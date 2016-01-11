@@ -4,7 +4,7 @@
 #include "WebServerResponseHandler.hpp"
 #include <thread>
 
-// Creates a WebServer on a certain port
+// Creates a WebServer on a certain port and a certain rootDirectory that contains server files
 WebServer::WebServer(int port, std::string rootDirectory) : port{port}, rootDirectory{rootDirectory} {
     std::thread t(&WebServer::run, this);
     t.detach();
@@ -37,20 +37,20 @@ void WebServer::handleConnection(TCPSocket *sock) {
     Logger logger;
     logger.setFile(sock->getForeignAddress().getAddress());
     logger.logNotice("Handle Connection", "Started logging");
-    WebServerResponseHandler responseHandler(logger);
+    WebServerResponseHandler responseHandler(rootDirectory, logger);
     while(true) {
         std::string line;
         std::iostream& stream = sock->getStream();
         WebServerGetHandler getHandler;
         bool readRequest = false;
-        while(getline(stream, line)){
+        while(getLine(stream, line)){
             if (line.compare(0, getHandler.getGetPrefix().length(), getHandler.getGetPrefix()) == 0) {
                 getHandler.parseGetLine(line);
                 readRequest = true;
             }
 
             std::cout << line << std::endl; // What the client sent
-            if (line.empty() && readRequest ) {
+            if (line.empty() && readRequest) {
                 responseHandler.setInfo(getHandler.getFilename(), getHandler.getFileExtension());
                 responseHandler.sendResponse(sock);
                 stream.flush();
@@ -65,11 +65,11 @@ void WebServer::handleConnection(TCPSocket *sock) {
 void WebServer::run() {
     try { // Make a socket to listen for client connections.
         TCPServerSocket servSock(port);
-        std::cout << "server running: " << servSock.getLocalAddress().getAddress() << std::endl;
+        std::cout << "WebServer running: " << servSock.getLocalAddress().getAddress() << std::endl;
         for (;;) {
             TCPSocket *sock = servSock.accept(); // Wait for a new connection and accept it
             std::thread t(&WebServer::handleConnection, this, sock); // Handle each connection on a new thread
-            t.detach(); // Will not wait for thread to finish; will just kill the thread
+            t.detach(); // Will not wait for thread to finish; will just kill the thread if WebServer dies
         }
     } catch (SocketException &e) {
         std::cerr << e.what() << std::endl; // Report errors to the console

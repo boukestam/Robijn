@@ -1,12 +1,10 @@
 #include "WebServerResponseHandler.hpp"
 
-WebServerResponseHandler::WebServerResponseHandler(Logger logger) {
-    log = logger;
+WebServerResponseHandler::WebServerResponseHandler(std::string rootDirectory, Logger logger) : rootDirectory{rootDirectory}, log{logger} {
     log.logNotice("ResponseHandler ctor", "New response handler for connection ");
 }
 
 WebServerResponseHandler::~WebServerResponseHandler() {
-    //dtor
 }
 
 void WebServerResponseHandler::setInfo(std::string filePath, std::string fileExtension) {
@@ -18,7 +16,7 @@ void WebServerResponseHandler::setInfo(std::string filePath, std::string fileExt
 bool WebServerResponseHandler::doesFileExist() {
     std::ifstream stream;
     bool isOpen = false;
-    stream.open("www/" + path + "." + extension);
+    stream.open(rootDirectory + path + "." + extension);
 
     if (stream.is_open()) {
         isOpen = true;
@@ -73,17 +71,17 @@ void WebServerResponseHandler::sendResponse(TCPSocket *sock) {
 }
 
 std::string WebServerResponseHandler::readFile(std::string location, bool readBinary) {
-    log.logNotice("ReadFile", "Starting to read file www/" + location);
+    log.logNotice("ReadFile", "Starting to read file " + rootDirectory + location);
     std::string fileContent;
     if (readBinary) {
-        std::ifstream fin("www/" + location, std::ios::in | std::ios::binary);
+        std::ifstream fin(rootDirectory + location, std::ios::in | std::ios::binary);
         std::ostringstream oss;
         oss << fin.rdbuf();
         fileContent = oss.str();
     } else {
         std::ifstream stream;
         std::string regel;
-        stream.open("www/" + location);
+        stream.open(rootDirectory + location);
 
         while (getline(stream, regel)) {
             fileContent += regel;

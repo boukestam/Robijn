@@ -4,7 +4,6 @@ WebServerGetHandler::WebServerGetHandler() {
 }
 
 WebServerGetHandler::~WebServerGetHandler() {
-    //dtor
 }
 
 std::string WebServerGetHandler::getGetPrefix() {

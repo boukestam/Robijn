@@ -12,7 +12,7 @@
 class WebServerResponseHandler
 {
     public:
-        WebServerResponseHandler(Logger logger);
+        WebServerResponseHandler(std::string rootDirectory, Logger logger);
         virtual ~WebServerResponseHandler();
         void sendResponse(TCPSocket *sock);
         void setInfo(std::string filepath, std::string fileextension);
@@ -43,5 +43,6 @@ class WebServerResponseHandler
     std::string path;
     std::string extension;
     std::string content_type;
+    std::string rootDirectory;
     Logger log;
 };
