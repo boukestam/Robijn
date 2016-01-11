@@ -1,0 +1,5 @@
+#all object files
+*.[o]
+
+#executable
+washingOS
