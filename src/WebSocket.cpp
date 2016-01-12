@@ -90,47 +90,39 @@ void WebSocket::setListener(WebSocketListener* l){
 }
 
 void WebSocket::sendTextMessage(const string &message) throw (WebSocketException, SocketException){
-	//throw WebSocketException("de methode sendTextMessage is nog niet geimplementeerd");
 	if(closing) {
         throw WebSocketException("sending message while the websocket is already in closing state");
     }
 
-    //int payloadLen = message.size();
-    int payloadLen = message.size()+1;
-    char * rawData = new char[message.size()+1];
-    strcpy(rawData, message.c_str());
-    int frameCount = 0;
-    char * frame = new char[10];
-
-    frame[0] = 129;
-
-    if (payloadLen <= 125) {
-        frame[1] = payloadLen;
-        frameCount = 2;
-    } else if (payloadLen >= 126 && payloadLen <= 65535) {
-        frame[1] = 126;
-        int len = payloadLen;
-        frame[2] = ((len >> 8) & 255);
-        frame[3] = (len & 255);
-        frameCount = 4;
+    size_t payloadlen = message.length();
+    int startSize = 1;
+    if (payloadlen > 125 && payloadlen <= 65535) {
+        startSize += 2;
+    } else if (payloadlen > 65535) {
+        startSize += 8;
     }
 
-    char * reply = new char[frameCount+payloadLen];
+    char* frame = new char [startSize + payloadlen];
+    int position = 0;
+	frame[position++] = 0x81;
+	if(payloadlen <= 125) {
+        frame[position++] = payloadlen;
+	} else if (payloadlen <= 65535) {
+        frame[position++] = 126;
+        frame[position++] = (payloadlen  >> 8) & 0xFF;
+        frame[position++] = payloadlen  & 0xFF;
+    } else {
+        frame[position++] = 127;
+        for(int i = 7; i >= 0; i--) {
+			frame[position++]  = ((payloadlen >> 8 * i) & 0xFF);
+		}
+    }
 
-    memcpy(reply, frame, frameCount);
-    memcpy(reply+frameCount, rawData, payloadLen);
+	memcpy(frame + position, message.c_str(), payloadlen);
+	sock->send(frame, payloadlen + position);
 
-    sock->send(reply, frameCount+payloadLen);
-
-//	if(payloadLen > 125) {
-//        payloadLen = 125;
-//	}
-//	char* frame = new char[2 + payloadLen];
-//	frame[0] = 0x88; //fin = 1, opc = 0x8
-//	frame[1] = payloadLen;
-//	memcpy(frame+2, message, payloadLen);
-//	sock->send(frame, payloadLen+2);
-	delete[] frame;
+	delete frame;
+	std::cout << "FRAME SENT" << std::endl;
 }
 
 //stuur een closeframe

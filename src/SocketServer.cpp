@@ -5,7 +5,7 @@ SocketServer::SocketServer(int port) : port{port} {
     sendBuffer.reserve(bufferSize);     // Vector with 'bufferSize' elements
 
     multicaster = new Multicaster();
-    myListener = new MyListener(multicaster);
+    myListener = new MyListener(multicaster, this);
 
     std::thread t(&SocketServer::run, this);
     t.detach();
@@ -22,6 +22,11 @@ void SocketServer::sendMessage(SocketMessage* message) {
 
 bool SocketServer::receiveMessage(SocketMessage* message) {
     receiveBuffer.push_back(message);
+    std::cout << message->getJSONString() << std::endl;
+    std::string firstname("firstname");
+    message->getValue<std::string>(firstname);
+    message->generateMessage();
+    std::cout << message->getJSONString() << std::endl;
     return true;
 }
 
