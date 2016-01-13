@@ -231,11 +231,11 @@ $( document ).ready(function() {
         var rpm = data.steps[0]["rpm"];
         var water = data.steps[0]["water"];
         var total = 0;
-        for(var i = 0; i < data.stepSize; i++){
+        for(var i = 0; i < data.steps.length; i++){
             times[i] = data.steps[i]["time"];
             total += times[i];
         }
-        steps = data.stepSize + 1;
+        steps = data.steps.length + 1;
         
 
         $('#waterSelector option:first-child').text(water);
