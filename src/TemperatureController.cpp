@@ -1,4 +1,3 @@
-#include <chrono>
 #include "TemperatureController.hpp"
 
 TemperatureController::TemperatureController(Heating* heating, HardwareSensor* temperatureSensor) :
@@ -7,6 +6,7 @@ TemperatureController::TemperatureController(Heating* heating, HardwareSensor* t
 {}
 
 void TemperatureController::main(){
+	RTOS::timer *temperatureTimer = new RTOS::timer(this, "temperatureTimer");
 	while(true){
 		temperatureSensor->update();
 		if(currentState < goalState){
@@ -15,7 +15,8 @@ void TemperatureController::main(){
 		else{
 			heating->off();
 		}
-		sleep(5000);
+		temperatureTimer->set(5000);
+		wait(*temperatureTimer);
 	}
 }
 

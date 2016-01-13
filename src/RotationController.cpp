@@ -6,10 +6,12 @@ RotationController::RotationController(Motor* motor, HardwareSensor* rotationSen
 {}
 
 void RotationController::main(){
+	RTOS::timer *rotationTimer = new RTOS::timer(this, "rotationTimer");
 	while(true){
 		rotationSensor->update();
 		motor->setRotation(goalState);
-		sleep(5000);
+		rotationTimer->set(5000);
+		wait(*rotationTimer);
 	}
 }
 
