@@ -35,7 +35,7 @@ public:
 
 	void generateMessage();
 
-	void generateStatusUpdateMessage();
+	void generateStatusUpdateMessage(int status);
 
 	void generateWashingProgramsMessage();
 

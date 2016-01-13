@@ -5,6 +5,7 @@
 #include "WebSocketMulticaster.h"
 #include "SocketMessage.hpp"
 #include <vector>
+#include <mutex>
 
 class SocketListener;
 
@@ -16,6 +17,12 @@ public:
 	void sendMessage(SocketMessage* message);
 	bool receiveMessage(SocketMessage* message);
 
+	SocketMessage* getFirstSendMessage();
+	void deleteFirstSendMessage();
+
+	SocketMessage* getFirstReceiveMessage();
+	void deleteFirstReceiveMessage();
+
 private:
     void run();
 
@@ -26,6 +33,9 @@ private:
     size_t bufferSize = 16;
     std::vector<SocketMessage*> receiveBuffer;
     std::vector<SocketMessage*> sendBuffer;
+
+    std::mutex receiveMutex;
+    std::mutex sendMutex;
 };
 
 class SocketListener : public WebSocketListener{

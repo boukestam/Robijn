@@ -86,7 +86,7 @@ void SocketMessage::generateMessage() {
     json.Parse(s.GetString());
 }
 
-void SocketMessage::generateStatusUpdateMessage() {
+void SocketMessage::generateStatusUpdateMessage(int status) {
     rapidjson::StringBuffer s;
     rapidjson::Writer<rapidjson::StringBuffer> writer(s);
 
@@ -104,7 +104,7 @@ void SocketMessage::generateStatusUpdateMessage() {
             writer.Key("data");
             writer.StartObject();
                 writer.Key("status");
-                writer.Int(0);
+                writer.Int(status);
                 writer.Key("currentDegrees");
                 writer.Uint(0);
                 writer.Key("currentRpm");
