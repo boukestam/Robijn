@@ -1,5 +1,4 @@
 #include "HardwareController.hpp"
-#include "HardwareSensor.hpp"
 
 void HardwareController::main(){
 	
