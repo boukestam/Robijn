@@ -6,7 +6,7 @@
 #include "SocketMessage.hpp"
 #include <vector>
 
-class MyListener;
+class SocketListener;
 
 class SocketServer{
 public:
@@ -20,7 +20,7 @@ private:
     void run();
 
     Multicaster* multicaster;
-    MyListener* myListener;
+    SocketListener* socketListener;
 
     int port;
     size_t bufferSize = 16;
@@ -28,19 +28,14 @@ private:
     std::vector<SocketMessage*> sendBuffer;
 };
 
-class MyListener : public WebSocketListener{
+class SocketListener : public WebSocketListener{
 public:
-    MyListener(Multicaster* multicaster, SocketServer* socketServer) : multicaster{multicaster}, socketServer{socketServer} {}
+    SocketListener(Multicaster* multicaster, SocketServer* socketServer) : multicaster{multicaster}, socketServer{socketServer} {}
 
 	void onTextMessage(const std::string& s, WebSocket* ws){ // TODO: Parse json string and put it in the receiveBuffer
-		multicaster->broadcast(s);
 		SocketMessage* message = new SocketMessage();
-		//std::cout << message->getJSONString() << message->getJSONString().empty() << std::endl;
 		if (message->parseJSONString(s)) {
             socketServer->receiveMessage(message);
-            std::string s("fuck");
-            message->setValue(s, s);
-            multicaster->broadcast(message->getJSONString());
 		} else {
             std::cout << "Parsing failed" << std::endl;
 		}
