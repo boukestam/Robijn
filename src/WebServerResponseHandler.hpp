@@ -36,7 +36,8 @@ class WebServerResponseHandler
 		{ "json", "application/json", false },
 		{ "xml", "application/xml", false },
 		{ "log", "text/plain", false},
-		{ "js", "application/javascript", false }
+		{ "js", "application/javascript", false },
+		{ "css", "text/css", false }
     };
 
     bool needBinaryRead;
