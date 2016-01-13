@@ -284,7 +284,7 @@ $( document ).ready(function() {
                                 {"time": $( "#timeSelector option:selected" ).text()}
                             ]
                     },
-                    }
+                    
                 ]},
             };
         ws.send(msg);
