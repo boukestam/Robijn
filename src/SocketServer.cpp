@@ -5,7 +5,7 @@ SocketServer::SocketServer(int port) : port{port} {
     sendBuffer.reserve(bufferSize);     // Vector with 'bufferSize' elements
 
     multicaster = new Multicaster();
-    myListener = new MyListener(multicaster, this);
+    socketListener = new SocketListener(multicaster, this);
 
     std::thread t(&SocketServer::run, this);
     t.detach();
@@ -13,7 +13,7 @@ SocketServer::SocketServer(int port) : port{port} {
 
 SocketServer::~SocketServer() {
     delete multicaster;
-    delete myListener;
+    delete socketListener;
 }
 
 void SocketServer::sendMessage(SocketMessage* message) {
@@ -23,10 +23,16 @@ void SocketServer::sendMessage(SocketMessage* message) {
 bool SocketServer::receiveMessage(SocketMessage* message) {
     receiveBuffer.push_back(message);
     std::cout << message->getJSONString() << std::endl;
-    std::string firstname("firstname");
-    message->getValue<std::string>(firstname);
-    message->generateMessage();
+    std::string eventKey("event");
+    std::string event = message->getValue<std::string>(eventKey);
+    if (event == "statusUpdate") {
+        std::cout << "statusUpdate" << std::endl;
+        message->generateStatusUpdateMessage();
+    } else if (event == "getWashingPrograms") {
+        message->generateWashingProgramsMessage();
+    }
     std::cout << message->getJSONString() << std::endl;
+    multicaster->broadcast(message->getJSONString());
     return true;
 }
 
@@ -37,7 +43,7 @@ void SocketServer::run() {
         for (;;) {
             TCPSocket *sock = servSock.accept();
             WebSocket* ws = new WebSocket(sock);
-            ws->setListener(myListener);
+            ws->setListener(socketListener);
             multicaster->add(ws);
         }
     } catch (SocketException &e) {

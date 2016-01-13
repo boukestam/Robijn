@@ -35,6 +35,10 @@ public:
 
 	void generateMessage();
 
+	void generateStatusUpdateMessage();
+
+	void generateWashingProgramsMessage();
+
 private:
 	rapidjson::Document json;
 };
