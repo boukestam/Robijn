@@ -5,13 +5,9 @@ class UARTListener;
 
 class UARTMessage{
 public:
-	UARTMessage(unsigned char first, unsigned char second);
-	
-	unsigned char getFirstByte();
-	unsigned char getSecondByte();
-	UARTListener getSender();
-	
-private:
+	UARTMessage();
+	UARTMessage(unsigned char first, unsigned char second, UARTListener* sender);
+
 	unsigned char first;
 	unsigned char second;
 	UARTListener* sender;
