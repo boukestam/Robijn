@@ -6,7 +6,7 @@ TemperatureController::TemperatureController(Heating* heating, HardwareSensor* t
 {}
 
 void TemperatureController::main(){
-	RTOS::timer *temperatureTimer = new RTOS::timer(this, "temperatureTimer");
+	RTOS::timer temperatureTimer(this, "temperatureTimer");
 	while(true){
 		temperatureSensor->update();
 		if(currentState < goalState){
@@ -15,8 +15,8 @@ void TemperatureController::main(){
 		else{
 			heating->off();
 		}
-		temperatureTimer->set(5000);
-		wait(*temperatureTimer);
+		temperatureTimer.set(500);
+		wait(temperatureTimer);
 	}
 }
 

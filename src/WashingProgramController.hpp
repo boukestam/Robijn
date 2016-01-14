@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include "pRTOS.h"
 
 #include "WashingProgram.hpp"
@@ -20,7 +18,14 @@
 class WashingProgramController: public RTOS::task{
 public:
 	void main() override;
-	
+	WashingProgramController(
+		WaterLevelController* waterLevelController,
+		RotationController* rotationController,
+		TemperatureController* temperatureController,
+		Door* door, 
+		SignalLed* signalLed, 
+		WashingMachine* washingMachine,
+		HardwareSensor* washingMachineStatusSensor);
 	void startWashingProgram(WashingProgram program);
 	void stopWashingProgram();
 	
