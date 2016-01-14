@@ -30,7 +30,7 @@ private:
 	//to show the start and end will be converted to type time_t	
 	time_t stepStartTime, stepStopTime;
 	time_t programStartTime;
-	//RTOS::timer schedularTimer;
+	RTOS::timer schedularTimer;
 	int stepDuration;
 	unsigned int currentStepIndex;
 	WashingProgram currentWashingProgram;
