@@ -1,3 +1,24 @@
+#include "pRTOS.h"
+
+#include "UARTInterface.hpp"
+#include "Door.hpp"
+#include "Heating.hpp"
+#include "TemperatureSensor.hpp"
+#include "Motor.hpp"
+#include "RotationSensor.hpp"
+#include "Pump.hpp"
+#include "Tap.hpp"
+#include "WaterLevelSensor.hpp"
+#include "SignalLed.hpp"
+#include "SoapTray.hpp"
+#include "WashingMachine.hpp"
+#include "WashingMachineStatusSensor.hpp"
+#include "RotationController.hpp"
+#include "TemperatureController.hpp"
+#include "WebInterfaceController.hpp"
+#include "WashingProgramController.hpp"
+#include "WaterLevelController.hpp"
+
 int main(){
 	UARTInterface* uartInterface = new UARTInterface();
 
@@ -20,12 +41,13 @@ int main(){
 	WashingMachine* washingMachine = new WashingMachine(uartInterface);
 	WashingMachineStatusSensor* washingMachineStatusSensor = new WashingMachineStatusSensor(uartInterface);
 	
-	RotationController* rotationController = new RotationController();
-	TemperatureController* temperatureController = new TemperatureController();
+	RotationController* rotationController = new RotationController(motor);
+	TemperatureController* temperatureController = new TemperatureController(heating, temperatureSensor);
+	WaterLevelController* waterLevelController = new WaterLevelController(pump, tap, waterLevelSensor);
+	
 	WebInterfaceController* webInterfaceController = new WebInterfaceController();
 	
 	WashingProgramController* washingProgramController = new WashingProgramController();
-	WaterLevelController* waterLevelController = new WaterLevelController();
 	
 	RTOS::run();
 	
