@@ -3,13 +3,18 @@
 #include <time.h>
 #include <chrono>
 #include <iostream>
-#include <thread>
+#include "pRTOS.h"
 
 #include "WashingProgram.hpp"
 #include "WashingProgramStep.hpp"
+class WashingProgramController;
 
 class WashingProgramScheduler{
 public:
+	
+	
+	//WashingProgramScheduler(WashingProgramController * wpc);
+	
 	void startWashingProgram(WashingProgram washingProgram);
 	
 	WashingProgramStep getCurrentStep();
@@ -19,13 +24,15 @@ public:
 	void update();
 	
 private:
-	std::chrono::time_point<std::chrono::system_clock> start;
+	//clock will be put in start and end
+	std::chrono::time_point<std::chrono::system_clock> timePoint1, timePoint2, timePoint3;
 
-	time_t startTime;
+	//to show the start and end will be converted to type time_t	
 	time_t stepStartTime, stepStopTime;
-	
-
-	int currentStepIndex;
+	time_t programStartTime;
+	//RTOS::timer schedularTimer;
+	int stepDuration;
+	unsigned int currentStepIndex;
 	WashingProgram currentWashingProgram;
 	
 	bool running;

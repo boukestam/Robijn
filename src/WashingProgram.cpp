@@ -15,6 +15,10 @@ WashingProgramStep WashingProgram::getStep(int index){
 	return steps[index];
 }
 
+size_t WashingProgram::getStepSize(){
+	return steps.size();
+}
+
 void WashingProgram::addStep(WashingProgramStep wPS){
 	steps.push_back(wPS);
 }
