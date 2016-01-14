@@ -4,6 +4,8 @@
 
 class Door: public HardwareComponent{
 public:
+	Door(UARTInterface* uartInterface);
+	
 	void lock();
 	void unlock();
 };

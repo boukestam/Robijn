@@ -1,9 +1,18 @@
 #include "Tap.hpp"
 
+Tap::Tap(UARTInterface* uartInterface):
+	HardwareComponent(uartInterface)
+{}
+
 void Tap::on(){
-	//PLACEHOLDER; REMOVE ONCE IMPLEMENTED
+	UARTMessage message(WATER_VALVE_REQ, OPEN_CMD, this);
+
+	uartInterface->send(message);
 }
 
 void Tap::off(){
-	//PLACEHOLDER; REMOVE ONCE IMPLEMENTED
+	UARTMessage message(WATER_VALVE_REQ, CLOSE_CMD, this);
+
+	uartInterface->send(message);
 }
+

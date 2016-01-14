@@ -1,9 +1,17 @@
 #include "Heating.hpp"
 
+Heating::Heating(UARTInterface* uartInterface):
+	HardwareComponent(uartInterface)
+{}
+
 void Heating::on(){
-	//PLACEHOLDER; REMOVE ONCE IMPLEMENTED
+	UARTMessage message(HEATING_UNIT_REQ, ON_CMD, this);
+
+	uartInterface->send(message);
 }
 
 void Heating::off(){
-	//PLACEHOLDER; REMOVE ONCE IMPLEMENTED
+	UARTMessage message(HEATING_UNIT_REQ, OFF_CMD, this);
+
+	uartInterface->send(message);
 }
