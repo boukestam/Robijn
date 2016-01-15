@@ -1,13 +1,5 @@
 #include "WashingProgramScheduler.hpp"
 
-/*
-	WashingProgramScheduler::WashingProgramScheduler(WashingProgramController * wpc):	
-	schedularTimer(wpc, "schedularTimer");	
-	{
-		//t1.set(1000 MS);
-	}
-	
-*/
 void WashingProgramScheduler::startWashingProgram(WashingProgram program){	
 	running = 1;
 	currentStepIndex = 0;
@@ -19,12 +11,7 @@ void WashingProgramScheduler::startWashingProgram(WashingProgram program){
 	programStartTime = std::chrono::system_clock::to_time_t(timePoint1);
 	std::cout << "Started washing program at" << std::ctime(&programStartTime);	
 }
-/*	
-	void WashingProgramScheduler::stopWashingProgram(WashingProgram program){		
-		stepStopTime = clock();		
-		running = 0;	
-		 * }
-*/
+
 WashingProgramStep WashingProgramScheduler::getCurrentStep(){
 	std::cout << "returning step: " << currentStepIndex << std::endl;
 	return currentWashingProgram.getStep(currentStepIndex);
@@ -41,16 +28,15 @@ bool WashingProgramScheduler::isRunning(){
 }
 
 void WashingProgramScheduler::update(){		
-
-	//missing: sleep from RTOS
-	
 	timePoint2 = std::chrono::system_clock::now();		
+	//check the difference.
 	std::chrono::duration<double> elapsed_seconds = timePoint2-timePoint3;			
 	std::cout << "time passed: " << elapsed_seconds.count() << "seconds";					
 	
 	if(elapsed_seconds.count() > stepDuration) {
 		if(currentStepIndex > currentWashingProgram.getStepSize()){
-			std::cout<< "Step: " << currentStepIndex << "has finished/nMoving to step: " << currentStepIndex++ << std::endl;
+			std::cout << "Step: " << currentStepIndex << "has finished/nMoving to step: " 
+			<< currentStepIndex++ << std::endl;
 			timePoint3 = std::chrono::system_clock::now();		
 		}
 		else{
