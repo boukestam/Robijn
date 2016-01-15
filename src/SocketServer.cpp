@@ -30,8 +30,10 @@ bool SocketServer::receiveMessage(SocketMessage*& message) {
 }
 
 void SocketServer::sendMessage(SocketMessage* message) {
+	std::cout << "Start putting in buffer" << std::endl;
     std::lock_guard<std::mutex> lock(sendMutex);
     sendBuffer.push_back(message);
+    std::cout << "Done putting in buffer" << std::endl;
 }
 
 void SocketServer::run() {

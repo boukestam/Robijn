@@ -44,6 +44,7 @@ public:
     ~SocketListener() {}
 
 	void onTextMessage(const std::string& s, WebSocket* ws){ // TODO: Parse json string and put it in the receiveBuffer
+		std::cout << "Got new message" << std::endl;
 		SocketMessage* message = new SocketMessage();
 		if (message->parseJSONString(s)) {
             socketServer->receiveMutex.lock();

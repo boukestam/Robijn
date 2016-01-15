@@ -3,6 +3,7 @@
 #include "UARTListener.hpp"
 
 UARTInterface::UARTInterface(): 
+	RTOS::task(0, "uartInterface"),
 	sendBuffer(this, "sendBuffer"), 
 	replyTimer(this, "replyTimer")
 {

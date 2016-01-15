@@ -5,16 +5,16 @@
 
 class WashingProgramStatus{
 public:
-	int rotationSpeed;
-	int waterLevel;
-	int temperature;
+	int rotationSpeed = 0;
+	int waterLevel = 0;
+	int temperature = 0;
 
-	int timeLeft;
-	int stepTimeLeft;
-	int currentStep;
+	int timeLeft = 0;
+	int stepTimeLeft = 0;
+	int currentStep = 0;
 
-	int totalSteps;
-	int totalSteptime;
+	int totalSteps = 0;
+	int totalSteptime = 0;
 
 	WashingMachineStatus status;
 
