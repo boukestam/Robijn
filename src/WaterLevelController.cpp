@@ -9,12 +9,11 @@ WaterLevelController::WaterLevelController(Pump* pump, Tap* tap, HardwareSensor*
 void WaterLevelController::main(){
 	RTOS::timer waterTimer(this, "waterTimer");
 	while(true){
-		waterLevelSensor->update();
-		if(currentState < goalState){
+		if(currentState < goalState-5){
 			pump->off();
 			tap->on();
 		}
-		else if(currentState > goalState){
+		else if(currentState > goalState+5){
 			tap->off();
 			pump->on();
 		}
@@ -22,6 +21,7 @@ void WaterLevelController::main(){
 			tap->off();
 			pump->off();
 		}
+		waterLevelSensor->update();
 		waterTimer.set(500);
 		wait(waterTimer);
 	}

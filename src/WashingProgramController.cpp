@@ -33,10 +33,10 @@ void WashingProgramController::stopWashingProgram(){
 void WashingProgramController::main(){
 	RTOS::timer washingProgramTimer(this, "stepTimer");
 	while(true){
-		scheduler.update();
 		waterLevelController.setGoalState(scheduler.getCurrentStep().waterLevel);
 		temperatureController.setGoalState(scheduler.getCurrentStep().temperature);
 		rotationController.setGoalState(scheduler.getCurrentStep().rotationSpeed);
+		scheduler.update();
 		washingProgramTimer.set(1000);
 		wait(washingProgramTimer);
 	}
