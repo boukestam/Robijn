@@ -15,8 +15,10 @@ WashingProgramController::WashingProgramController(
 	door(door),
 	signalLed(signalLed),
 	washingMachine(washingMachine),
-	hardwareSensor(hardwareSensor)
-{}
+	washingMachineStatusSensor(washingMachineStatusSensor)
+{
+	updateStatusSensorTimer(this, "updateTimer");
+}
 
 void WashingProgramController::startWashingProgram(WashingProgram program){
 	door.lock();
@@ -58,22 +60,21 @@ void WashingProgramController::main(){
 	while(true){
 		if(washingMachineStatus == RUNNING){
 			if(scheduler.isRunning()){
-				if(WashingProgramScheduler.isPaused()){
-					WashingProgramScheduler.unpause();
+				if(scheduler.isPaused()){
+					scheduler.unpause();
 				}
-				waterLevelController.setGoalState(scheduler.getCurrentStep().waterLevel);
-				temperatureController.setGoalState(scheduler.getCurrentStep().temperature);
-				rotationController.setGoalState(scheduler.getCurrentStep().rotationSpeed);
+				waterLevelController->setGoalState(scheduler->getCurrentStep().waterLevel);
+				temperatureController->setGoalState(scheduler->getCurrentStep().temperature);
+				rotationController->setGoalState(scheduler->getCurrentStep().rotationSpeed);
 			}
 			scheduler.update();
 		}
 		else if(washingMachineStatus == FAILED){
-			WashingProgramScheduler.pause();
+			scheduler.pause();
 		}
 		else{
 			std::cout << "Washing Machine not running. Status: " << washingMachineStatus << endl;
 		}
-		
 		washingMachineStatusSensor.update();
 		washingProgramTimer.set(1000);
 		wait(washingProgramTimer);
