@@ -28,7 +28,7 @@ int main(){
 	TemperatureSensor* temperatureSensor = new TemperatureSensor(uartInterface);
 	
 	Motor* motor = new Motor(uartInterface);
-	RotationSensor* sensor = new RotationSensor(uartInterface);
+	RotationSensor* rotationSensor = new RotationSensor(uartInterface);
 	
 	Pump* pump = new Pump(uartInterface);
 	Tap* tap = new Tap(uartInterface);
@@ -41,13 +41,13 @@ int main(){
 	WashingMachine* washingMachine = new WashingMachine(uartInterface);
 	WashingMachineStatusSensor* washingMachineStatusSensor = new WashingMachineStatusSensor(uartInterface);
 	
-	RotationController* rotationController = new RotationController(motor);
+	RotationController* rotationController = new RotationController(motor, rotationSensor);
 	TemperatureController* temperatureController = new TemperatureController(heating, temperatureSensor);
 	WaterLevelController* waterLevelController = new WaterLevelController(pump, tap, waterLevelSensor);
 	
 	WebInterfaceController* webInterfaceController = new WebInterfaceController();
 	
-	WashingProgramController* washingProgramController = new WashingProgramController();
+	WashingProgramController* washingProgramController = new WashingProgramController(waterLevelController, rotationController, temperatureController, door, led, washingMachine, washingMachineStatusSensor);
 	
 	RTOS::run();
 	

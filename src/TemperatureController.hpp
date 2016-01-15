@@ -1,17 +1,16 @@
 #pragma once
 
 #include "HardwareController.hpp"
-
 #include "Heating.hpp"
-#include "TemperatureSensor.hpp"
+#include "HardwareSensor.hpp"
 
 class TemperatureController: public HardwareController{
 public:
-	TemperatureController(Heating* heating, TemperatureSensor* temperatureSensor);
-	
+	TemperatureController(Heating* heating, HardwareSensor* temperatureSensor);
+	void valueChanged(HardwareSensor* sensor, unsigned char value) override;
 	void main() override;
 	
 private:
 	Heating* heating;
-	TemperatureSensor* temperatureSensor;
+	HardwareSensor* temperatureSensor;
 };
