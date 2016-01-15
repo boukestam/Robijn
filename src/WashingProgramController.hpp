@@ -73,18 +73,18 @@ public:
  */
 	void valueChanged(HardwareSensor* sensor, unsigned char value);
 private:
-	WashingProgramScheduler scheduler;
+	WashingProgramScheduler* scheduler;
 	
-	WaterLevelController waterLevelController;
-	RotationController rotationController;
-	TemperatureController temperatureController;
+	WaterLevelController* waterLevelController;
+	RotationController* rotationController;
+	TemperatureController* temperatureController;
 	
-	Door door;
-	SignalLed signalLed;
-	WashingMachine washingMachine;
+	Door* door;
+	SignalLed* signalLed;
+	WashingMachine* washingMachine;
 	
-	HardwareSensor washingMachineStatusSensor;
+	HardwareSensor* washingMachineStatusSensor;
 	
 	unsigned char washingMachineStatus;
-	RTOS::timer updateStatusSensorTimer(this, "updateTimer");
+	RTOS::timer updateStatusSensorTimer;
 };
