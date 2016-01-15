@@ -28,6 +28,7 @@ private:
 	time_t stepStartTime, stepStopTime;
 	time_t programStartTime;
 
+	int stepDuration;
 	unsigned int currentStepIndex;
 	
 	bool running;
