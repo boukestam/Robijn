@@ -15,37 +15,39 @@ WashingProgramController::WashingProgramController(
 	door(door),
 	signalLed(signalLed),
 	washingMachine(washingMachine),
-	washingMachineStatusSensor(washingMachineStatusSensor)
+	washingMachineStatusSensor(washingMachineStatusSensor),
+	updateStatusSensorTimer(this, "updateTimer")
 {
-	updateStatusSensorTimer(this, "updateTimer");
+	
 }
 
+
 void WashingProgramController::startWashingProgram(WashingProgram program){
-	door.lock();
-	washingMachine.start();
-	washingMachineStatusSensor.update();
+	door->lock();
+	washingMachine->start();
+	washingMachineStatusSensor->update();
 	updateStatusSensorTimer.set(50);
 	wait(updateStatusSensorTimer);
 	if(washingMachineStatus == IDLE){
-		scheduler = WashingProgramScheduler(this);
-		scheduler.startWashingProgram(program);
+		scheduler = new WashingProgramScheduler();
+		scheduler->start(program);
 	}
 	else{
-		std::cout << "Status is: " << washingMachineStatus << ". Did not start washing program." << endl;
+		std::cout << "Status is: " << washingMachineStatus << ". Did not start washing program." << std::endl;
 	}
 }
 
 void WashingProgramController::stopWashingProgram(){
-	washingMachine.stop();
-	door.unlock();
-	washingMachineStatusSensor.update();
+	washingMachine->stop();
+	door->unlock();
+	washingMachineStatusSensor->update();
 	updateStatusSensorTimer.set(50);
 	wait(updateStatusSensorTimer);
 	if(washingMachineStatus == STOPPED){
-		scheduler.stopWashingProgram();
+		scheduler->stop();
 	}
 	else{
-		std::cout << "Washing Machine not stopped. Status: " << washingMachineStatus << endl;
+		std::cout << "Washing Machine not stopped. Status: " << washingMachineStatus << std::endl;
 	}
 }
 
@@ -59,23 +61,23 @@ void WashingProgramController::main(){
 	RTOS::timer washingProgramTimer(this, "stepTimer");
 	while(true){
 		if(washingMachineStatus == RUNNING){
-			if(scheduler.isRunning()){
-				if(scheduler.isPaused()){
-					scheduler.unpause();
+			if(scheduler->isRunning()){
+				if(scheduler->isPaused()){
+					scheduler->unpause();
 				}
 				waterLevelController->setGoalState(scheduler->getCurrentStep().waterLevel);
 				temperatureController->setGoalState(scheduler->getCurrentStep().temperature);
 				rotationController->setGoalState(scheduler->getCurrentStep().rotationSpeed);
 			}
-			scheduler.update();
+			scheduler->update();
 		}
 		else if(washingMachineStatus == FAILED){
-			scheduler.pause();
+			scheduler->pause();
 		}
 		else{
-			std::cout << "Washing Machine not running. Status: " << washingMachineStatus << endl;
+			std::cout << "Washing Machine not running. Status: " << washingMachineStatus << std::endl;
 		}
-		washingMachineStatusSensor.update();
+		washingMachineStatusSensor->update();
 		washingProgramTimer.set(1000);
 		wait(washingProgramTimer);
 	}

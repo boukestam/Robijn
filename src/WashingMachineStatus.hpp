@@ -1,9 +1,9 @@
 #pragma once
 
 enum class WashingMachineStatus{
-	idle,
-	running,
-	stopped,
-	halted,
-	failed
+	idle = 0,
+	running = 1,
+	stopped = 2,
+	halted = 3,
+	failed = 4
 };

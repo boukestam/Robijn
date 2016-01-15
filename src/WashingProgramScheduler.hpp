@@ -48,7 +48,7 @@ public:
 	void update();
 	
 private:
-	WashingProgram currentWashingProgram;
+	WashingProgram* currentWashingProgram;
 	
 	time_t stepStartTime, stepStopTime;
 	time_t programStartTime;

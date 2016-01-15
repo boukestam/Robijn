@@ -22,6 +22,7 @@
 int main(){
 	/*UARTInterface* uartInterface = new UARTInterface();
 
+
 	Door* door = new Door(uartInterface);
 	
 	Heating* heating = new Heating(uartInterface);
@@ -45,9 +46,17 @@ int main(){
 	TemperatureController* temperatureController = new TemperatureController(heating, temperatureSensor);
 	WaterLevelController* waterLevelController = new WaterLevelController(pump, tap, waterLevelSensor);
 	
-	WebInterfaceController* webInterfaceController = new WebInterfaceController();
+
+		WashingProgramController* washingProgramController = new WashingProgramController(waterLevelController, rotationController, temperatureController, door, led, washingMachine, washingMachineStatusSensor);
+	WebInterfaceController* webInterfaceController = new WebInterfaceController(washingProgramController,
+										    temperatureSensor,
+										    waterLevelSensor,
+										    rotationSensor,
+										    washingMachineStatusSensor);
 	
-	WashingProgramController* washingProgramController = new WashingProgramController(waterLevelController, rotationController, temperatureController, door, led, washingMachine, washingMachineStatusSensor);
+
+
+	
 	
 	RTOS::run();*/
 	

@@ -11,20 +11,37 @@
 
 #include "WashingProgramStatus.hpp"
 
-class WebInterfaceController: public RTOS::task{
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+
+#include "HardwareListener.hpp"
+
+class WebInterfaceController: public RTOS::task, public HardwareListener{
 public:
-	//void main() override;
+    WebInterfaceController( WashingProgramController* washingProgramController,
+                            HardwareSensor* temperatureSensor,
+                            HardwareSensor* waterLevelSensor,
+                            HardwareSensor* rotationSensor,
+                            HardwareSensor* washingMachineStatusSensor);
+	void main() override;
+
+	void valueChanged(HardwareSensor* sensor, unsigned char value);
+	void GenerateStatusUpdate();
 
 private:
-	SocketServer socketServer;
-	WebServer webServer;
+    SocketMessage* createSocketMessageFromWashingList();
 
-	WashingProgramController washingProgramController;
+    WebServer* webServer = new WebServer(8080, "www/"); // Starts the WebServer on its own thread (.detach)
+    SocketServer* socketServer = new SocketServer(8081); // Starts the SocketServer on its own thread (.detach)
 
-	HardwareSensor temperatureSensor;
-	HardwareSensor waterLevelSensor;
-	HardwareSensor rotationSensor;
-	HardwareSensor washingMachineStatusSensor;
+	WashingProgramController* washingProgramController;
 
-	WashingProgramStatus currentWashingProgramStatus;
+	HardwareSensor* temperatureSensor;
+	HardwareSensor* waterLevelSensor;
+	HardwareSensor* rotationSensor;
+	HardwareSensor* washingMachineStatusSensor;
+
+	WashingProgramStatus* currentWashingProgramStatus;
+    std::vector<WashingProgram*> washingPrograms;
 };

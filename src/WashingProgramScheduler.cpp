@@ -3,7 +3,6 @@
 void WashingProgramScheduler::start(WashingProgram program){	
 	running = 1;
 	currentStepIndex = 0;
-	stepDuration = currentWashingProgram.getStep(currentStepIndex).duration;
 	
 	// get current time of the system
 	time(&programStartTime);
@@ -18,7 +17,7 @@ void WashingProgramScheduler::stop(){
 
 WashingProgramStep WashingProgramScheduler::getCurrentStep(){
 	std::cout << "returning step: " << currentStepIndex << std::endl;
-	return currentWashingProgram.getStep(currentStepIndex);
+	return currentWashingProgram->getStep(currentStepIndex);
 }
 
 bool WashingProgramScheduler::isRunning(){
@@ -46,8 +45,8 @@ void WashingProgramScheduler::update(){
 		time_t elapsedSeconds = now - stepStartTime;			
 		std::cout << "time passed: " << elapsedSeconds << "seconds";					
 	
-		if(elapsedSeconds >= currentWashingProgram.getStep(currentStepIndex).duration) {
-			if(currentStepIndex >= currentWashingProgram.getStepSize() - 1){
+		if(elapsedSeconds >= currentWashingProgram->getStep(currentStepIndex).duration) {
+			if(currentStepIndex >= currentWashingProgram->getStepSize() - 1){
 				currentStepIndex++;
 				
 				std::cout << "Step: " << currentStepIndex - 1 << "has finished/nMoving to step: " 

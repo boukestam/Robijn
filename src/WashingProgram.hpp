@@ -20,12 +20,16 @@ public:
 	 * @return 
 	 */
 	int getTotalDuration();
+
+
+	std::string dicription;
 	
 	/**
 	 * @brief returns step of the given index
 	 * @param index
 	 * @return 
 	 */
+
 	WashingProgramStep getStep(unsigned int index);
 	
 	/**
@@ -39,7 +43,6 @@ public:
 	 * @param step
 	 */
 	void addStep(WashingProgramStep step);
-	
 private:
 	std::vector<WashingProgramStep> steps;	
 };
