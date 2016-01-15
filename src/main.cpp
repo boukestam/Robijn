@@ -20,7 +20,7 @@
 #include "WaterLevelController.hpp"
 
 int main(){
-	UARTInterface* uartInterface = new UARTInterface();
+	/*UARTInterface* uartInterface = new UARTInterface();
 
 	Door* door = new Door(uartInterface);
 	
@@ -49,7 +49,7 @@ int main(){
 	
 	WashingProgramController* washingProgramController = new WashingProgramController(waterLevelController, rotationController, temperatureController, door, led, washingMachine, washingMachineStatusSensor);
 	
-	RTOS::run();
+	RTOS::run();*/
 	
 	return 0;
 }
