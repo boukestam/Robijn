@@ -1,5 +1,5 @@
 TARGET = washingOS
-LIBS = -lcrypto -pthread
+LIBS = -lcrypto
 CC = g++
 CFLAGS = -std=c++11 -g -Wall
 

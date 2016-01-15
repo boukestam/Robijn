@@ -51,11 +51,20 @@ void WebInterfaceController::main()
             // check events
             if(event == "startWashingProgram"){
                 // start washing program
-                std::string id = msg->getValue<std::string>(idkey);
-                int iId = std::stoi(id);
-                if(washingPrograms.at(iId) != nullptr){
-                    washingProgramController->startWashingProgram(*washingPrograms.at(iId));
+                // Using a reference for consecutive access is handy and faster.
+                WashingProgram wp;
+                rapidjson::Document& document = msg->getJSON();
+                rapidjson::Value& stp = document["steps"];
+                for (rapidjson::SizeType i = 0; i < stp.Size(); i++){ // Uses SizeType instead of size_t
+                    WashingProgramStep step;
+                    step.temperature = stp[i]["degrees"].GetInt();
+                    step.rotationSpeed = stp[i]["rpm"].GetInt();
+                    step.waterLevel = stp[i]["water"].GetInt();
+                    step.duration = stp[i]["time"].GetInt();
+                    wp.addStep(step);
                 }
+
+                washingProgramController->startWashingProgram(wp);
             } else if(event == "stopWashingProgram") {
                 // Stop current washing program
                 washingProgramController->stopWashingProgram();
@@ -82,19 +91,19 @@ void WebInterfaceController::valueChanged(HardwareSensor* sensor, unsigned char 
         WashingMachineStatus stats;
         switch(value){
             case 0:
-                stats = WashingMachineStatus.idle;
+                stats = WashingMachineStatus::idle;
                 break;
             case 1:
-                stats = WashingMachineStatus.running;
+                stats = WashingMachineStatus::running;
                 break;
             case 2:
-                stats = WashingMachineStatus.stopped;
+                stats = WashingMachineStatus::stopped;
                 break;
             case 3:
-                stats = WashingMachineStatus.halted;
+                stats = WashingMachineStatus::halted;
                 break;
             case 4:
-                stats = WashingMachineStatus.failed;
+                stats = WashingMachineStatus::failed;
                 break;
         }
 
@@ -112,7 +121,7 @@ SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
     writer.String("washingProgramList");
     writer.Key("washingPrograms");
     writer.StartArray();
-    for(int i = 0; i < washingPrograms.size(); i++)
+    for(unsigned int i = 0; i < washingPrograms.size(); i++)
     {
         WashingProgram* wp = washingPrograms.at(i);
         writer.StartObject();
@@ -120,7 +129,7 @@ SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
         writer.String(wp->dicription.c_str());
         writer.Key("steps");
         writer.StartArray();
-        for (unsigned int i = 0; i < wp->getTotalSteps(); i++) {
+        for (unsigned int i = 0; i < wp->getStepSize(); i++) {
             WashingProgramStep step = wp->getStep(i);
             writer.StartObject();
             writer.Key("degrees");

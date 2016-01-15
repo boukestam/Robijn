@@ -32,8 +32,8 @@ public:
 private:
     SocketMessage* createSocketMessageFromWashingList();
 
-    SocketServer* socketServer = new SocketServer(8081);
-    WebServer* webServer = new WebServer(80, "/www");
+    WebServer* webServer = new WebServer(8080, "www/"); // Starts the WebServer on its own thread (.detach)
+    SocketServer* socketServer = new SocketServer(8081); // Starts the SocketServer on its own thread (.detach)
 
 	WashingProgramController* washingProgramController;
 

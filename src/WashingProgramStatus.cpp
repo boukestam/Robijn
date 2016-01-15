@@ -6,6 +6,8 @@ SocketMessage* WashingProgramStatus::toSocketMessage()
     rapidjson::StringBuffer s;
     rapidjson::Writer<rapidjson::StringBuffer> writer(s);
 
+	//int stats = stats;
+
     writer.StartObject();
         writer.Key("event");
         writer.String("statusUpdate");
@@ -20,7 +22,7 @@ SocketMessage* WashingProgramStatus::toSocketMessage()
             writer.Key("data");
             writer.StartObject();
                 writer.Key("status");
-                writer.Int(status);
+                writer.Uint(0);
                 writer.Key("currentDegrees");
                 writer.Uint(temperature);
                 writer.Key("currentRpm");

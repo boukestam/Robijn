@@ -31,9 +31,9 @@ private:
 	RotationController rotationController;
 	TemperatureController temperatureController;
 	
-	Door door;
-	SignalLed signalLed;
-	WashingMachine washingMachine;
+	//Door door;
+	//SignalLed signalLed;
+	//WashingMachine washingMachine;
 	
-	HardwareSensor washingMachineStatusSensor;
+	//HardwareSensor washingMachineStatusSensor;
 };

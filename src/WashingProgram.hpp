@@ -1,17 +1,16 @@
 #pragma once
 
 #include <vector>
-
+#include <iostream>
 #include "WashingProgramStep.hpp"
 
 class WashingProgram{
 public:
 	int getTotalDuration();
-	int getTotalSteps();
 	std::string dicription;
-	void addStep(WashingProgramStep step);
 	WashingProgramStep getStep(int index);
-
+	size_t getStepSize();
+	void addStep(WashingProgramStep step);
 private:
-	std::vector<WashingProgramStep> steps;
+	std::vector<WashingProgramStep> steps;	
 };
