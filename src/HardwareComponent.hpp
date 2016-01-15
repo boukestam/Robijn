@@ -44,6 +44,7 @@
 #define IDLE				0x02
 #define RUNNING				0x04
 #define STOPPED				0x08
+#define FAILED				0xFF
 
 #define OPENED				0x01
 #define CLOSED				0x02

@@ -5,10 +5,12 @@ SocketServer::SocketServer(int port) : port{port} {
     sendBuffer.reserve(bufferSize);     // Vector with 'bufferSize' elements
 
     multicaster = new Multicaster();
-    socketListener = new SocketListener(multicaster, this);
+    socketListener = new SocketListener(this);
 
     std::thread t(&SocketServer::run, this);
     t.detach();
+    std::thread t2(&SocketServer::runSendMessageHandler, this);
+    t2.detach();
 }
 
 SocketServer::~SocketServer() {
@@ -16,24 +18,20 @@ SocketServer::~SocketServer() {
     delete socketListener;
 }
 
-void SocketServer::sendMessage(SocketMessage* message) {
-    sendBuffer.push_back(message);
+bool SocketServer::receiveMessage(SocketMessage*& message) {
+    std::lock_guard<std::mutex> lock(receiveMutex);
+    if (receiveBuffer.size() > 0) {
+        message = receiveBuffer.front(); // Make message point to message from vector (will have to be deleted on receiving side when done)
+        receiveBuffer.erase(receiveBuffer.begin()); // Remove from vector
+        return true;
+    }
+
+    return false;
 }
 
-bool SocketServer::receiveMessage(SocketMessage* message) {
-    receiveBuffer.push_back(message);
-    std::cout << message->getJSONString() << std::endl;
-    std::string eventKey("event");
-    std::string event = message->getValue<std::string>(eventKey);
-    if (event == "statusUpdate") {
-        std::cout << "statusUpdate" << std::endl;
-        message->generateStatusUpdateMessage();
-    } else if (event == "getWashingPrograms") {
-        message->generateWashingProgramsMessage();
-    }
-    std::cout << message->getJSONString() << std::endl;
-    multicaster->broadcast(message->getJSONString());
-    return true;
+void SocketServer::sendMessage(SocketMessage* message) {
+    std::lock_guard<std::mutex> lock(sendMutex);
+    sendBuffer.push_back(message);
 }
 
 void SocketServer::run() {
@@ -48,5 +46,20 @@ void SocketServer::run() {
         }
     } catch (SocketException &e) {
         std::cerr << e.what() << std::endl; // Report errors to the console
+    }
+}
+
+void SocketServer::runSendMessageHandler() {
+    for (;;) {
+        sendMutex.lock();
+        if (sendBuffer.size() > 0) {
+            SocketMessage* message = sendBuffer.front(); // Get Message
+            multicaster->broadcast(message->getJSONString()); // Send Message
+            sendBuffer.erase(sendBuffer.begin()); // Delete from vector
+            delete message; // Free space
+        }
+        sendMutex.unlock();
+
+        usleep(sendMessageHandlerSleepTime);
     }
 }

@@ -45,15 +45,15 @@ void WebInterfaceController::main()
 
         if(msgReceived){
             std::string eventKey("event");
-            std::string event = msg->getValue<std::string>(eventKey);
-            std::string idkey("id");
+            rapidjson::Document& document = msg->getJSON();
+            rapidjson::Value& val = document["event"];
+			std::string event = val.GetString();
 
             // check events
             if(event == "startWashingProgram"){
                 // start washing program
                 // Using a reference for consecutive access is handy and faster.
-                WashingProgram* wp = new WashingProgram;
-                rapidjson::Document& document = msg->getJSON();
+                WashingProgram wp;
                 rapidjson::Value& stp = document["steps"];
                 for (rapidjson::SizeType i = 0; i < stp.Size(); i++){ // Uses SizeType instead of size_t
                     WashingProgramStep step;
@@ -61,7 +61,7 @@ void WebInterfaceController::main()
                     step.rotationSpeed = stp[i]["rpm"].GetInt();
                     step.waterLevel = stp[i]["water"].GetInt();
                     step.duration = stp[i]["time"].GetInt();
-                    wp->addStep(step);
+                    wp.addStep(step);
                 }
 
                 washingProgramController->startWashingProgram(wp);
