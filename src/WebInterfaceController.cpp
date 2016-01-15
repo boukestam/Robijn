@@ -35,7 +35,7 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
     wp->addStep(step);
     wp->addStep(step);
     wp->addStep(step);
-
+	wp->dicription = "Was programma 1";
     washingPrograms.push_back(wp);
 }
 
@@ -62,8 +62,30 @@ void WebInterfaceController::main()
             if(event == "startWashingProgram"){
                 // start washing program
                 // Using a reference for consecutive access is handy and faster.
+				const rapidjson::Value& a = document["washingProgram"];
+				std::cout << "Done 1" << std::endl;
+				const rapidjson::Value& jsonsteps = a["steps"];
+std::cout << "Done 2" << std::endl;
+				// rapidjson uses SizeType instead of size_t.
+				for (rapidjson::SizeType i = 0; i < jsonsteps.Size(); i++)
+				{
+					std::cout << "starting " << i + 3 << std::endl;
+					const rapidjson::Value& setting = jsonsteps[i];
+
+
+					printf("%s \n",setting["degrees"].GetString());
+					printf("%s \n",setting["rpm"].GetString());
+					printf("%s \n",setting["water"].GetString());
+					printf("%s \n",setting["time"].GetString());
+					std::cout << "starting " << i + 3 << std::endl;
+				}  
+
+/*
                 WashingProgram wp;
-                rapidjson::Value& stp = document["steps"];
+				rapidjson::Value& washingProgram = document["washingProgram"];
+				std::cout << "Done finding washinProgram node" << std::endl;
+                rapidjson::Value& stp = washingProgram["steps"];
+				std::cout << "Done finding steps node" << std::endl;
                 for (rapidjson::SizeType i = 0; i < stp.Size(); i++){ // Uses SizeType instead of size_t
                     WashingProgramStep step;
                     step.temperature = stp[i]["degrees"].GetInt();
@@ -72,8 +94,8 @@ void WebInterfaceController::main()
                     step.duration = stp[i]["time"].GetInt();
                     wp.addStep(step);
                 }
-
-                washingProgramController->startWashingProgram(wp);
+*/
+                //washingProgramController->startWashingProgram(wp);
             } else if(event == "stopWashingProgram") {
                 // Stop current washing program
                 washingProgramController->stopWashingProgram();

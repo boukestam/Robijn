@@ -107,7 +107,6 @@ $( document ).ready(function() {
         
         for(var i = 0; i < steps; i++) {          
             context.fillStyle = textColor;
-            
             if(i < steps - 1){
                 context.fillText("stap " + (i + 1), margin + dist * i, centerY - radius * 2);
             } else {
@@ -144,6 +143,7 @@ $( document ).ready(function() {
                     context.stroke();
                 }
             }
+        
             context.beginPath();
             context.arc(margin + dist * i, centerY, radius, 0, 2 * Math.PI, false);
             context.fill();
@@ -247,40 +247,34 @@ $( document ).ready(function() {
     }
     
     $( "#start" ).click(function() {
+        
         var msg = {
             "event":"startWashingProgram",
             "id": $("#wasSelector").selectedIndex,
             "washingProgram":{
                     "steps":[
                     {
-                        "settings":[
-                                {"degrees": $( "#degreeSelector option:selected" ).text()},
-                                {"rpm": $( "#rpmSelector option:selected" ).text()},
-                                {"water": $( "#waterSelector option:selected" ).text()},
-                                {"time": $( "#timeSelector option:selected" ).text()}
-                            ]
-                    }, {
-                        "settings":[
-                            {"degrees": $( "#degreeSelector option:selected" ).text()},
-                            {"rpm": $( "#rpmSelector option:selected" ).text()},
-                            {"water": $( "#waterSelector option:selected" ).text()},
-                            {"time": $( "#timeSelector option:selected" ).text()}
-                    ]}, {
-                        "settings":[
-                                {"degrees": $( "#degreeSelector option:selected" ).text()},
-                                {"rpm": $( "#rpmSelector option:selected" ).text()},
-                                {"water": $( "#waterSelector option:selected" ).text()},
-                                {"time": $( "#timeSelector option:selected" ).text()}
-                    ]}, {
-                        "settings":[
-                                {"degrees": $( "#degreeSelector option:selected" ).text()},
-                                {"rpm": $( "#rpmSelector option:selected" ).text()},
-                                {"water": $( "#waterSelector option:selected" ).text()},
-                                {"time": $( "#timeSelector option:selected" ).text()}
-                            ]
-                    },
-                    
-                ]},
+						"degrees": $( "#degreeSelector option:selected" ).text(),
+                    	"rpm": $( "#rpmSelector option:selected" ).text(),
+                        "water": $( "#waterSelector option:selected" ).text(),
+                        "time": $( "#timeSelector option:selected" ).text()
+                    },{
+						"degrees": $( "#degreeSelector option:selected" ).text(),
+                    	"rpm": $( "#rpmSelector option:selected" ).text(),
+                        "water": $( "#waterSelector option:selected" ).text(),
+                        "time": $( "#timeSelector option:selected" ).text()
+                    },{
+						"degrees": $( "#degreeSelector option:selected" ).text(),
+                    	"rpm": $( "#rpmSelector option:selected" ).text(),
+                        "water": $( "#waterSelector option:selected" ).text(),
+                        "time": $( "#timeSelector option:selected" ).text()
+                    },{
+						"degrees": $( "#degreeSelector option:selected" ).text(),
+                    	"rpm": $( "#rpmSelector option:selected" ).text(),
+                        "water": $( "#waterSelector option:selected" ).text(),
+                        "time": $( "#timeSelector option:selected" ).text()
+                    }                 
+                ]}
             };
         ws.send(JSON.stringify(msg));
         $('#start').hide();

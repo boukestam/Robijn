@@ -55,10 +55,12 @@ void SocketServer::runSendMessageHandler() {
     for (;;) {
         sendMutex.lock();
         if (sendBuffer.size() > 0) {
+			std::cout << "Start sending first msg from " << sendBuffer.size() << std::endl;
             SocketMessage* message = sendBuffer.front(); // Get Message
             multicaster->broadcast(message->getJSONString()); // Send Message
             sendBuffer.erase(sendBuffer.begin()); // Delete from vector
             delete message; // Free space
+			std::cout << "Done sending buffer!" << std::endl;
         }
         sendMutex.unlock();
 
