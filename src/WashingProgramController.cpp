@@ -15,9 +15,10 @@ WashingProgramController::WashingProgramController(
 	door(door),
 	signalLed(signalLed),
 	washingMachine(washingMachine),
-	washingMachineStatusSensor(washingMachineStatusSensor)
+	washingMachineStatusSensor(washingMachineStatusSensor),
+	updateStatusSensorTimer(this, "updateTimer")
 {
-	//updateStatusSensorTimer(this, "updateTimer");
+	
 }
 
 
@@ -29,7 +30,7 @@ void WashingProgramController::startWashingProgram(WashingProgram program){
 	wait(updateStatusSensorTimer);
 	if(washingMachineStatus == IDLE){
 		scheduler = new WashingProgramScheduler();
-		scheduler->startWashingProgram(program);
+		scheduler->start(program);
 	}
 	else{
 		std::cout << "Status is: " << washingMachineStatus << ". Did not start washing program." << std::endl;
@@ -43,7 +44,7 @@ void WashingProgramController::stopWashingProgram(){
 	updateStatusSensorTimer.set(50);
 	wait(updateStatusSensorTimer);
 	if(washingMachineStatus == STOPPED){
-		scheduler->stopWashingProgram();
+		scheduler->stop();
 	}
 	else{
 		std::cout << "Washing Machine not stopped. Status: " << washingMachineStatus << std::endl;

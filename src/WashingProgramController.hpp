@@ -86,6 +86,6 @@ private:
 	HardwareSensor* washingMachineStatusSensor;
 	
 	unsigned char washingMachineStatus;
-	RTOS::timer updateStatusSensorTimer;
+	RTOS::timer updateStatusSensorTimer ;
 };
 

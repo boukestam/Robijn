@@ -20,8 +20,8 @@
 #include "WaterLevelController.hpp"
 
 int main(){
+	/*UARTInterface* uartInterface = new UARTInterface();
 
-	UARTInterface* uartInterface = new UARTInterface();
 
 	Door* door = new Door(uartInterface);
 	
@@ -58,7 +58,7 @@ int main(){
 
 	
 	
-	RTOS::run();
+	RTOS::run();*/
 	
 	return 0;
 }
