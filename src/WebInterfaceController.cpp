@@ -79,8 +79,26 @@ void WebInterfaceController::valueChanged(HardwareSensor* sensor, unsigned char 
     } else if (sensor == rotationSensor) {
         currentWashingProgramStatus->rotationSpeed = value;
     } else if (sensor == washingMachineStatusSensor) {
-        // TODO(yorick) Update status
-        //currentWashingProgramStatus->status = value;
+        WashingMachineStatus stats;
+        switch(value){
+            case 0:
+                stats = WashingMachineStatus.idle;
+                break;
+            case 1:
+                stats = WashingMachineStatus.running;
+                break;
+            case 2:
+                stats = WashingMachineStatus.stopped;
+                break;
+            case 3:
+                stats = WashingMachineStatus.halted;
+                break;
+            case 4:
+                stats = WashingMachineStatus.failed;
+                break;
+        }
+
+        currentWashingProgramStatus->status = stats;
     }
 }
 
