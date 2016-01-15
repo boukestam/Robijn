@@ -29,8 +29,8 @@ void WashingProgramController::startWashingProgram(WashingProgram program){
 	updateStatusSensorTimer.set(50);
 	wait(updateStatusSensorTimer);
 	if(washingMachineStatus == IDLE){
-		scheduler = new WashingProgramScheduler();
-		scheduler->start(program);
+		scheduler = WashingProgramScheduler();
+		scheduler.start(program);
 	}
 	else{
 		std::cout << "Status is: " << washingMachineStatus << ". Did not start washing program." << std::endl;
@@ -44,7 +44,7 @@ void WashingProgramController::stopWashingProgram(){
 	updateStatusSensorTimer.set(50);
 	wait(updateStatusSensorTimer);
 	if(washingMachineStatus == STOPPED){
-		scheduler->stop();
+		scheduler.stop();
 	}
 	else{
 		std::cout << "Washing Machine not stopped. Status: " << washingMachineStatus << std::endl;
@@ -61,18 +61,18 @@ void WashingProgramController::main(){
 	RTOS::timer washingProgramTimer(this, "stepTimer");
 	while(true){
 		if(washingMachineStatus == RUNNING){
-			if(scheduler->isRunning()){
-				if(scheduler->isPaused()){
-					scheduler->unpause();
+			if(scheduler.isRunning()){
+				if(scheduler.isPaused()){
+					scheduler.unpause();
 				}
-				waterLevelController->setGoalState(scheduler->getCurrentStep().waterLevel);
-				temperatureController->setGoalState(scheduler->getCurrentStep().temperature);
-				rotationController->setGoalState(scheduler->getCurrentStep().rotationSpeed);
+				waterLevelController->setGoalState(scheduler.getCurrentStep().waterLevel);
+				temperatureController->setGoalState(scheduler.getCurrentStep().temperature);
+				rotationController->setGoalState(scheduler.getCurrentStep().rotationSpeed);
 			}
-			scheduler->update();
+			scheduler.update();
 		}
 		else if(washingMachineStatus == FAILED){
-			scheduler->pause();
+			scheduler.pause();
 		}
 		else{
 			std::cout << "Washing Machine not running. Status: " << washingMachineStatus << std::endl;

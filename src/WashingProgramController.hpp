@@ -73,7 +73,7 @@ public:
  */
 	void valueChanged(HardwareSensor* sensor, unsigned char value);
 private:
-	WashingProgramScheduler* scheduler;
+	WashingProgramScheduler scheduler;
 	
 	WaterLevelController* waterLevelController;
 	RotationController* rotationController;
