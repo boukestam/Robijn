@@ -8,11 +8,15 @@ public:
 	int rotationSpeed;
 	int waterLevel;
 	int temperature;
-	
+
 	int timeLeft;
 	int stepTimeLeft;
-	
+	int currentStep;
+
+	int totalSteps;
+	int totalSteptime;
+
 	WashingMachineStatus status;
-	
-	SocketMessage toSocketMessage();
+
+	SocketMessage* toSocketMessage();
 };

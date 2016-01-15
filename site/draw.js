@@ -287,7 +287,7 @@ $( document ).ready(function() {
                     
                 ]},
             };
-        ws.send(msg);
+        ws.send(JSON.stringify(msg));
         $('#start').hide();
         $('#wasSelector').hide();
         $('#stop').show();
