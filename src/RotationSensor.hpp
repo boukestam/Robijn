@@ -4,9 +4,8 @@
 
 class RotationSensor: public HardwareSensor{
 public:
+	RotationSensor(UARTInterface* uartInterface);
+	
 	void update() override;
 	void responseReceived(UARTMessage response) override;
-	
-private:
-	unsigned char getRotation();
 };

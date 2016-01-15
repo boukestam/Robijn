@@ -4,8 +4,8 @@
 
 class WashingMachine: public HardwareComponent{
 public:
+	WashingMachine(UARTInterface* uartInterface);
+	
 	void start();
 	void stop();
-	
-	void responseReceived(UARTMessage response) override;
 };

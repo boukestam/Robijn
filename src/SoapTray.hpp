@@ -4,6 +4,8 @@
 
 class SoapTray: public HardwareComponent{
 public:
+	SoapTray(UARTInterface* uartInterface);
+	
 	void open();
 	void close();
 };

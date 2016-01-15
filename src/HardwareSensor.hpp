@@ -7,6 +7,8 @@
 
 class HardwareSensor: public HardwareComponent{
 public:
+	HardwareSensor(UARTInterface* uartInterface);
+
 	virtual void update();
 	void addListener(HardwareListener* listener);
 	
@@ -15,5 +17,5 @@ protected:
 	
 private:
 	std::vector<HardwareListener*> listeners;
-	unsigned char previousValue;
+	unsigned char previousValue = 0;
 };
