@@ -15,16 +15,11 @@ public:
 	~SocketServer();
 
 	void sendMessage(SocketMessage* message);
-	bool receiveMessage(SocketMessage* message);
-
-	SocketMessage* getFirstSendMessage();
-	void deleteFirstSendMessage();
-
-	SocketMessage* getFirstReceiveMessage();
-	void deleteFirstReceiveMessage();
+	bool receiveMessage(SocketMessage*& message);
 
 private:
     void run();
+    void runSendMessageHandler();
 
     Multicaster* multicaster;
     SocketListener* socketListener;
@@ -34,18 +29,26 @@ private:
     std::vector<SocketMessage*> receiveBuffer;
     std::vector<SocketMessage*> sendBuffer;
 
+    int sendMessageHandlerSleepTime = 200;
+    SocketMessage* localSendMessage;
+
     std::mutex receiveMutex;
     std::mutex sendMutex;
+
+    friend SocketListener;
 };
 
 class SocketListener : public WebSocketListener{
 public:
-    SocketListener(Multicaster* multicaster, SocketServer* socketServer) : multicaster{multicaster}, socketServer{socketServer} {}
+    SocketListener(SocketServer* socketServer) : socketServer{socketServer} {}
+    ~SocketListener() {}
 
 	void onTextMessage(const std::string& s, WebSocket* ws){ // TODO: Parse json string and put it in the receiveBuffer
 		SocketMessage* message = new SocketMessage();
 		if (message->parseJSONString(s)) {
-            socketServer->receiveMessage(message);
+            socketServer->receiveMutex.lock();
+            socketServer->receiveBuffer.push_back(message);
+            socketServer->receiveMutex.unlock();
 		} else {
             std::cout << "Parsing failed" << std::endl;
 		}
@@ -53,11 +56,11 @@ public:
 	}
 
 	void onClose(WebSocket* ws){
-		multicaster->remove(ws);
+		socketServer->multicaster->remove(ws);
+
 		delete ws;
 	}
 
 private:
-    Multicaster* multicaster;
     SocketServer* socketServer;
 };

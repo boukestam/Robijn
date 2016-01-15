@@ -42,7 +42,7 @@ private:
 	bool closing;
 	void performHandshake() throw(WebSocketException, SocketException);
 	void processFrame() throw(WebSocketException, SocketException);
-	void handleConnection() ;
+	void handleConnection();
 	void sendClose(const char*, size_t) throw (SocketException);
 	void sendPong(const char*, size_t) throw (SocketException);
 };
