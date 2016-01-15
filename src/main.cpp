@@ -1,5 +1,7 @@
 #include "pRTOS.h"
 
+#include <iostream>
+
 #include "UARTInterface.hpp"
 #include "Door.hpp"
 #include "Heating.hpp"
@@ -20,8 +22,11 @@
 #include "WaterLevelController.hpp"
 
 int main(){
-	/*UARTInterface* uartInterface = new UARTInterface();
-
+	
+	std::cout << "Came here";
+	
+	UARTInterface* uartInterface = new UARTInterface();
+	
 
 	Door* door = new Door(uartInterface);
 	
@@ -46,19 +51,19 @@ int main(){
 	TemperatureController* temperatureController = new TemperatureController(heating, temperatureSensor);
 	WaterLevelController* waterLevelController = new WaterLevelController(pump, tap, waterLevelSensor);
 	
-
+	
 		WashingProgramController* washingProgramController = new WashingProgramController(waterLevelController, rotationController, temperatureController, door, led, washingMachine, washingMachineStatusSensor);
+
 	WebInterfaceController* webInterfaceController = new WebInterfaceController(washingProgramController,
 										    temperatureSensor,
 										    waterLevelSensor,
 										    rotationSensor,
 										    washingMachineStatusSensor);
 	
+	
 
-
 	
 	
-	RTOS::run();*/
-	
+	RTOS::run();
 	return 0;
 }

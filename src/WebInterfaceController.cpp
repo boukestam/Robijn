@@ -4,7 +4,8 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
                             HardwareSensor* temperatureSensor,
                             HardwareSensor* waterLevelSensor,
                             HardwareSensor* rotationSensor,
-                            HardwareSensor* washingMachineStatusSensor)
+                            HardwareSensor* washingMachineStatusSensor):
+	task(3, "webInterfaceController")
 {
     this->washingProgramController = washingProgramController;
 
@@ -19,16 +20,18 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
 
     this->washingMachineStatusSensor = washingMachineStatusSensor;
     this->washingMachineStatusSensor->addListener(this);
+    
+    this->currentWashingProgramStatus = new WashingProgramStatus();
 
     // TODO(Yorick): Load washing programs from file
-
+	
     WashingProgramStep step;
     step.duration = 100;
     step.rotationSpeed = 1200;
     step.temperature = 45;
     step.waterLevel = 80;
 
-    WashingProgram* wp;
+    WashingProgram* wp = new WashingProgram();
     wp->addStep(step);
     wp->addStep(step);
     wp->addStep(step);
@@ -44,10 +47,16 @@ void WebInterfaceController::main()
         bool msgReceived = socketServer->receiveMessage(msg);
 
         if(msgReceived){
+        	std::cout << "Web interface received message" << std::endl;
+        
             std::string eventKey("event");
             rapidjson::Document& document = msg->getJSON();
             rapidjson::Value& val = document["event"];
 			std::string event = val.GetString();
+			
+			std::cout << "Web interface after json event get" << std::endl;
+			
+			std::cout << "Event type: " << event << std::endl;
 
             // check events
             if(event == "startWashingProgram"){
@@ -70,11 +79,16 @@ void WebInterfaceController::main()
                 washingProgramController->stopWashingProgram();
             } else if(event == "statusUpdate"){
                 // Get data parse to msg and send back
-                socketServer->sendMessage(currentWashingProgramStatus->toSocketMessage());
-            } else if(event == "washingProgramList"){
+                std::cout << "Before send message call" << std::endl;
+                SocketMessage* msg2 = currentWashingProgramStatus->toSocketMessage();
+                std::cout << "After getting message" << std::endl;
+                socketServer->sendMessage(msg2);
+            } else if(event == "getWashingPrograms"){
                 // Show washing program list
                 socketServer->sendMessage(createSocketMessageFromWashingList());
             }
+            
+            std::cout << "Web interface processed message" << std::endl;
         }
     }
 }
@@ -129,8 +143,8 @@ SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
         writer.String(wp->dicription.c_str());
         writer.Key("steps");
         writer.StartArray();
-        for (unsigned int i = 0; i < wp->getStepSize(); i++) {
-            WashingProgramStep step = wp->getStep(i);
+        for (unsigned int j = 0; j < wp->getStepSize(); j++) {
+            WashingProgramStep step = wp->getStep(j);
             writer.StartObject();
             writer.Key("degrees");
             writer.Uint(step.temperature);
@@ -148,7 +162,7 @@ SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
     writer.EndArray();
     writer.EndObject();
 
-    SocketMessage* msg;
+    SocketMessage* msg = new SocketMessage();
     msg->parseJSONString(s.GetString());
     return msg;
 }

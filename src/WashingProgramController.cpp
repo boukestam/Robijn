@@ -9,6 +9,7 @@ WashingProgramController::WashingProgramController(
 	WashingMachine* washingMachine,
 	HardwareSensor* washingMachineStatusSensor):
 	
+	RTOS::task(2, "washingProgramController"),
 	waterLevelController(waterLevelController),
 	rotationController(rotationController),
 	temperatureController(temperatureController),

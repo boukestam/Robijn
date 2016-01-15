@@ -14,6 +14,8 @@
  */
 class HardwareController: public RTOS::task, public HardwareListener{
 public:
+	HardwareController();
+
 /**
  * @brief Main method derrived from RTOS::task
  */

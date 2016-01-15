@@ -1,5 +1,9 @@
 #include "HardwareController.hpp"
 
+HardwareController::HardwareController():
+	RTOS::task(1, "hardwareController")
+{}
+
 void HardwareController::main(){
 	
 }
