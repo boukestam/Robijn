@@ -18,12 +18,6 @@ WashingProgramStep WashingProgramScheduler::getCurrentStep(){
 }
 
 bool WashingProgramScheduler::isRunning(){
-	if(running){
-		std::cout << "WashingProgram is currently still running";
-	}
-	else{
-		std::cout << "WashingProgram is currently not running";
-	}
 	return running;
 }
 

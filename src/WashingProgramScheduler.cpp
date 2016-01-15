@@ -1,6 +1,6 @@
 #include "WashingProgramScheduler.hpp"
 
-void WashingProgramScheduler::startWashingProgram(WashingProgram program){	
+void WashingProgramScheduler::start(WashingProgram program){	
 	running = 1;
 	currentStepIndex = 0;
 	stepDuration = currentWashingProgram.getStep(currentStepIndex).duration;
@@ -10,6 +10,10 @@ void WashingProgramScheduler::startWashingProgram(WashingProgram program){
 	time(&stepStartTime);
 	
 	std::cout << "Started washing program at" << std::ctime(&programStartTime);	
+}
+
+void WashingProgramScheduler::stop(){
+	running = false;
 }
 
 WashingProgramStep WashingProgramScheduler::getCurrentStep(){

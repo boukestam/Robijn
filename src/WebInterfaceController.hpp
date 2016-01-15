@@ -13,18 +13,18 @@
 
 class WebInterfaceController: public RTOS::task{
 public:
-	void main() override;
-	
+	//void main() override;
+
 private:
 	SocketServer socketServer;
 	WebServer webServer;
-	
+
 	WashingProgramController washingProgramController;
-	
+
 	HardwareSensor temperatureSensor;
 	HardwareSensor waterLevelSensor;
 	HardwareSensor rotationSensor;
 	HardwareSensor washingMachineStatusSensor;
-	
+
 	WashingProgramStatus currentWashingProgramStatus;
 };
