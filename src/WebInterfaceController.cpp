@@ -5,7 +5,8 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
                             HardwareSensor* waterLevelSensor,
                             HardwareSensor* rotationSensor,
                             HardwareSensor* washingMachineStatusSensor):
-	task(3, "webInterfaceController")
+	task(3, "webInterfaceController"),
+	sleepTimer(this, "webInterfaceController")
 {
     this->washingProgramController = washingProgramController;
 
@@ -47,55 +48,32 @@ void WebInterfaceController::main()
         bool msgReceived = socketServer->receiveMessage(msg);
 
         if(msgReceived){
-        	std::cout << "Web interface received message" << std::endl;
-        
             std::string eventKey("event");
             rapidjson::Document& document = msg->getJSON();
             rapidjson::Value& val = document["event"];
 			std::string event = val.GetString();
-			
-			std::cout << "Web interface after json event get" << std::endl;
-			
-			std::cout << "Event type: " << event << std::endl;
-
+		
             // check events
             if(event == "startWashingProgram"){
                 // start washing program
                 // Using a reference for consecutive access is handy and faster.
 				const rapidjson::Value& a = document["washingProgram"];
-				std::cout << "Done 1" << std::endl;
 				const rapidjson::Value& jsonsteps = a["steps"];
-std::cout << "Done 2" << std::endl;
+
+				WashingProgram wp;
 				// rapidjson uses SizeType instead of size_t.
-				for (rapidjson::SizeType i = 0; i < jsonsteps.Size(); i++)
-				{
-					std::cout << "starting " << i + 3 << std::endl;
+				for (rapidjson::SizeType i = 0; i < jsonsteps.Size(); i++){
 					const rapidjson::Value& setting = jsonsteps[i];
 
-
-					printf("%s \n",setting["degrees"].GetString());
-					printf("%s \n",setting["rpm"].GetString());
-					printf("%s \n",setting["water"].GetString());
-					printf("%s \n",setting["time"].GetString());
-					std::cout << "starting " << i + 3 << std::endl;
-				}  
-
-/*
-                WashingProgram wp;
-				rapidjson::Value& washingProgram = document["washingProgram"];
-				std::cout << "Done finding washinProgram node" << std::endl;
-                rapidjson::Value& stp = washingProgram["steps"];
-				std::cout << "Done finding steps node" << std::endl;
-                for (rapidjson::SizeType i = 0; i < stp.Size(); i++){ // Uses SizeType instead of size_t
-                    WashingProgramStep step;
-                    step.temperature = stp[i]["degrees"].GetInt();
-                    step.rotationSpeed = stp[i]["rpm"].GetInt();
-                    step.waterLevel = stp[i]["water"].GetInt();
-                    step.duration = stp[i]["time"].GetInt();
+					WashingProgramStep step;
+                    step.temperature = stoi(setting["degrees"].GetString());
+                    step.rotationSpeed = stoi(setting["rpm"].GetString());
+                    step.waterLevel = stoi(setting["water"].GetString());
+                    step.duration = stoi(setting["time"].GetString());
                     wp.addStep(step);
-                }
-*/
-                //washingProgramController->startWashingProgram(wp);
+				}  
+				washingProgramController->startWashingProgram(wp);
+
             } else if(event == "stopWashingProgram") {
                 // Stop current washing program
                 washingProgramController->stopWashingProgram();
@@ -111,6 +89,8 @@ std::cout << "Done 2" << std::endl;
             }
             
             std::cout << "Web interface processed message" << std::endl;
+			sleepTimer.set(1000 MS);
+			wait(sleepTimer); 
         }
     }
 }
@@ -161,7 +141,7 @@ SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
     {
         WashingProgram* wp = washingPrograms.at(i);
         writer.StartObject();
-        writer.Key("discription");
+        writer.Key("description");
         writer.String(wp->dicription.c_str());
         writer.Key("steps");
         writer.StartArray();
