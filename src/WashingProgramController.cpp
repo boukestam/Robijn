@@ -79,7 +79,7 @@ void WashingProgramController::main(){
 			std::cout << "Washing Machine not running. Status: " << washingMachineStatus << std::endl;
 		}
 		washingMachineStatusSensor->update();
-		washingProgramTimer.set(1000);
+		washingProgramTimer.set(1000 MS);
 		wait(washingProgramTimer);
 	}
 }

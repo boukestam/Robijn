@@ -15,7 +15,7 @@ void TemperatureController::main(){
 			heating->on();
 		}
 		temperatureSensor->update();
-		temperatureTimer.set(500);
+		temperatureTimer.set(500 MS);
 		wait(temperatureTimer);
 	}
 }
