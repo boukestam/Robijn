@@ -10,7 +10,7 @@ void RotationController::main(){
 	while(true){
 		motor->setRotation(goalState);
 		rotationSensor->update();
-		rotationTimer.set(500);
+		rotationTimer.set(500 MS);
 		wait(rotationTimer);
 	}
 }

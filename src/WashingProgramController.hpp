@@ -59,7 +59,7 @@ public:
  * @brief Starts a washing program
  * @param program The program to start
  */
-	void startWashingProgram(WashingProgram program);
+	void startWashingProgram(WashingProgram* program);
 	
 /**
  * @brief Stops current washing program
@@ -73,7 +73,7 @@ public:
  */
 	void valueChanged(HardwareSensor* sensor, unsigned char value);
 private:
-	WashingProgramScheduler scheduler;
+	WashingProgramScheduler* scheduler;
 	
 	WaterLevelController* waterLevelController;
 	RotationController* rotationController;
@@ -88,5 +88,7 @@ private:
 	unsigned char washingMachineStatus;
 	RTOS::timer updateStatusSensorTimer;
 	RTOS::flag startFlag;
+	
+	bool hasStarted = false;
 };
 

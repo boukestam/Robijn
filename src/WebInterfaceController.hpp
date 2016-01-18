@@ -32,6 +32,8 @@ public:
 private:
     SocketMessage* createSocketMessageFromWashingList();
 
+	RTOS::timer sleepTimer;
+
     WebServer* webServer = new WebServer(8080, "www/"); // Starts the WebServer on its own thread (.detach)
     SocketServer* socketServer = new SocketServer(8081); // Starts the SocketServer on its own thread (.detach)
 

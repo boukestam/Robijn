@@ -23,13 +23,17 @@ WashingProgramController::WashingProgramController(
 
 
 void WashingProgramController::startWashingProgram(WashingProgram* program){
-	scheduler = WashingProgramScheduler(program);
+	if(!hasStarted){
+		scheduler = new WashingProgramScheduler(program);
 
-	startFlag.set();
+		startFlag.set();
+	}
 }
 
 void WashingProgramController::stopWashingProgram(){
-	scheduler.stop();
+	if(hasStarted){
+		scheduler->stop();
+	}
 }
 
 void WashingProgramController::valueChanged(HardwareSensor* sensor, unsigned char value){
@@ -43,43 +47,53 @@ void WashingProgramController::main(){
 	
 	while(true){
 		wait(startFlag);
+		
+		hasStarted = true;
 	
 		door->lock();
 		washingMachine->start();
 	
-		scheduler.start();
+		scheduler->start();
 		
-		bool started = false;
+		bool startedRunning = false;
 	
 		while(true){
 			if(washingMachineStatus == RUNNING){
-				started = true;
-				
-				if(scheduler.isRunning()){
-					if(scheduler.isPaused()){
-						scheduler.unpause();
-					}
-				
-					waterLevelController->setGoalState(scheduler.getCurrentStep().waterLevel);
-					temperatureController->setGoalState(scheduler.getCurrentStep().temperature);
-					rotationController->setGoalState(scheduler.getCurrentStep().rotationSpeed);
+				if(!startedRunning){
+					startedRunning = true;
 				}
 				
-				scheduler.update();
+				if(scheduler->isRunning()){
+					if(scheduler->isPaused()){
+						scheduler->unpause();
+					}
+					
+					WashingProgramStep currentStep = scheduler->getCurrentStep();
+				
+					waterLevelController->setGoalState(currentStep.waterLevel);
+					temperatureController->setGoalState(currentStep.temperature);
+					rotationController->setGoalState(currentStep.rotationSpeed);
+				}
+				
+				scheduler->update();
 			}else if(washingMachineStatus == FAILED){
-				scheduler.pause();
+				scheduler->pause();
 			}else{
-				if(started){
+				if(startedRunning){
 					break;
 				}
 			}
 			
 			washingMachineStatusSensor->update();
-			washingProgramTimer.set(1000);
+			washingProgramTimer.set(1000 MS);
 			wait(washingProgramTimer);
 		}
 		
 		washingMachine->stop();
 		door->unlock();
+		
+		delete scheduler;
+		
+		hasStarted = false;
 	}
 }

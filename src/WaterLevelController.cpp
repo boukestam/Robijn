@@ -22,7 +22,7 @@ void WaterLevelController::main(){
 			pump->off();
 		}
 		waterLevelSensor->update();
-		waterTimer.set(500);
+		waterTimer.set(500 MS);
 		wait(waterTimer);
 	}
 }
