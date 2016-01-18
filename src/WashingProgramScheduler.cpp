@@ -1,6 +1,10 @@
 #include "WashingProgramScheduler.hpp"
 
-void WashingProgramScheduler::start(WashingProgram program){	
+WashingProgramScheduler::WashingProgramScheduler(WashingProgram* washingProgram):
+	currentWashingProgram(washingProgram)
+{}
+
+void WashingProgramScheduler::start(){	
 	running = 1;
 	currentStepIndex = 0;
 	

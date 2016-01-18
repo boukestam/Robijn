@@ -13,21 +13,19 @@
 */
 class WashingProgramScheduler{
 public:	
-<<<<<<< HEAD
-	void start(WashingProgram washingProgram);
-	void pause();
-	void unpause();
-	void stop();
-=======
+	WashingProgramScheduler(WashingProgram *washingProgram);
 
 	//! Starts the washing program
-	/*!
-	 Save the current time of system and also retrieve the duration of the first step of the washing program.
-	 Calling this function will set the currentStepIndex to 0
-	 \param washingProgram
-	*/
-	void startWashingProgram(WashingProgram washingProgram);
->>>>>>> development
+	void start();
+	
+	//! Stops the current washing program
+	void stop();
+	
+	//! Pauses the current washing program
+	void pause();
+	
+	//! Unpauses the current washing program
+	void unpause();
 	
 	//!Retrieve the current step of the washing program. 
 	/*!
@@ -52,7 +50,7 @@ public:
 	void update();
 	
 private:
-	WashingProgram currentWashingProgram;
+	WashingProgram* currentWashingProgram;
 	
 	time_t stepStartTime, stepStopTime;
 	time_t programStartTime;

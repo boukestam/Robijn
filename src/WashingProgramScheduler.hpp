@@ -13,8 +13,10 @@
 */
 class WashingProgramScheduler{
 public:	
+	WashingProgramScheduler(WashingProgram* washingProgram);
+
 	//! Starts the washing program
-	void start(WashingProgram washingProgram);
+	void start();
 	
 	//! Stops the current washing program
 	void stop();
