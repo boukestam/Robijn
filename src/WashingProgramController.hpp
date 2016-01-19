@@ -83,12 +83,11 @@ private:
 	TemperatureController* temperatureController;
 	
 	Door* door;
-	HardwareSensor* doorSensor;
 	SignalLed* signalLed;
 	WashingMachine* washingMachine;
-	SoapTray* soapTray;
-	
 	HardwareSensor* washingMachineStatusSensor;
+	SoapTray* soapTray;
+	HardwareSensor* doorSensor;
 	
 	unsigned char washingMachineStatus;
 	RTOS::flag startFlag;

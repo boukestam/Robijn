@@ -23,7 +23,7 @@ void UARTInterface::main(){
 		
 		UARTMessage message = sendBuffer.read();
 		
-		int writeStatus = serial.write((void *)&message.first, 2);
+		serial.write((void *)&message.first, 2);
 
 		serial.flush();
 				
@@ -33,7 +33,7 @@ void UARTInterface::main(){
 		}
 		
 		UARTMessage response;
-		int readStatus = serial.read((void *)&response.first, 2);
+		serial.read((void *)&response.first, 2);
 
 		serial.flush();
 
