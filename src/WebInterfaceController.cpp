@@ -123,11 +123,10 @@ void WebInterfaceController::main()
                 std::string password = document["password"].GetString();
                 handleVerification(name, password);
             }
-
-            std::cout << "Web interface processed message" << std::endl;
-			sleepTimer.set(1000 MS);
-			wait(sleepTimer);
         }
+
+	sleepTimer.set(1000 MS);
+	wait(sleepTimer);
     }
 }
 

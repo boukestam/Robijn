@@ -2,12 +2,18 @@
 
 #include "UARTListener.hpp"
 
+#include <iostream>
+
+#include <errno.h>
+#include <string.h>
+
 UARTInterface::UARTInterface(): 
 	RTOS::task(0, "uartInterface"),
 	sendBuffer(this, "sendBuffer"), 
 	replyTimer(this, "replyTimer")
 {
-	serial.open("/dev/ttyUSB0", 9600);
+	int status = serial.open("/dev/ttyAMA0", 9600);
+	std::cout << "Serial open status: " << status << std::endl;
 }
 
 UARTInterface::~UARTInterface(){
@@ -20,13 +26,20 @@ void UARTInterface::main(){
 		
 		UARTMessage message = sendBuffer.read();
 		
-		serial.write((void *)&message.first, 2);
-		
-		replyTimer.set(10 MS);
-		wait(replyTimer);
+		int writeStatus = serial.write((void *)&message.first, 2);
+
+		serial.flush();
+				
+		while(serial.peek() < 2){
+			replyTimer.set(10 MS);
+			wait(replyTimer);
+		}
 		
 		UARTMessage response;
-		serial.read((void *)&response.first, 2);
+		int readStatus = serial.read((void *)&response.first, 2);
+
+		serial.flush();
+
 		response.sender = message.sender;
 		
 		response.sender->responseReceived(response);

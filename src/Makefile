@@ -45,6 +45,26 @@ Door.o: /usr/include/_G_config.h /usr/include/wchar.h /usr/include/unistd.h
 Door.o: /usr/include/getopt.h libserial.h /usr/include/termios.h
 Door.o: /usr/include/string.h /usr/include/xlocale.h /usr/include/fcntl.h
 Door.o: /usr/include/time.h UARTMessage.hpp UARTListener.hpp
+DoorSensor.o: DoorSensor.hpp HardwareSensor.hpp HardwareComponent.hpp
+DoorSensor.o: UARTInterface.hpp pRTOS.h libfiber.h /usr/include/ucontext.h
+DoorSensor.o: /usr/include/features.h /usr/include/stdc-predef.h
+DoorSensor.o: /usr/include/stdlib.h /usr/include/alloca.h
+DoorSensor.o: /usr/include/stdio.h /usr/include/libio.h
+DoorSensor.o: /usr/include/_G_config.h /usr/include/wchar.h
+DoorSensor.o: /usr/include/unistd.h /usr/include/getopt.h libserial.h
+DoorSensor.o: /usr/include/termios.h /usr/include/string.h
+DoorSensor.o: /usr/include/xlocale.h /usr/include/fcntl.h /usr/include/time.h
+DoorSensor.o: UARTMessage.hpp UARTListener.hpp HardwareListener.hpp
+DoorSensor.o: HardwareSensor.hpp HardwareComponent.hpp UARTInterface.hpp
+DoorSensor.o: pRTOS.h libfiber.h /usr/include/ucontext.h
+DoorSensor.o: /usr/include/features.h /usr/include/stdc-predef.h
+DoorSensor.o: /usr/include/stdlib.h /usr/include/alloca.h
+DoorSensor.o: /usr/include/stdio.h /usr/include/libio.h
+DoorSensor.o: /usr/include/_G_config.h /usr/include/wchar.h
+DoorSensor.o: /usr/include/unistd.h /usr/include/getopt.h libserial.h
+DoorSensor.o: /usr/include/termios.h /usr/include/string.h
+DoorSensor.o: /usr/include/xlocale.h /usr/include/fcntl.h /usr/include/time.h
+DoorSensor.o: UARTMessage.hpp UARTListener.hpp HardwareListener.hpp
 HardwareComponent.o: HardwareComponent.hpp UARTInterface.hpp pRTOS.h
 HardwareComponent.o: libfiber.h /usr/include/ucontext.h
 HardwareComponent.o: /usr/include/features.h /usr/include/stdc-predef.h
@@ -443,6 +463,7 @@ UARTInterface.o: /usr/include/unistd.h /usr/include/getopt.h libserial.h
 UARTInterface.o: /usr/include/termios.h /usr/include/string.h
 UARTInterface.o: /usr/include/xlocale.h /usr/include/fcntl.h
 UARTInterface.o: /usr/include/time.h UARTMessage.hpp UARTListener.hpp
+UARTInterface.o: /usr/include/errno.h
 UARTInterface.o: pRTOS.h libfiber.h /usr/include/ucontext.h
 UARTInterface.o: /usr/include/features.h /usr/include/stdc-predef.h
 UARTInterface.o: /usr/include/stdlib.h /usr/include/alloca.h
@@ -520,7 +541,7 @@ WashingProgramController.o: /usr/include/fcntl.h UARTMessage.hpp
 WashingProgramController.o: UARTListener.hpp Pump.hpp Tap.hpp
 WashingProgramController.o: RotationController.hpp Motor.hpp
 WashingProgramController.o: TemperatureController.hpp Heating.hpp Door.hpp
-WashingProgramController.o: SignalLed.hpp WashingMachine.hpp
+WashingProgramController.o: SignalLed.hpp WashingMachine.hpp SoapTray.hpp
 WashingProgramController.o: pRTOS.h libfiber.h /usr/include/ucontext.h
 WashingProgramController.o: /usr/include/features.h
 WashingProgramController.o: /usr/include/stdc-predef.h /usr/include/stdlib.h
@@ -539,7 +560,7 @@ WashingProgramController.o: /usr/include/fcntl.h UARTMessage.hpp
 WashingProgramController.o: UARTListener.hpp Pump.hpp Tap.hpp
 WashingProgramController.o: RotationController.hpp Motor.hpp
 WashingProgramController.o: TemperatureController.hpp Heating.hpp Door.hpp
-WashingProgramController.o: SignalLed.hpp WashingMachine.hpp
+WashingProgramController.o: SignalLed.hpp WashingMachine.hpp SoapTray.hpp
 WashingProgram.o: WashingProgram.hpp WashingProgramStep.hpp
 WashingProgram.o: WashingProgramStep.hpp
 WashingProgramScheduler.o: WashingProgramScheduler.hpp /usr/include/time.h
@@ -678,7 +699,7 @@ WebInterfaceController.o: /usr/include/xlocale.h /usr/include/fcntl.h
 WebInterfaceController.o: UARTMessage.hpp UARTListener.hpp Pump.hpp Tap.hpp
 WebInterfaceController.o: RotationController.hpp Motor.hpp
 WebInterfaceController.o: TemperatureController.hpp Heating.hpp Door.hpp
-WebInterfaceController.o: SignalLed.hpp WashingMachine.hpp
+WebInterfaceController.o: SignalLed.hpp WashingMachine.hpp SoapTray.hpp
 WebInterfaceController.o: WashingProgramStatus.hpp WashingMachineStatus.hpp
 WebInterfaceController.o: pRTOS.h libfiber.h /usr/include/ucontext.h
 WebInterfaceController.o: /usr/include/features.h /usr/include/stdc-predef.h
@@ -717,7 +738,7 @@ WebInterfaceController.o: /usr/include/xlocale.h /usr/include/fcntl.h
 WebInterfaceController.o: UARTMessage.hpp UARTListener.hpp Pump.hpp Tap.hpp
 WebInterfaceController.o: RotationController.hpp Motor.hpp
 WebInterfaceController.o: TemperatureController.hpp Heating.hpp Door.hpp
-WebInterfaceController.o: SignalLed.hpp WashingMachine.hpp
+WebInterfaceController.o: SignalLed.hpp WashingMachine.hpp SoapTray.hpp
 WebInterfaceController.o: WashingProgramStatus.hpp WashingMachineStatus.hpp
 WebServer.o: WebServer.hpp PracticalSocket.h /usr/include/netdb.h
 WebServer.o: /usr/include/features.h /usr/include/stdc-predef.h

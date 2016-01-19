@@ -52,11 +52,12 @@ public:
 private:
 	WashingProgram* currentWashingProgram;
 	
-	time_t stepStartTime, stepStopTime;
-	time_t programStartTime;
+	time_t stepStartTime = 0;
+	time_t stepStopTime = 0;
+	time_t programStartTime = 0;
 
-	unsigned int currentStepIndex;
+	unsigned int currentStepIndex = 0;
 	
-	bool running;
-	bool paused;
+	bool running = false;
+	bool paused = false;
 };
