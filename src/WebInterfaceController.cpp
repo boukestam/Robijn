@@ -25,6 +25,10 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
     this->currentWashingProgramStatus = new WashingProgramStatus();
 
     // TODO(Yorick): Load washing programs from file
+
+	std::ifstream t("wasprograms.json");
+	std::stringstream buffer;
+	buffer << t.rdbuf();
 	
     WashingProgramStep step;
     step.duration = 100;
@@ -38,6 +42,33 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
     wp->addStep(step);
 	wp->dicription = "Was programma 1";
     washingPrograms.push_back(wp);
+}
+
+void WebInterfaceController::loadWashingPrograms()
+{
+	std::ifstream t("wasprograms.json");
+	std::stringstream buffer;
+	buffer << t.rdbuf();
+
+	rapidjson::Document& 
+	const rapidjson::Value& a = document["washingProgram"];
+	const rapidjson::Value& jsonsteps = a["steps"];
+
+	WashingProgram* wp = new WashingProgram();
+	
+	// rapidjson uses SizeType instead of size_t.
+	for (rapidjson::SizeType i = 0; i < jsonsteps.Size(); i++){
+		const rapidjson::Value& setting = jsonsteps[i];
+
+		WashingProgramStep step;
+		
+        step.temperature = stoi(setting["degrees"].GetString());
+        step.rotationSpeed = stoi(setting["rpm"].GetString());
+        step.waterLevel = stoi(setting["water"].GetString());
+        step.duration = stoi(setting["time"].GetString());
+        
+        wp->addStep(step);
+	}
 }
 
 void WebInterfaceController::main()

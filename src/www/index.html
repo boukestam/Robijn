@@ -11,87 +11,96 @@
 <div> 
     <img src="logo.jpg" alt="Logo">
 </div>
-    
-<!-- Body -->
-<canvas id="statusCanvas" height="200" style="border:1px solid #000000;">
-    
-</canvas>
-    
-    
-<fieldset id="infoBox">
-  <legend id="legenda">Was info</legend>
-    Was status: <a id="status">Running</a><br />
-    <label>Water niveau: <a id="water"> </a>% </label> 
-    <select id="waterSelector">
-        <option></option>
-        <option>10</option>
-        <option>20</option>
-        <option>30</option>
-        <option>40</option>
-        <option>50</option>
-        <option>60</option>
-        <option>70</option>
-        <option>80</option>
-        <option>90</option>
-        <option>100</option>
-    </select><br />
-    <label>RPM: <a id="rpm"> </a></label>
-    <select id="rpmSelector">
-        <option></option>
-        <option>100</option>
-        <option>200</option>
-        <option>300</option>
-        <option>400</option>
-        <option>500</option>
-        <option>600</option>
-        <option>700</option>
-        <option>800</option>
-        <option>900</option>
-        <option>1000</option>
-        <option>1100</option>
-        <option>1200</option>
-        <option>1300</option>
-        <option>1400</option>
-        <option>1500</option>
-        <option>1600</option>
-        <option>1700</option>
-        <option>1800</option>
-    </select><br />
-   <label> Temperatuur: <a id="temp"> </a> </label>
-    <select id="degreeSelector">
-        <option></option>
-        <option>10</option>
-        <option>20</option>
-        <option>30</option>
-        <option>40</option>
-        <option>50</option>
-        <option>60</option>
-        <option>70</option>
-        <option>80</option>
-        <option>90</option>
-        <option>100</option>
-    </select><br />
-    <label>loop tijd: <a id="time"> </a></label>
-    <select id="timeSelector">
-        <option></option>
-        <option>10</option>
-        <option>20</option>
-        <option>30</option>
-        <option>40</option>
-        <option>50</option>
-        <option>60</option>
-        <option>70</option>
-        <option>80</option>
-        <option>90</option>
-        <option>100</option>
-    </select><br />
-</fieldset>
-<!-- Als het draait -->
-<button id="stop" type="button">Stop!</button>
-<!-- Als het gestopt is -->
-<select id="wasSelector">
+<div id="login">
+Name: <input type="text" id="nameInput" /> <br/>
+Passcode: <input type="password" id="passInput" /><br />
+IP wasmachine: <input type="text" id="ipInput" /> poort: <input type="text" id="poortInput" value="8081" />
+		  <input type="button" value="verbind" id="subBtn" />
+</div>
+<div id="status">   
 
-</select>
-<button id="start" type="button" >Start!</button>
+	<!-- Body -->
+	<canvas id="statusCanvas" height="200" style="border:1px solid #000000;">
+		
+	</canvas>
+		
+		
+	<fieldset id="infoBox">
+     <div class="ribbon-wrapper-green"><div class="ribbon-green">Online</div></div>
+	  <legend id="legenda">Was info</legend>
+		Was status: <a id="status">Running</a><br />
+		<label>Water niveau: <a id="water"> </a>% </label> 
+		<select id="waterSelector">
+		    <option></option>
+		    <option>10</option>
+		    <option>20</option>
+		    <option>30</option>
+		    <option>40</option>
+		    <option>50</option>
+		    <option>60</option>
+		    <option>70</option>
+		    <option>80</option>
+		    <option>90</option>
+		    <option>100</option>
+		</select><br />
+		<label>Toeren: <a id="rpm"> </a></label>
+		<select id="rpmSelector">
+		    <option></option>
+		    <option>100</option>
+		    <option>200</option>
+		    <option>300</option>
+		    <option>400</option>
+		    <option>500</option>
+		    <option>600</option>
+		    <option>700</option>
+		    <option>800</option>
+		    <option>900</option>
+		    <option>1000</option>
+		    <option>1100</option>
+		    <option>1200</option>
+		    <option>1300</option>
+		    <option>1400</option>
+		    <option>1500</option>
+		    <option>1600</option>
+		    <option>1700</option>
+		    <option>1800</option>
+		</select> per minuut<br />
+	   <label> Temperatuur: <a id="temp"> </a> </label>
+		<select id="degreeSelector">
+		    <option></option>
+		    <option>10</option>
+		    <option>20</option>
+		    <option>30</option>
+		    <option>40</option>
+		    <option>50</option>
+		    <option>60</option>
+		    <option>70</option>
+		    <option>80</option>
+		    <option>90</option>
+		    <option>100</option>
+		</select> graden <br />
+		<label>loop tijd: <a id="time"> </a></label>
+		<select id="timeSelector">
+		    <option></option>
+		    <option>10</option>
+		    <option>20</option>
+		    <option>30</option>
+		    <option>40</option>
+		    <option>50</option>
+		    <option>60</option>
+		    <option>70</option>
+		    <option>80</option>
+		    <option>90</option>
+		    <option>100</option>
+		</select> minuten<br />
+	</fieldset>
+	<!-- Als het draait -->
+	<button id="stop" type="button">Stop!</button>
+	<!-- Als het gestopt is -->
+	<select id="wasSelector">
+
+	</select>
+	<button id="start" type="button" >Start!</button>
+</div>
 </body>
 </html>
