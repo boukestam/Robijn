@@ -22,13 +22,10 @@
 #include "WaterLevelController.hpp"
 
 int main(){
-	
-	std::cout << "Came here";
-	
 	UARTInterface* uartInterface = new UARTInterface();
-	
 
 	Door* door = new Door(uartInterface);
+	DoorSensor* doorSensor = new DoorSensor(uartInterface);
 	
 	Heating* heating = new Heating(uartInterface);
 	TemperatureSensor* temperatureSensor = new TemperatureSensor(uartInterface);
@@ -52,7 +49,7 @@ int main(){
 	WaterLevelController* waterLevelController = new WaterLevelController(pump, tap, waterLevelSensor);
 	
 	
-		WashingProgramController* washingProgramController = new WashingProgramController(waterLevelController, rotationController, temperatureController, door, led, washingMachine, washingMachineStatusSensor, soapTray);
+	WashingProgramController* washingProgramController = new WashingProgramController(waterLevelController, rotationController, temperatureController, door, led, washingMachine, washingMachineStatusSensor, soapTray, doorSensor);
 
 	WebInterfaceController* webInterfaceController = new WebInterfaceController(washingProgramController,
 										    temperatureSensor,
@@ -61,8 +58,17 @@ int main(){
 										    washingMachineStatusSensor);
 	
 	
-
+	rotationSensor->addListener(rotationController);
+	rotationSensor->addListener(webInterfaceController);
 	
+	waterLevelSensor->addListener(waterLevelController);
+	waterLevelSensor->addListener(webInterfaceController);
+	
+	temperatureSensor->addListener(temperatureController);
+	temperatureSensor->addListener(webInterfaceController);
+
+	washingMachineStatusSensor->addListener(washingProgramController);
+	washingMachineStatusSensor->addListener(webInterfaceController);
 	
 	RTOS::run();
 	return 0;

@@ -55,7 +55,8 @@ public:
 		SignalLed* signalLed, 
 		WashingMachine* washingMachine,
 		HardwareSensor* washingMachineStatusSensor,
-		SoapTray* soapTray);
+		SoapTray* soapTray,
+		HardwareSensor* doorSensor);
 		
 /**
  * @brief Starts a washing program
@@ -82,6 +83,7 @@ private:
 	TemperatureController* temperatureController;
 	
 	Door* door;
+	HardwareSensor* doorSensor;
 	SignalLed* signalLed;
 	WashingMachine* washingMachine;
 	SoapTray* soapTray;
@@ -93,5 +95,6 @@ private:
 	RTOS::flag startFlag;
 	
 	bool hasStarted = false;
+	bool doorClosed = false;
 };
 

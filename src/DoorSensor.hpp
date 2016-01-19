@@ -2,9 +2,9 @@
 
 #include "HardwareSensor.hpp"
 
-class TemperatureSensor: public HardwareSensor{
+class DoorSensor: public HardwareSensor{
 public:
-	TemperatureSensor(UARTInterface* uartInterface);
+	DoorSensor(UARTInterface* uartInterface);
 	
 	void update() override;
 	void responseReceived(UARTMessage response) override;

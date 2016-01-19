@@ -47,7 +47,7 @@ $( document ).ready(function() {
     hideShowItems();
     
     if ("WebSocket" in window) {
-        ws = new WebSocket("ws://192.168.253.128:8081");
+        ws = new WebSocket("ws://169.254.248.69:8081");
         ws.onopen = function(evt) { onOpen(evt) };
         ws.onclose = function(evt) { onClose(evt) };
         ws.onmessage = function(evt) { onMessage(evt) };

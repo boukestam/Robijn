@@ -4,6 +4,8 @@
 #include "HardwareListener.hpp"
 #include "HardwareSensor.hpp"
 
+#include <vector>
+
 /**
  * @class HardwareController
  * @author Thijs Hendrickx
@@ -39,8 +41,13 @@ public:
  * @param state New currentState value
  */
 	void setCurrentState(unsigned char state);
+
+	void signalWhenDone(RTOS::flag* flag);
 	
 protected:
 	unsigned char goalState;
 	unsigned char currentState;
+
+private:
+	std::vector<RTOS::flag*> waitingFlags;
 };
