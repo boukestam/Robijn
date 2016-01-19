@@ -19,9 +19,9 @@ WashingProgramController::WashingProgramController(
 	signalLed(signalLed),
 	washingMachine(washingMachine),
 	washingMachineStatusSensor(washingMachineStatusSensor),
-	startFlag(this, "startFlag"),
 	soapTray(soapTray),
-	doorSensor(doorSensor)
+	doorSensor(doorSensor),
+	startFlag(this, "startFlag")
 {}
 
 

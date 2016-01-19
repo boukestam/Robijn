@@ -42,7 +42,7 @@ private:
 class SocketListener : public WebSocketListener{
 public:
     SocketListener(SocketServer* socketServer) : socketServer{socketServer} {}
-    ~SocketListener() {}
+    virtual ~SocketListener() {}
 
 	void onTextMessage(const std::string& s, WebSocket* ws){ // TODO: Parse json string and put it in the receiveBuffer
 		std::cout << "Got new message" << std::endl;
