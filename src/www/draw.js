@@ -83,12 +83,18 @@ $( document ).ready(function() {
         } else if(data.event == "statusUpdate"){
             handleStatusUpdate(data.washingProgram);
         } else if(data.event == "verify") {
-			if(data.ok == true && data.hash != "")
+			if(data.ok == true)
 			{
 				connectHash = data.hash;
 				$("#login").hide();
 				$("#status").show();
 				sendMSG("statusUpdate");
+			}
+			else 
+			{
+				$("#login").show();
+				$("#status").hide();
+				ws.close();
 			}
 		}
         hideShowItems();

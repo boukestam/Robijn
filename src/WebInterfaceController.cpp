@@ -23,22 +23,6 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
     this->washingMachineStatusSensor->addListener(this);
 
     this->currentWashingProgramStatus = new WashingProgramStatus();
-
-    // TODO(Yorick): Load washing programs from file
-	/*
-    WashingProgramStep step;
-    step.duration = 100;
-    step.rotationSpeed = 1200;
-    step.temperature = 45;
-    step.waterLevel = 80;
-
-    WashingProgram* wp = new WashingProgram();
-    wp->addStep(step);
-    wp->addStep(step);
-    wp->addStep(step);
-	wp->dicription = "Was programma 1";
-    washingPrograms.push_back(wp);
-*/
 	loadWashingPrograms();
 }
 
@@ -54,7 +38,6 @@ void WebInterfaceController::loadWashingPrograms()
 
 
 	rapidjson::Document document;
-	std::cout << file_contents << std::endl;
 	document.Parse(file_contents.c_str());
 
 	const rapidjson::Value& a = document["washingPrograms"];
@@ -86,7 +69,6 @@ void WebInterfaceController::loadWashingPrograms()
 void WebInterfaceController::main()
 {
     while(true){
-        // TODO(Yorick): Update the time of the status object?
         SocketMessage* msg;
         bool msgReceived = socketServer->receiveMessage(msg);
 
@@ -137,8 +119,10 @@ void WebInterfaceController::main()
 		sleepTimer.set(1000 MS);
 		wait(sleepTimer);
 		// Send status update every 1000MS
-		SocketMessage* msg2 = currentWashingProgramStatus->toSocketMessage();
-        socketServer->sendMessage(msg2);
+		if(currentWashingProgramStatus->status ==  WashingMachineStatus::running){
+			SocketMessage* msg2 = currentWashingProgramStatus->toSocketMessage();
+        	socketServer->sendMessage(msg2);
+		}
     }
 }
 

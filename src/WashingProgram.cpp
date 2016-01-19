@@ -21,7 +21,7 @@ WashingProgramStep WashingProgram::getStep(unsigned int index){
 }
 
 size_t WashingProgram::getStepSize(){
-	std::cout << "the current step size is: " << steps.size();
+	std::cout << "the current step size is: " << steps.size() << std::endl;
 	return steps.size();
 }
 

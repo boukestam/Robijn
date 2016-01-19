@@ -8,6 +8,7 @@
 #include <mutex>
 #include <unordered_map>
 #include <ctime>
+#include <fstream>
 
 class SocketListener;
 
@@ -55,7 +56,7 @@ public:
 
             if (event == "verify") { // User wants to log in
                 const std::string name = document["name"].GetString();
-                const int password = document["password"].GetUint();
+                const int password = document["password"].GetInt();
                 handleVerification(ws, name, password);
                 delete message; // Delete message because we're not using it
             } else { // Handle messaged
@@ -99,28 +100,46 @@ private:
     std::unordered_map<WebSocket*, unsigned int> webSocketHashValueMap; // WebSocket pointer, hash value
 
     void handleVerification(WebSocket* ws, std::string name, int password) {
-        std::string defaultName("demo"); // TODO: From file
-        int defaultPassword = 3079651; // TODO: From file
+		std::ifstream file("users.json");
+		std::string str;
+		std::string file_contents;
+		while (std::getline(file, str))
+		{
+			file_contents += str;
+		}  
 
-        if (name == defaultName && password == defaultPassword) {
-            const long double sysTime = time(0);
-            const char* s = std::to_string(sysTime).c_str();
 
-            unsigned int newHash = 34523;
-            while (*s) {
-                newHash = newHash * 101  +  *s++;
-            }
+		rapidjson::Document document;
+		document.Parse(file_contents.c_str());
 
-            std::pair <WebSocket*, unsigned int> newPair(ws, newHash);
-            webSocketHashValueMap.insert(newPair);
+		const rapidjson::Value& a = document["users"];
 
-            std::string jsonString("{\"event\":\"verify\", \"ok\":true, \"hash\":");
-            jsonString.append(std::to_string(newHash));
-            jsonString.append("}");
-            ws->sendTextMessage(jsonString);
-        } else { // Wrong name and/or password
-            std::string jsonString("{\"event\":\"verify\", \"ok\":false, \"hash\":}");
-            ws->sendTextMessage(jsonString);
-        }
+		for (rapidjson::SizeType i = 0; i < a.Size(); i++){
+		    std::string defaultName = a[i]["name"].GetString(); // TODO: From file
+		    int defaultPassword = a[i]["pass"].GetInt(); //3079651; // TODO: From file means demo  
+
+		    if (name == defaultName && password == defaultPassword) {
+		        //const long double sysTime = time(0);
+		        //const char* s = std::to_string(sysTime).c_str();
+				const char* s = "wakkaUbuntu9NEIN";
+
+		        unsigned int newHash = time(0);
+		        while (*s) {
+		            newHash = newHash * 101  +  *s++;
+		        }
+
+		        std::pair <WebSocket*, unsigned int> newPair(ws, newHash);
+		        webSocketHashValueMap.insert(newPair);
+
+		        std::string jsonString("{\"event\":\"verify\", \"ok\":true, \"hash\":");
+		        jsonString.append(std::to_string(newHash));
+		        jsonString.append("}");
+		        ws->sendTextMessage(jsonString);
+				return;
+		    } 
+		} 
+		// Wrong name and/or password
+        std::string jsonString("{\"event\":\"verify\", \"ok\":false}");
+        ws->sendTextMessage(jsonString);
     }
 };
