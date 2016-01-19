@@ -70,6 +70,8 @@ int main(){
 
 	washingMachineStatusSensor->addListener(washingProgramController);
 	washingMachineStatusSensor->addListener(webInterfaceController);
+
+	doorSensor->addListener(washingProgramController);
 	
 	RTOS::run();
 	return 0;

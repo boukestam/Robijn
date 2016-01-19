@@ -11,8 +11,6 @@ void WashingProgramScheduler::start(){
 	// get current time of the system
 	time(&programStartTime);
 	time(&stepStartTime);
-	
-	std::cout << "Started washing program at" << std::ctime(&programStartTime);	
 }
 
 void WashingProgramScheduler::stop(){
@@ -20,7 +18,6 @@ void WashingProgramScheduler::stop(){
 }
 
 WashingProgramStep WashingProgramScheduler::getCurrentStep(){
-	std::cout << "returning step: " << currentStepIndex << std::endl;
 	return currentWashingProgram->getStep(currentStepIndex);
 }
 
@@ -45,17 +42,8 @@ void WashingProgramScheduler::update(){
 		time_t now;
 		time(&now);
 
-		std::cout << "Now: " << now << std::endl;
-		std::cout << "Step start: " << stepStartTime << std::endl;
-
 		//check the difference
 		int elapsedSeconds = now - stepStartTime;
-
-		std::cout << "Did the substraction" << std::endl;
-
-		std::cout << "Elapsed: " << elapsedSeconds << std::endl;
-
-		std::cout << "Step time: " << currentWashingProgram->getStep(currentStepIndex).duration << std::endl; 
 
 		if(elapsedSeconds >= currentWashingProgram->getStep(currentStepIndex).duration){
 			if(currentStepIndex >= currentWashingProgram->getStepSize() - 1){
@@ -65,6 +53,7 @@ void WashingProgramScheduler::update(){
 
 				time(&stepStartTime);
 			}else{
+				std::cout << "Scheduler done" << std::endl;
 				running = false;
 			}
 		}
