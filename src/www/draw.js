@@ -1,6 +1,7 @@
 $( document ).ready(function() {
 
 	$("#status").hide();
+	$("#ipInput").val(window.location.href.replace(/.*?:\/\//g, "").replace("/", ""));
     
     var c = document.getElementById("statusCanvas");
     var context = c.getContext('2d');
@@ -82,7 +83,7 @@ $( document ).ready(function() {
         } else if(data.event == "statusUpdate"){
             handleStatusUpdate(data.washingProgram);
         } else if(data.event == "verify") {
-			if(data.ok == true)
+			if(data.ok == true && data.hash != "")
 			{
 				connectHash = data.hash;
 				$("#login").hide();
@@ -97,6 +98,8 @@ $( document ).ready(function() {
 		$(".ribbon-green").text("Offline");
 		$(".ribbon-green").css("background-color", "#F00");
         console.log("connection closed");
+		$("#login").show();
+		$("#status").hide();
     }
     
     function onError (evt){

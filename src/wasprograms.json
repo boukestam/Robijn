@@ -1,0 +1,50 @@
+{
+	"washingPrograms":[
+		{
+			"description":"Was programma 1",
+			"steps":[
+				{
+					"degrees":"45",
+					"rpm":"1200",
+					"water":"80",
+					"time":"100"
+				},{
+					"degrees":"45",
+					"rpm":"1200",
+					"water":"80",
+					"time":"100"
+				},{
+					"degrees":"45",
+					"rpm":"1200",
+					"water":"80",
+					"time":"100"
+				}
+			]
+		} , {
+			"description":"Was programma 2",
+			"steps":[
+				{
+					"degrees":"45",
+					"rpm":"1200",
+					"water":"80",
+					"time":"100"
+				},{
+					"degrees":"45",
+					"rpm":"1200",
+					"water":"80",
+					"time":"100"
+				},{
+					"degrees":"45",
+					"rpm":"1200",
+					"water":"80",
+					"time":"100"
+				},{
+					"degrees":"45",
+					"rpm":"1200",
+					"water":"80",
+					"time":"100"
+				}
+			]
+		}
+	]
+}

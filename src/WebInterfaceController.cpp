@@ -25,7 +25,7 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
     this->currentWashingProgramStatus = new WashingProgramStatus();
 
     // TODO(Yorick): Load washing programs from file
-
+	/*
     WashingProgramStep step;
     step.duration = 100;
     step.rotationSpeed = 1200;
@@ -38,36 +38,51 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
     wp->addStep(step);
 	wp->dicription = "Was programma 1";
     washingPrograms.push_back(wp);
+*/
+	loadWashingPrograms();
 }
-/*
+
 void WebInterfaceController::loadWashingPrograms()
 {
-	std::ifstream t("wasprograms.json");
-	std::stringstream buffer;
-	buffer << t.rdbuf();
+	std::ifstream file("wasprograms.json");
+	std::string str;
+	std::string file_contents;
+	while (std::getline(file, str))
+	{
+		file_contents += str;
+	}  
 
-	rapidjson::Document& document;
-	document.parse(buffer.c_str());
-	const rapidjson::Value& a = document["washingProgram"];
-	const rapidjson::Value& jsonsteps = a["steps"];
 
-	WashingProgram* wp = new WashingProgram();
+	rapidjson::Document document;
+	std::cout << file_contents << std::endl;
+	document.Parse(file_contents.c_str());
+
+	const rapidjson::Value& a = document["washingPrograms"];
 	
-	// rapidjson uses SizeType instead of size_t.
-	for (rapidjson::SizeType i = 0; i < jsonsteps.Size(); i++){
-		const rapidjson::Value& setting = jsonsteps[i];
+	for(rapidjson::SizeType j = 0; j < a.Size(); j++)
+	{
+		const rapidjson::Value& jsonsteps = a[j]["steps"];
 
-		WashingProgramStep step;
-		
-        step.temperature = stoi(setting["degrees"].GetString());
-        step.rotationSpeed = stoi(setting["rpm"].GetString());
-        step.waterLevel = stoi(setting["water"].GetString());
-        step.duration = stoi(setting["time"].GetString());
-        
-        wp->addStep(step);
+		WashingProgram* wp = new WashingProgram();
+		wp->dicription = a[j]["description"].GetString();
+	
+		// rapidjson uses SizeType instead of size_t.
+		for (rapidjson::SizeType i = 0; i < jsonsteps.Size(); i++){
+			const rapidjson::Value& setting = jsonsteps[i];
+
+			WashingProgramStep step;
+		    step.temperature = stoi(setting["degrees"].GetString());
+		    step.rotationSpeed = stoi(setting["rpm"].GetString());
+		    step.waterLevel = stoi(setting["water"].GetString());
+		    step.duration = stoi(setting["time"].GetString());
+		    
+		    wp->addStep(step);
+		}
+		washingPrograms.push_back(wp);
 	}
+
 }
-*/
+
 void WebInterfaceController::main()
 {
     while(true){
@@ -116,15 +131,14 @@ void WebInterfaceController::main()
             } else if(event == "getWashingPrograms"){
                 // Show washing program list
                 socketServer->sendMessage(createSocketMessageFromWashingList());
-            } else if (event == "verify"){
-                std::string name = document["name"].GetString();
-                std::string password = document["password"].GetString();
-                handleVerification(name, password);
             }
         }
 
-	sleepTimer.set(1000 MS);
-	wait(sleepTimer);
+		sleepTimer.set(1000 MS);
+		wait(sleepTimer);
+		// Send status update every 1000MS
+		SocketMessage* msg2 = currentWashingProgramStatus->toSocketMessage();
+        socketServer->sendMessage(msg2);
     }
 }
 
@@ -200,8 +214,4 @@ SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
     SocketMessage* msg = new SocketMessage();
     msg->parseJSONString(s.GetString());
     return msg;
-}
-
-void WebInterfaceController::handleVerification(std::string name, std::string description) {
-
 }
