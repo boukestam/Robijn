@@ -31,8 +31,6 @@ void WashingProgramController::startWashingProgram(WashingProgram* program){
 		scheduler = new WashingProgramScheduler(program);
 
 		startFlag.set();
-
-		std::cout << "Set start flag" << std::endl;
 	}
 }
 
@@ -45,7 +43,7 @@ void WashingProgramController::stopWashingProgram(){
 void WashingProgramController::valueChanged(HardwareSensor* sensor, unsigned char value){
 	if(sensor == washingMachineStatusSensor){
 		washingMachineStatus = value;
-	}else if(sensor == door){
+	}else if(sensor == doorSensor){
 		doorClosed = value != 0x01;
 	}
 }
@@ -81,18 +79,12 @@ void WashingProgramController::main(){
 		bool startedRunning = false;
 	
 		while(true){
-			std::cout << "Start loop" << std::endl;
-
 			if(washingMachineStatus == RUNNING){
-				std::cout << "Status: RUNNING" << std::endl;
-
 				if(!startedRunning){
 					startedRunning = true;
 				}
 				
 				if(scheduler->isRunning()){
-					std::cout << "Scheduler: RUNNING" << std::endl;
-
 					if(scheduler->isPaused()){
 						scheduler->unpause();
 					}
@@ -106,24 +98,17 @@ void WashingProgramController::main(){
 				
 				scheduler->update();
 			}else if(washingMachineStatus == FAILED){
-				std::cout << "Status: FAILED" << std::endl;
-
 				scheduler->pause();
 			}else{
-				std::cout << "Status: ELSE" << std::endl;
 				if(startedRunning){
 					break;
 				}
 			}
 			
 			washingMachineStatusSensor->update();
-			
-			std::cout << "Set timer" << std::endl;
 
 			washingProgramTimer.set(1000 MS);
 			wait(washingProgramTimer);
-
-			std::cout << "Timer done" << std::endl;
 		}
 		
 		soapTray->close();
@@ -147,8 +132,6 @@ void WashingProgramController::main(){
 		
 		hasStarted = false;
 		
-		std::cout << "-------------------------------------" << std::endl;
 		std::cout << "Stopped washing program" << std::endl;
-		std::cout << "-------------------------------------" << std::endl;
 	}
 }

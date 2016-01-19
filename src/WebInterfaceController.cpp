@@ -83,9 +83,7 @@ void WebInterfaceController::main()
                 washingProgramController->stopWashingProgram();
             } else if(event == "statusUpdate"){
                 // Get data parse to msg and send back
-                std::cout << "Before send message call" << std::endl;
                 SocketMessage* msg2 = currentWashingProgramStatus->toSocketMessage();
-                std::cout << "After getting message" << std::endl;
                 socketServer->sendMessage(msg2);
             } else if(event == "getWashingPrograms"){
                 // Show washing program list
