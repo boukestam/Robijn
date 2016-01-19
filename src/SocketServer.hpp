@@ -7,6 +7,7 @@
 #include <vector>
 #include <mutex>
 #include <unordered_map>
+#include <ctime>
 
 class SocketListener;
 
@@ -56,7 +57,8 @@ public:
                 const std::string name = document["name"].GetString();
                 const int password = document["password"].GetUint();
                 handleVerification(ws, name, password);
-            } else { // Handle message
+                delete message; // Delete message because we're not using it
+            } else { // Handle messaged
                 unsigned int hashValue = document["hash"].GetUint();
 
                 std::unordered_map<WebSocket*, unsigned int>::const_iterator foundMap = webSocketHashValueMap.find(ws);
@@ -66,11 +68,16 @@ public:
                         socketServer->receiveMutex.lock();
                         socketServer->receiveBuffer.push_back(message);
                         socketServer->receiveMutex.unlock();
+                    } else { // Hash not equal, so delete message
+                        delete message;
                     }
+                } else { // Map not found, delete message
+                    delete message;
                 }
             }
-		} else {
+		} else { // Parsing failed, delete message
             std::cout << "Parsing failed" << std::endl;
+            delete message;
 		}
 		std::cout << "Received: " << s << std::endl;
 	}
@@ -95,8 +102,9 @@ private:
         std::string defaultName("demo"); // TODO: From file
         int defaultPassword = 3079651; // TODO: From file
 
-        if (!name.compare(defaultName) && password == defaultPassword) {
-            const char* s = "wakkawakka";
+        if (name == defaultName && password == defaultPassword) {
+            const long double sysTime = time(0);
+            const char* s = std::to_string(sysTime).c_str();
 
             unsigned int newHash = 34523;
             while (*s) {
@@ -109,6 +117,9 @@ private:
             std::string jsonString("{\"event\":\"verify\", \"ok\":true, \"hash\":");
             jsonString.append(std::to_string(newHash));
             jsonString.append("}");
+            ws->sendTextMessage(jsonString);
+        } else { // Wrong name and/or password
+            std::string jsonString("{\"event\":\"verify\", \"ok\":false, \"hash\":}");
             ws->sendTextMessage(jsonString);
         }
     }
