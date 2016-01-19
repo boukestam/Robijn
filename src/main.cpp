@@ -20,6 +20,7 @@
 #include "WebInterfaceController.hpp"
 #include "WashingProgramController.hpp"
 #include "WaterLevelController.hpp"
+#include "DoorSensor.hpp"
 
 int main(){
 	UARTInterface* uartInterface = new UARTInterface();

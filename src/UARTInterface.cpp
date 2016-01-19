@@ -4,9 +4,6 @@
 
 #include <iostream>
 
-#include <errno.h>
-#include <string.h>
-
 UARTInterface::UARTInterface(): 
 	RTOS::task(0, "uartInterface"),
 	sendBuffer(this, "sendBuffer"), 
