@@ -6,6 +6,8 @@
 #include "SocketMessage.hpp"
 #include <vector>
 #include <mutex>
+#include <unordered_map>
+#include <ctime>
 
 class SocketListener;
 
@@ -41,7 +43,7 @@ private:
 class SocketListener : public WebSocketListener{
 public:
     SocketListener(SocketServer* socketServer) : socketServer{socketServer} {}
-    ~SocketListener() {}
+    virtual ~SocketListener() {}
 
 	void onTextMessage(const std::string& s, WebSocket* ws){ // TODO: Parse json string and put it in the receiveBuffer
 		std::cout << "Got new message" << std::endl;
@@ -51,60 +53,73 @@ public:
             rapidjson::Value& val = document["event"];
 			std::string event = val.GetString();
 
-            if (event == "verify"){
+            if (event == "verify") { // User wants to log in
                 const std::string name = document["name"].GetString();
                 const int password = document["password"].GetUint();
                 handleVerification(ws, name, password);
-            } else {
+                delete message; // Delete message because we're not using it
+            } else { // Handle messaged
                 unsigned int hashValue = document["hash"].GetUint();
-                for (std::vector<std::pair<std::string, unsigned int>>::iterator currentPair=userAddressHashPairs.begin(); currentPair!=userAddressHashPairs.end(); ++currentPair) {
-                    if ((*currentPair).second == hashValue) {
+
+                std::unordered_map<WebSocket*, unsigned int>::const_iterator foundMap = webSocketHashValueMap.find(ws);
+
+                if (foundMap != webSocketHashValueMap.end()) { // If websocket exists
+                    if (foundMap->second == hashValue) { // If the hash is equal to the sent hash
                         socketServer->receiveMutex.lock();
                         socketServer->receiveBuffer.push_back(message);
                         socketServer->receiveMutex.unlock();
+                    } else { // Hash not equal, so delete message
+                        delete message;
                     }
+                } else { // Map not found, delete message
+                    delete message;
                 }
             }
-		} else {
+		} else { // Parsing failed, delete message
             std::cout << "Parsing failed" << std::endl;
+            delete message;
 		}
 		std::cout << "Received: " << s << std::endl;
 	}
 
 	void onClose(WebSocket* ws){
 		socketServer->multicaster->remove(ws);
-		/*
-		for (std::vector<std::pair<std::string, unsigned int>>::iterator currentPair=userAddressHashPairs.begin(); currentPair!=userAddressHashPairs.end(); ++currentPair) {
-            if ((*currentPair).first == ws->getForeignAddress()) {
-                userAddressHashPairs.erase(currentPair);
-            }
-		}*/
+
+		std::unordered_map<WebSocket*, unsigned int>::const_iterator foundMap = webSocketHashValueMap.find(ws);
+
+        if (foundMap != webSocketHashValueMap.end()) {
+            webSocketHashValueMap.erase(foundMap);
+        }
 
 		delete ws;
 	}
 
 private:
     SocketServer* socketServer;
-    std::vector<std::pair<std::string, unsigned int>> userAddressHashPairs;
+    std::unordered_map<WebSocket*, unsigned int> webSocketHashValueMap; // WebSocket pointer, hash value
 
     void handleVerification(WebSocket* ws, std::string name, int password) {
         std::string defaultName("demo"); // TODO: From file
         int defaultPassword = 3079651; // TODO: From file
 
-        if (!name.compare(defaultName) && password == defaultPassword) {
-            const char* s = "wakkawakka";
+        if (name == defaultName && password == defaultPassword) {
+            const long double sysTime = time(0);
+            const char* s = std::to_string(sysTime).c_str();
 
             unsigned int newHash = 34523;
             while (*s) {
                 newHash = newHash * 101  +  *s++;
             }
 
-            std::pair <std::string, unsigned int> newPair(ws->getForeignAddress(), newHash);
-            userAddressHashPairs.push_back(newPair);
+            std::pair <WebSocket*, unsigned int> newPair(ws, newHash);
+            webSocketHashValueMap.insert(newPair);
 
             std::string jsonString("{\"event\":\"verify\", \"ok\":true, \"hash\":");
             jsonString.append(std::to_string(newHash));
             jsonString.append("}");
+            ws->sendTextMessage(jsonString);
+        } else { // Wrong name and/or password
+            std::string jsonString("{\"event\":\"verify\", \"ok\":false, \"hash\":}");
             ws->sendTextMessage(jsonString);
         }
     }
