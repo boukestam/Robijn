@@ -18,7 +18,8 @@ WashingProgramController::WashingProgramController(
 	washingMachine(washingMachine),
 	washingMachineStatusSensor(washingMachineStatusSensor),
 	updateStatusSensorTimer(this, "updateTimer"),
-	startFlag(this, "startFlag")
+	startFlag(this, "startFlag"),
+	soapTray(soapTray)
 {}
 
 
