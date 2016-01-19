@@ -8,8 +8,6 @@ TemperatureController::TemperatureController(Heating* heating, HardwareSensor* t
 void TemperatureController::main(){
 	RTOS::timer temperatureTimer(this, "temperatureTimer");
 	while(true){
-		std::cout << "Start temperature loop" << std::endl;
-
 		if(currentState >= goalState+1){
 			heating->off();
 		}else if(currentState <= goalState-1){
@@ -17,8 +15,6 @@ void TemperatureController::main(){
 		}
 
 		temperatureSensor->update();
-
-		std::cout << "End temperature loop" << std::endl;
 
 		temperatureTimer.set(500 MS);
 		wait(temperatureTimer);
