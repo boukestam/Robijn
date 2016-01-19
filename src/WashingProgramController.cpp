@@ -22,8 +22,6 @@ WashingProgramController::WashingProgramController(
 	soapTray(soapTray),
 	doorSensor(doorSensor),
 	startFlag(this, "startFlag")
-	
-	
 {}
 
 

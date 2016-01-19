@@ -89,8 +89,8 @@ private:
 	SoapTray* soapTray;
 	HardwareSensor* doorSensor;
 	
-	unsigned char washingMachineStatus;
 	RTOS::flag startFlag;
+	unsigned char washingMachineStatus;
 	
 	bool hasStarted = false;
 	bool doorClosed = false;
