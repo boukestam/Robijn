@@ -53,7 +53,8 @@ public:
 		Door* door, 
 		SignalLed* signalLed, 
 		WashingMachine* washingMachine,
-		HardwareSensor* washingMachineStatusSensor);
+		HardwareSensor* washingMachineStatusSensor,
+		SoapTray* soapTray);
 		
 /**
  * @brief Starts a washing program
@@ -82,6 +83,7 @@ private:
 	Door* door;
 	SignalLed* signalLed;
 	WashingMachine* washingMachine;
+	SoapTray* soapTray;
 	
 	HardwareSensor* washingMachineStatusSensor;
 	

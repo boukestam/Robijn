@@ -58,7 +58,8 @@ int main(){
 										    temperatureSensor,
 										    waterLevelSensor,
 										    rotationSensor,
-										    washingMachineStatusSensor);
+										    washingMachineStatusSensor,
+											soapTray);
 	
 	
 
