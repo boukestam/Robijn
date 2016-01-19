@@ -1,0 +1,10 @@
+{
+	"users":[{ 
+				"name":"admin",
+				"pass":92668751
+			},{ 
+				"name":"demo",
+				"pass":3079651
+			}
+	]
+}
