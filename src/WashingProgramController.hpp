@@ -91,7 +91,6 @@ private:
 	HardwareSensor* washingMachineStatusSensor;
 	
 	unsigned char washingMachineStatus;
-	RTOS::timer updateStatusSensorTimer;
 	RTOS::flag startFlag;
 	
 	bool hasStarted = false;
