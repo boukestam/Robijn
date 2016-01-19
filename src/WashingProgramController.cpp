@@ -55,77 +55,107 @@ void WashingProgramController::main(){
 		wait(startFlag);
 
 		std::cout << "Started washing program" << std::endl;
-		
+
 		hasStarted = true;
-		
+
 		std::cout << "Waiting for door to close" << std::endl;
-		
+
+		RTOS::timer doorTimer(this, "doorTimer");
+
 		while(!doorClosed){
 			doorSensor->update();
-			
-			washingProgramTimer.set(100 MS);
-			wait(washingProgramTimer);
+
+			doorTimer.set(100 MS);
+			wait(doorTimer);
 		}
-	
+
 		door->lock();
-		
+
+		std::cout << "Locked door" << std::endl;
+
 		washingMachine->start();
-		
+
 		soapTray->open();
-	
+
 		scheduler->start();
-		
+
 		bool startedRunning = false;
-	
+
+		WashingProgramStep step;
+
 		while(true){
 			if(washingMachineStatus == RUNNING){
+				scheduler->update();
+
 				if(!startedRunning){
 					startedRunning = true;
 				}
-				
+
 				if(scheduler->isRunning()){
 					if(scheduler->isPaused()){
 						scheduler->unpause();
 					}
-					
+
 					WashingProgramStep currentStep = scheduler->getCurrentStep();
-				
-					waterLevelController->setGoalState(currentStep.waterLevel);
-					temperatureController->setGoalState(currentStep.temperature);
-					rotationController->setGoalState(currentStep.rotationSpeed / 25);
+
+					if(currentStep != step){
+						waterLevelController->setGoalState(currentStep.waterLevel);
+
+						waterLevelController->signalWhenDone(&stateReachedFlag);
+						wait(stateReachedFlag);
+
+						temperatureController->setGoalState(currentStep.temperature);
+						rotationController->setGoalState(currentStep.rotationSpeed / 25);
+
+						step = currentStep;
+					}
+				}else{
+					std::cout << "Washing program done" << std::endl;
+					break;
 				}
-				
-				scheduler->update();
 			}else if(washingMachineStatus == FAILED){
 				scheduler->pause();
 			}else{
 				if(startedRunning){
+					std::cout << "Washing program done" << std::endl;
 					break;
 				}
 			}
-			
+
 			washingMachineStatusSensor->update();
 
 			washingProgramTimer.set(1000 MS);
 			wait(washingProgramTimer);
 		}
-		
+
+		std::cout << "Stopping washing program..." << std::endl;
+
 		soapTray->close();
 
 		rotationController->setGoalState(0);
 
+		std::cout << "Waiting for motor to stop" << std::endl;
+
 		rotationController->signalWhenDone(&stateReachedFlag);
 		wait(stateReachedFlag);
+
+		std::cout << "Motor stopped" << std::endl;
+
+		std::cout << "Waiting for water to drain" << std::endl;
 
 		waterLevelController->setGoalState(0);
 
 		waterLevelController->signalWhenDone(&stateReachedFlag);
 		wait(stateReachedFlag);
 
+		std::cout << "Water drained" << std::endl;
+
 		temperatureController->setGoalState(20);
 		
 		washingMachine->stop();
 		door->unlock();
+
+		std::cout << "Door unlocked" << std::endl;
 		
 		delete scheduler;
 		

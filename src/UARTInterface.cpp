@@ -27,8 +27,8 @@ void UARTInterface::main(){
 
 		serial.flush();
 				
-		while(serial.peek() < 2){
-			replyTimer.set(10 MS);
+		for(int i = 0; i < 20 && serial.peek() < 2; i++){
+			replyTimer.set(3 MS);
 			wait(replyTimer);
 		}
 		
