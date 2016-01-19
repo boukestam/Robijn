@@ -7,7 +7,8 @@ WashingProgramController::WashingProgramController(
 	Door* door, 
 	SignalLed* signalLed, 
 	WashingMachine* washingMachine,
-	HardwareSensor* washingMachineStatusSensor):
+	HardwareSensor* washingMachineStatusSensor,
+	SoapTray* soapTray):
 	
 	RTOS::task(2, "washingProgramController"),
 	waterLevelController(waterLevelController),

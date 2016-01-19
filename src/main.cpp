@@ -52,14 +52,13 @@ int main(){
 	WaterLevelController* waterLevelController = new WaterLevelController(pump, tap, waterLevelSensor);
 	
 	
-		WashingProgramController* washingProgramController = new WashingProgramController(waterLevelController, rotationController, temperatureController, door, led, washingMachine, washingMachineStatusSensor);
+		WashingProgramController* washingProgramController = new WashingProgramController(waterLevelController, rotationController, temperatureController, door, led, washingMachine, washingMachineStatusSensor, soapTray);
 
 	WebInterfaceController* webInterfaceController = new WebInterfaceController(washingProgramController,
 										    temperatureSensor,
 										    waterLevelSensor,
 										    rotationSensor,
-										    washingMachineStatusSensor,
-											soapTray);
+										    washingMachineStatusSensor);
 	
 	
 

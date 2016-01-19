@@ -14,6 +14,7 @@
 #include "Door.hpp"
 #include "SignalLed.hpp"
 #include "WashingMachine.hpp"
+#include "SoapTray.hpp"
 
 #include "HardwareSensor.hpp"
 
