@@ -53,7 +53,7 @@ public:
 
             if (event == "verify"){
                 const std::string name = document["name"].GetString();
-                const std::string password = document["password"].GetString();
+                const int password = document["password"].GetUint();
                 handleVerification(ws, name, password);
             } else {
                 unsigned int hashValue = document["hash"].GetUint();
@@ -73,12 +73,12 @@ public:
 
 	void onClose(WebSocket* ws){
 		socketServer->multicaster->remove(ws);
-
+		/*
 		for (std::vector<std::pair<std::string, unsigned int>>::iterator currentPair=userAddressHashPairs.begin(); currentPair!=userAddressHashPairs.end(); ++currentPair) {
             if ((*currentPair).first == ws->getForeignAddress()) {
                 userAddressHashPairs.erase(currentPair);
             }
-		}
+		}*/
 
 		delete ws;
 	}
@@ -87,11 +87,11 @@ private:
     SocketServer* socketServer;
     std::vector<std::pair<std::string, unsigned int>> userAddressHashPairs;
 
-    void handleVerification(WebSocket* ws, std::string name, std::string password) {
+    void handleVerification(WebSocket* ws, std::string name, int password) {
         std::string defaultName("demo"); // TODO: From file
-        std::string defaultPassword("demoHashed"); // TODO: From file
+        int defaultPassword = 3079651; // TODO: From file
 
-        if (!name.compare(defaultName) && !password.compare(defaultPassword)) {
+        if (!name.compare(defaultName) && password == defaultPassword) {
             const char* s = "wakkawakka";
 
             unsigned int newHash = 34523;

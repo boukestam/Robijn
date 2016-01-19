@@ -1,4 +1,6 @@
 $( document ).ready(function() {
+
+	$("#status").hide();
     
     var c = document.getElementById("statusCanvas");
     var context = c.getContext('2d');
@@ -15,6 +17,8 @@ $( document ).ready(function() {
     var status;
     
     var loadedWasPrograms;
+
+	var connectHash = "";
     
     var stepCount;
     var washingProgram = { 
@@ -45,18 +49,27 @@ $( document ).ready(function() {
     }
     resizeCanvas();
     hideShowItems();
-    
-    if ("WebSocket" in window) {
-        ws = new WebSocket("ws://169.254.248.69:8081");
-        ws.onopen = function(evt) { onOpen(evt) };
-        ws.onclose = function(evt) { onClose(evt) };
-        ws.onmessage = function(evt) { onMessage(evt) };
-        ws.onerror = function(evt) { onError(evt) };
-    }
+
+	function initWebSockets()
+	{
+		if ("WebSocket" in window) {
+			var ip = $("#ipInput").val();
+			var port = $("#poortInput").val();
+			var wsURL = "ws://" + ip + ":" + port;
+			console.log(wsURL);
+
+		    ws = new WebSocket(wsURL);
+		    ws.onopen = function(evt) { onOpen(evt) };
+		    ws.onclose = function(evt) { onClose(evt) };
+		    ws.onmessage = function(evt) { onMessage(evt) };
+		    ws.onerror = function(evt) { onError(evt) };
+    	}
+	}
     
     function onOpen (evt) {
         console.log("connection opened");
-        ws.send("{\"event\":\"statusUpdate\"}");
+		$(".ribbon-green").text("Online");
+		sendMSG("verify");
     }
     
     function onMessage (evt){
@@ -68,15 +81,26 @@ $( document ).ready(function() {
             populateSelectors();
         } else if(data.event == "statusUpdate"){
             handleStatusUpdate(data.washingProgram);
-        }
+        } else if(data.event == "verify") {
+			if(data.ok == true)
+			{
+				connectHash = data.hash;
+				$("#login").hide();
+				$("#status").show();
+				sendMSG("statusUpdate");
+			}
+		}
         hideShowItems();
     }
     
     function onClose (evt){
+		$(".ribbon-green").text("Offline");
+		$(".ribbon-green").css("background-color", "#F00");
         console.log("connection closed");
     }
     
     function onError (evt){
+		$(".ribbon-green").text("WS ERROR");
         console.log("websocket error" + evt.data);
     }
     
@@ -85,6 +109,9 @@ $( document ).ready(function() {
     }
     
     function closeConnection() {
+		sendMSG("logout");
+		$("#login").show();
+		$("#status").hide();
         ws.close();
     }
     
@@ -158,7 +185,7 @@ $( document ).ready(function() {
         loadedWasPrograms = data;
         sel.innerHTML = "";
         for(var j = 0; j < data.length; j++) {
-            sel.innerHTML += "<option id=\"j\">" + data[j].desc + "</option>";
+            sel.innerHTML += "<option id=\"j\">" + data[j].description + "</option>";
         }
     }
     
@@ -190,7 +217,7 @@ $( document ).ready(function() {
             document.getElementById("temp").innerHTML = currentDegrees;
             document.getElementById("time").innerHTML = currentStepTime + "/" + totalStepTime;
         } else if(status == 0){
-            ws.send("{\"event\":\"getWashingPrograms\"}");
+			sendMSG("getWashingPrograms");
         }
         
         draw();
@@ -245,12 +272,34 @@ $( document ).ready(function() {
         $("#time").innerHTML = total + " Seconde";
         draw();
     }
+
+	$("#subBtn").click(function(){
+		console.log($("#passInput").val().hashCode());
+		initWebSockets();
+		if($("#passInput").text() != ""){
+			sendMSG("verify");
+		}
+	});
     
     $( "#start" ).click(function() {
-        
-        var msg = {
+        sendMSG("startWashingProgram");
+        $('#start').hide();
+        $('#wasSelector').hide();
+        $('#stop').show();
+    });
+    
+    $( "#stop" ).click(function() {
+		sendMSG("stopWashingProgram");
+        status = 0;
+    });
+
+	function sendMSG(event)
+	{
+		if(event == "startWashingProgram")
+		{
+			var msg = {
             "event":"startWashingProgram",
-            "id": $("#wasSelector").selectedIndex,
+			"hash":connectHash, 
             "washingProgram":{
                     "steps":[
                     {
@@ -276,14 +325,47 @@ $( document ).ready(function() {
                     }                 
                 ]}
             };
-        ws.send(JSON.stringify(msg));
-        $('#start').hide();
-        $('#wasSelector').hide();
-        $('#stop').show();
-    });
-    
-    $( "#stop" ).click(function() {
-        ws.send("{\"event\":\"stopWashingProgram\"}");
-        status = 0;
-    });
+		}else if(event == "stopWashingProgram") {
+			var msg = { 
+				"event": "stopWashingProgram",
+				"hash": connectHash
+			};
+		} else if(event == "verify") {
+			var msg = {
+		        "event":"verify",
+				"name": $("#nameInput").val(),
+		        "password": $("#passInput").val().hashCode()
+            };
+		} else if(event == "logout") {
+			var msg = {
+		        "event":"logout",
+		        "hash": connectHash
+            };
+		} else if(event == "getWashingPrograms") {
+			var msg = {
+		        "event":"getWashingPrograms",
+		        "hash": connectHash
+            };
+		} else if(event == "statusUpdate") {
+			var msg = {
+		        "event":"statusUpdate",
+		        "hash": connectHash
+            };
+		} else {
+			return; /* It shouldn't send an undifined msg */
+		} 
+		console.log(JSON.stringify(msg));
+		ws.send(JSON.stringify(msg));
+	}
+
+	String.prototype.hashCode = function() {
+	  var hash = 0, i, chr, len;
+	  if (this.length === 0) return hash;
+	  for (i = 0, len = this.length; i < len; i++) {
+		chr   = this.charCodeAt(i);
+		hash  = ((hash << 5) - hash) + chr;
+		hash |= 0;
+	  }
+	  return hash;
+	};
 });
