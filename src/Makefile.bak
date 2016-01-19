@@ -1,6 +1,6 @@
 TARGET = washingOS
-LIBS = -lcrypto
-CC = g++
+LIBS = -pthread -lcrypto
+CC = arm-linux-gnueabihf-gcc
 CFLAGS = -std=c++11 -g -Wall
 
 .PHONY: default all clean

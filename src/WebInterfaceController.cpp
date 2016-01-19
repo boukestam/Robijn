@@ -92,10 +92,11 @@ void WebInterfaceController::main()
                 socketServer->sendMessage(createSocketMessageFromWashingList());
             }
             
-            std::cout << "Web interface processed message" << std::endl;
-			sleepTimer.set(1000 MS);
-			wait(sleepTimer); 
+            std::cout << "Web interface processed message" << std::endl; 
         }
+
+	sleepTimer.set(1000 MS);
+	wait(sleepTimer);
     }
 }
 
