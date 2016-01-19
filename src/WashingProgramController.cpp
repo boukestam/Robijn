@@ -7,7 +7,9 @@ WashingProgramController::WashingProgramController(
 	Door* door, 
 	SignalLed* signalLed, 
 	WashingMachine* washingMachine,
-	HardwareSensor* washingMachineStatusSensor):
+	HardwareSensor* washingMachineStatusSensor,
+	SoapTray* soapTray,
+	HardwareSensor* doorSensor):
 	
 	RTOS::task(2, "washingProgramController"),
 	waterLevelController(waterLevelController),
@@ -18,7 +20,9 @@ WashingProgramController::WashingProgramController(
 	washingMachine(washingMachine),
 	washingMachineStatusSensor(washingMachineStatusSensor),
 	updateStatusSensorTimer(this, "updateTimer"),
-	startFlag(this, "startFlag")
+	startFlag(this, "startFlag"),
+	soapTray(soapTray),
+	doorSensor(doorSensor)
 {}
 
 
@@ -39,11 +43,10 @@ void WashingProgramController::stopWashingProgram(){
 }
 
 void WashingProgramController::valueChanged(HardwareSensor* sensor, unsigned char value){
-	std::cout << "New sensor value: " << (int)value << std::endl;
-
 	if(sensor == washingMachineStatusSensor){
-		std::cout << "Set sensor value" << std::endl;
 		washingMachineStatus = value;
+	}else if(sensor == door){
+		doorClosed = value != 0x01;
 	}
 }
 
@@ -54,12 +57,24 @@ void WashingProgramController::main(){
 	while(true){
 		wait(startFlag);
 
-		std::cout << "Done waiting for flag" << std::endl;
+		std::cout << "Started washing program" << std::endl;
 		
 		hasStarted = true;
+		
+		std::cout << "Waiting for door to close" << std::endl;
+		
+		while(!doorClosed){
+			doorSensor->update();
+			
+			washingProgramTimer.set(100 MS);
+			wait(washingProgramTimer);
+		}
 	
 		door->lock();
+		
 		washingMachine->start();
+		
+		soapTray->open();
 	
 		scheduler->start();
 		
@@ -110,6 +125,8 @@ void WashingProgramController::main(){
 
 			std::cout << "Timer done" << std::endl;
 		}
+		
+		soapTray->close();
 
 		rotationController->setGoalState(0);
 
@@ -122,7 +139,7 @@ void WashingProgramController::main(){
 		wait(stateReachedFlag);
 
 		temperatureController->setGoalState(20);
-
+		
 		washingMachine->stop();
 		door->unlock();
 		

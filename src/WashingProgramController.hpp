@@ -14,6 +14,7 @@
 #include "Door.hpp"
 #include "SignalLed.hpp"
 #include "WashingMachine.hpp"
+#include "SoapTray.hpp"
 
 #include "HardwareSensor.hpp"
 
@@ -53,7 +54,9 @@ public:
 		Door* door, 
 		SignalLed* signalLed, 
 		WashingMachine* washingMachine,
-		HardwareSensor* washingMachineStatusSensor);
+		HardwareSensor* washingMachineStatusSensor,
+		SoapTray* soapTray,
+		HardwareSensor* doorSensor);
 		
 /**
  * @brief Starts a washing program
@@ -80,8 +83,10 @@ private:
 	TemperatureController* temperatureController;
 	
 	Door* door;
+	HardwareSensor* doorSensor;
 	SignalLed* signalLed;
 	WashingMachine* washingMachine;
+	SoapTray* soapTray;
 	
 	HardwareSensor* washingMachineStatusSensor;
 	
@@ -90,5 +95,6 @@ private:
 	RTOS::flag startFlag;
 	
 	bool hasStarted = false;
+	bool doorClosed = false;
 };
 
