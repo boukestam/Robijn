@@ -7,7 +7,8 @@ WashingProgramController::WashingProgramController(
 	Door* door, 
 	SignalLed* signalLed, 
 	WashingMachine* washingMachine,
-	HardwareSensor* washingMachineStatusSensor):
+	HardwareSensor* washingMachineStatusSensor,
+	SoapTray* soapTray):
 	
 	RTOS::task(2, "washingProgramController"),
 	waterLevelController(waterLevelController),
@@ -18,7 +19,8 @@ WashingProgramController::WashingProgramController(
 	washingMachine(washingMachine),
 	washingMachineStatusSensor(washingMachineStatusSensor),
 	updateStatusSensorTimer(this, "updateTimer"),
-	startFlag(this, "startFlag")
+	startFlag(this, "startFlag"),
+	soapTray(soapTray)
 {}
 
 
@@ -51,9 +53,12 @@ void WashingProgramController::main(){
 		hasStarted = true;
 	
 		door->lock();
+		
 		washingMachine->start();
 	
 		scheduler->start();
+		
+		soapTray->open();
 		
 		bool startedRunning = false;
 	
@@ -89,6 +94,7 @@ void WashingProgramController::main(){
 			wait(washingProgramTimer);
 		}
 		
+		soapTray->close();
 		washingMachine->stop();
 		door->unlock();
 		

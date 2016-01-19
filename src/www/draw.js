@@ -68,9 +68,8 @@ $( document ).ready(function() {
     
     function onOpen (evt) {
         console.log("connection opened");
-		$("ribbon-green").text("Online");
-		sendMSG("statusUpdate");
-        //ws.send("{\"event\":\"statusUpdate\"}");
+		$(".ribbon-green").text("Online");
+		sendMSG("verify");
     }
     
     function onMessage (evt){
@@ -86,18 +85,22 @@ $( document ).ready(function() {
 			if(data.ok == true)
 			{
 				connectHash = data.hash;
+				$("#login").hide();
+				$("#status").show();
+				sendMSG("statusUpdate");
 			}
 		}
         hideShowItems();
     }
     
     function onClose (evt){
-		$("ribbon-green").text("Offline");
+		$(".ribbon-green").text("Offline");
+		$(".ribbon-green").css("background-color", "#F00");
         console.log("connection closed");
     }
     
     function onError (evt){
-		$("ribbon-green").text("WS ERROR");
+		$(".ribbon-green").text("WS ERROR");
         console.log("websocket error" + evt.data);
     }
     
@@ -109,7 +112,6 @@ $( document ).ready(function() {
 		sendMSG("logout");
 		$("#login").show();
 		$("#status").hide();
-    	//ws.send(JSON.stringify(msg));
         ws.close();
     }
     
@@ -216,7 +218,6 @@ $( document ).ready(function() {
             document.getElementById("time").innerHTML = currentStepTime + "/" + totalStepTime;
         } else if(status == 0){
 			sendMSG("getWashingPrograms");
-            //ws.send("{\"event\":\"getWashingPrograms\"}");
         }
         
         draw();
@@ -282,14 +283,12 @@ $( document ).ready(function() {
     
     $( "#start" ).click(function() {
         sendMSG("startWashingProgram");
-        //ws.send(JSON.stringify(msg));
         $('#start').hide();
         $('#wasSelector').hide();
         $('#stop').show();
     });
     
     $( "#stop" ).click(function() {
-        //ws.send("{\"event\":\"stopWashingProgram\"}");
 		sendMSG("stopWashingProgram");
         status = 0;
     });
@@ -365,7 +364,7 @@ $( document ).ready(function() {
 	  for (i = 0, len = this.length; i < len; i++) {
 		chr   = this.charCodeAt(i);
 		hash  = ((hash << 5) - hash) + chr;
-		hash |= 0; // Convert to 32bit integer
+		hash |= 0;
 	  }
 	  return hash;
 	};
