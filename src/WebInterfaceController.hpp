@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pRTOS.h"
-
+#include <fstream>
 #include "SocketServer.hpp"
 #include "WebServer.hpp"
 
@@ -31,7 +31,7 @@ public:
 
 private:
     SocketMessage* createSocketMessageFromWashingList();
-    void handleVerification(std::string name, std::string password);
+	void loadWashingPrograms();
 
 	RTOS::timer sleepTimer;
 

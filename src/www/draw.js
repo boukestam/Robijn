@@ -1,6 +1,7 @@
 $( document ).ready(function() {
 
 	$("#status").hide();
+	$("#ipInput").val(window.location.href.replace(/.*?:\/\//g, "").replace("/", ""));
     
     var c = document.getElementById("statusCanvas");
     var context = c.getContext('2d');
@@ -89,6 +90,12 @@ $( document ).ready(function() {
 				$("#status").show();
 				sendMSG("statusUpdate");
 			}
+			else 
+			{
+				$("#login").show();
+				$("#status").hide();
+				ws.close();
+			}
 		}
         hideShowItems();
     }
@@ -97,6 +104,8 @@ $( document ).ready(function() {
 		$(".ribbon-green").text("Offline");
 		$(".ribbon-green").css("background-color", "#F00");
         console.log("connection closed");
+		$("#login").show();
+		$("#status").hide();
     }
     
     function onError (evt){
