@@ -6,6 +6,7 @@
 #include "SocketMessage.hpp"
 #include <vector>
 #include <mutex>
+#include <unordered_map>
 
 class SocketListener;
 
@@ -51,14 +52,17 @@ public:
             rapidjson::Value& val = document["event"];
 			std::string event = val.GetString();
 
-            if (event == "verify"){
+            if (event == "verify") { // User wants to log in
                 const std::string name = document["name"].GetString();
                 const int password = document["password"].GetUint();
                 handleVerification(ws, name, password);
-            } else {
+            } else { // Handle message
                 unsigned int hashValue = document["hash"].GetUint();
-                for (std::vector<std::pair<std::string, unsigned int>>::iterator currentPair=userAddressHashPairs.begin(); currentPair!=userAddressHashPairs.end(); ++currentPair) {
-                    if ((*currentPair).second == hashValue) {
+
+                std::unordered_map<WebSocket*, unsigned int>::const_iterator foundMap = webSocketHashValueMap.find(ws);
+
+                if (foundMap != webSocketHashValueMap.end()) { // If websocket exists
+                    if (foundMap->second == hashValue) { // If the hash is equal to the sent hash
                         socketServer->receiveMutex.lock();
                         socketServer->receiveBuffer.push_back(message);
                         socketServer->receiveMutex.unlock();
@@ -73,19 +77,19 @@ public:
 
 	void onClose(WebSocket* ws){
 		socketServer->multicaster->remove(ws);
-		/*
-		for (std::vector<std::pair<std::string, unsigned int>>::iterator currentPair=userAddressHashPairs.begin(); currentPair!=userAddressHashPairs.end(); ++currentPair) {
-            if ((*currentPair).first == ws->getForeignAddress()) {
-                userAddressHashPairs.erase(currentPair);
-            }
-		}*/
+
+		std::unordered_map<WebSocket*, unsigned int>::const_iterator foundMap = webSocketHashValueMap.find(ws);
+
+        if (foundMap != webSocketHashValueMap.end()) {
+            webSocketHashValueMap.erase(foundMap);
+        }
 
 		delete ws;
 	}
 
 private:
     SocketServer* socketServer;
-    std::vector<std::pair<std::string, unsigned int>> userAddressHashPairs;
+    std::unordered_map<WebSocket*, unsigned int> webSocketHashValueMap; // WebSocket pointer, hash value
 
     void handleVerification(WebSocket* ws, std::string name, int password) {
         std::string defaultName("demo"); // TODO: From file
@@ -99,8 +103,8 @@ private:
                 newHash = newHash * 101  +  *s++;
             }
 
-            std::pair <std::string, unsigned int> newPair(ws->getForeignAddress(), newHash);
-            userAddressHashPairs.push_back(newPair);
+            std::pair <WebSocket*, unsigned int> newPair(ws, newHash);
+            webSocketHashValueMap.insert(newPair);
 
             std::string jsonString("{\"event\":\"verify\", \"ok\":true, \"hash\":");
             jsonString.append(std::to_string(newHash));
