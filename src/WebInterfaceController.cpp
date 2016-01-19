@@ -21,11 +21,11 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
 
     this->washingMachineStatusSensor = washingMachineStatusSensor;
     this->washingMachineStatusSensor->addListener(this);
-    
+
     this->currentWashingProgramStatus = new WashingProgramStatus();
 
     // TODO(Yorick): Load washing programs from file
-	
+
     WashingProgramStep step;
     step.duration = 100;
     step.rotationSpeed = 1200;
@@ -52,7 +52,7 @@ void WebInterfaceController::main()
             rapidjson::Document& document = msg->getJSON();
             rapidjson::Value& val = document["event"];
 			std::string event = val.GetString();
-		
+
             // check events
             if(event == "startWashingProgram"){
                 // start washing program
@@ -61,21 +61,21 @@ void WebInterfaceController::main()
 				const rapidjson::Value& jsonsteps = a["steps"];
 
 				WashingProgram* wp = new WashingProgram();
-				
+
 				// rapidjson uses SizeType instead of size_t.
 				for (rapidjson::SizeType i = 0; i < jsonsteps.Size(); i++){
 					const rapidjson::Value& setting = jsonsteps[i];
 
 					WashingProgramStep step;
-					
+
                     step.temperature = stoi(setting["degrees"].GetString());
                     step.rotationSpeed = stoi(setting["rpm"].GetString());
                     step.waterLevel = stoi(setting["water"].GetString());
                     step.duration = stoi(setting["time"].GetString());
-                    
+
                     wp->addStep(step);
-				}  
-				
+				}
+
 				washingProgramController->startWashingProgram(wp);
 
             } else if(event == "stopWashingProgram") {
@@ -90,11 +90,15 @@ void WebInterfaceController::main()
             } else if(event == "getWashingPrograms"){
                 // Show washing program list
                 socketServer->sendMessage(createSocketMessageFromWashingList());
+            } else if (event == "verify"){
+                std::string name = document["name"].GetString();
+                std::string password = document["password"].GetString();
+                handleVerification(name, password);
             }
-            
+
             std::cout << "Web interface processed message" << std::endl;
 			sleepTimer.set(1000 MS);
-			wait(sleepTimer); 
+			wait(sleepTimer);
         }
     }
 }
@@ -171,4 +175,8 @@ SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
     SocketMessage* msg = new SocketMessage();
     msg->parseJSONString(s.GetString());
     return msg;
+}
+
+void WebInterfaceController::handleVerification(std::string name, std::string description) {
+
 }

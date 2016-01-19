@@ -22,7 +22,7 @@ class WebServerResponseHandler
         bool isValidExtension();
         std::string readFile(std::string path, bool binaryRead);
 
-   const struct { std::string ext; std::string content_type; bool binaryRead; } ValidExtensionType[14] =
+   const struct { std::string ext; std::string content_type; bool binaryRead; } ValidExtensionType[15] =
 	{
 		{ "bmp", "image/bmp", true },
 		{ "ico", "image/ico", true },
@@ -37,7 +37,8 @@ class WebServerResponseHandler
 		{ "xml", "application/xml", false },
 		{ "log", "text/plain", false},
 		{ "js", "application/javascript", false },
-		{ "css", "text/css", false }
+		{ "css", "text/css", false },
+		{ "wav", "audio/x-wav", true }
     };
 
     bool needBinaryRead;
