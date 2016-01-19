@@ -83,15 +83,15 @@ private:
 	TemperatureController* temperatureController;
 	
 	Door* door;
-	HardwareSensor* doorSensor;
+	
 	SignalLed* signalLed;
 	WashingMachine* washingMachine;
-	SoapTray* soapTray;
-	
 	HardwareSensor* washingMachineStatusSensor;
-	
-	unsigned char washingMachineStatus;
+	SoapTray* soapTray;
+	HardwareSensor* doorSensor;
+
 	RTOS::flag startFlag;
+	unsigned char washingMachineStatus;
 	
 	bool hasStarted = false;
 	bool doorClosed = false;
