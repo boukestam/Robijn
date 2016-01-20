@@ -55,10 +55,25 @@
 
 /*---------------------------------*/
 
+/**
+ * @class HardwareComponent
+ * @author Bouke Stam
+ * @date 20/01/16
+ * @file HardwareComponent.hpp
+ * @brief Interface class for all hardware components of the washing machine
+ */
+
 class HardwareComponent: public UARTListener{
 public:
+/**
+ * @brief Constructor for HardwareComponent
+ */ 
 	HardwareComponent(UARTInterface* uartInterface);
-	
+
+/**
+ * @brief Gets called if UART recieves a response and sends it to the directed sensor
+ * @param response The message recieved from UART
+ */
 	void responseReceived(UARTMessage response) override;
 
 protected:
