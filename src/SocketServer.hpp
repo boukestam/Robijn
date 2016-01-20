@@ -10,18 +10,54 @@
 #include <ctime>
 #include <fstream>
 
-class SocketListener;
+class SocketListener; // Needed to compile, implementation is below
 
+/**
+ * @class SocketServer
+ * @author Mathijs van Bremen
+ * @date 20/01/16
+ * @file SocketServer.hpp
+ * @brief This class handles connections to the WebSocket
+ */
 class SocketServer{
 public:
+/**
+ * @brief Constructor for SocketServer that calls method run() and method runSendMessageHandler() on new threads
+ * @param port Integer that indicates on what port number the SocketServer should run
+ */
 	SocketServer(int port);
+
+/**
+ * @brief Destructor for SocketServer that deletes certain data
+ */
 	~SocketServer();
 
+/**
+ * @brief Adds a new SocketMessage that has te be sent to the client
+ * @brief Buffer is locked by a mutex
+ * @param message Pointer to SocketMessage which will be put in the SendBuffer
+ */
 	void sendMessage(SocketMessage* message);
+
+/**
+ * @brief Checks if there's a new message from the client
+ * @brief Will return true if there's a new message and false if there's no new message
+ * @brief If there's a new message then the message parameter will point to that new message
+ * @brief Buffer is locked by a mutex
+ * @param message Reference to a pointer to SocketMessage which will point to a new message from the buffer if available
+ */
 	bool receiveMessage(SocketMessage*& message);
 
 private:
+/**
+ * @brief Function that accepts and handles new connections
+ */
     void run();
+
+/**
+ * @brief Function that will check for new messages that have to be sent to the client
+ * @brief Buffer is locked by a mutex
+ */
     void runSendMessageHandler();
 
     Multicaster* multicaster;
@@ -33,7 +69,6 @@ private:
     std::vector<SocketMessage*> sendBuffer;
 
     int sendMessageHandlerSleepTime = 200;
-    SocketMessage* localSendMessage;
 
     std::mutex receiveMutex;
     std::mutex sendMutex;
@@ -41,105 +76,43 @@ private:
     friend SocketListener;
 };
 
+/**
+ * @class SocketListener
+ * @author Mathijs van Bremen
+ * @date 20/01/16
+ * @file SocketListener.hpp
+ * @brief This class handles the callbacks from the WebSocket
+ */
 class SocketListener : public WebSocketListener{
 public:
-    SocketListener(SocketServer* socketServer) : socketServer{socketServer} {}
-    virtual ~SocketListener() {}
+/**
+ * @brief Constructor for SocketListener
+ * @param socketServer Pointer to SocketServer so SocketListener can use mutex and multicaster from SocketServer (friend of SocketServer)
+ */
+    SocketListener(SocketServer* socketServer);
 
-	void onTextMessage(const std::string& s, WebSocket* ws){ // TODO: Parse json string and put it in the receiveBuffer
-		std::cout << "Got new message" << std::endl;
-		SocketMessage* message = new SocketMessage();
-		if (message->parseJSONString(s)) {
-            rapidjson::Document& document = message->getJSON();
-            rapidjson::Value& val = document["event"];
-			std::string event = val.GetString();
+/**
+ * @brief Callback that gets called when WebSocket receives a text message
+ * @param s Reference to string received by WebSocket
+ * @param ws Pointer to WebSocket where the callback came from
+ */
+	void onTextMessage(const std::string& s, WebSocket* ws);
 
-            if (event == "verify") { // User wants to log in
-                const std::string name = document["name"].GetString();
-                const int password = document["password"].GetInt();
-                handleVerification(ws, name, password);
-                delete message; // Delete message because we're not using it
-            } else { // Handle messaged
-                unsigned int hashValue = document["hash"].GetUint();
-
-                std::unordered_map<WebSocket*, unsigned int>::const_iterator foundMap = webSocketHashValueMap.find(ws);
-
-                if (foundMap != webSocketHashValueMap.end()) { // If websocket exists
-                    if (foundMap->second == hashValue) { // If the hash is equal to the sent hash
-                        socketServer->receiveMutex.lock();
-                        socketServer->receiveBuffer.push_back(message);
-                        socketServer->receiveMutex.unlock();
-                    } else { // Hash not equal, so delete message
-                        delete message;
-                    }
-                } else { // Map not found, delete message
-                    delete message;
-                }
-            }
-		} else { // Parsing failed, delete message
-            std::cout << "Parsing failed" << std::endl;
-            delete message;
-		}
-		std::cout << "Received: " << s << std::endl;
-	}
-
-	void onClose(WebSocket* ws){
-		socketServer->multicaster->remove(ws);
-
-		std::unordered_map<WebSocket*, unsigned int>::const_iterator foundMap = webSocketHashValueMap.find(ws);
-
-        if (foundMap != webSocketHashValueMap.end()) {
-            webSocketHashValueMap.erase(foundMap);
-        }
-
-		delete ws;
-	}
+/**
+ * @brief Callback that gets called when WebSocket gets closed
+ * @param ws Pointer to WebSocket where the callback came from
+ */
+	void onClose(WebSocket* ws);
 
 private:
+/**
+ * @brief Function that handles verification of a certain user
+ * @param ws Pointer to WebSocket the verification request came from
+ * @param name String of the username that has to be verified
+ * @param password Integer of the hashed password that has to be verified
+ */
+    void handleVerification(WebSocket* ws, std::string name, int password);
+
     SocketServer* socketServer;
     std::unordered_map<WebSocket*, unsigned int> webSocketHashValueMap; // WebSocket pointer, hash value
-
-    void handleVerification(WebSocket* ws, std::string name, int password) {
-		std::ifstream file("users.json");
-		std::string str;
-		std::string file_contents;
-		while (std::getline(file, str))
-		{
-			file_contents += str;
-		}  
-
-
-		rapidjson::Document document;
-		document.Parse(file_contents.c_str());
-
-		const rapidjson::Value& a = document["users"];
-
-		for (rapidjson::SizeType i = 0; i < a.Size(); i++){
-		    std::string defaultName = a[i]["name"].GetString(); // TODO: From file
-		    int defaultPassword = a[i]["pass"].GetInt(); //3079651; // TODO: From file means demo  
-
-		    if (name == defaultName && password == defaultPassword) {
-		        //const long double sysTime = time(0);
-		        //const char* s = std::to_string(sysTime).c_str();
-				const char* s = "wakkaUbuntu9NEIN";
-
-		        unsigned int newHash = time(0);
-		        while (*s) {
-		            newHash = newHash * 101  +  *s++;
-		        }
-
-		        std::pair <WebSocket*, unsigned int> newPair(ws, newHash);
-		        webSocketHashValueMap.insert(newPair);
-
-		        std::string jsonString("{\"event\":\"verify\", \"ok\":true, \"hash\":");
-		        jsonString.append(std::to_string(newHash));
-		        jsonString.append("}");
-		        ws->sendTextMessage(jsonString);
-				return;
-		    } 
-		} 
-		// Wrong name and/or password
-        std::string jsonString("{\"event\":\"verify\", \"ok\":false}");
-        ws->sendTextMessage(jsonString);
-    }
 };

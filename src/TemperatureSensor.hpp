@@ -18,7 +18,7 @@ public:
 	TemperatureSensor(UARTInterface* uartInterface);
 
 /**
- * @brief Calls an update on the currentValue for TemperatureSensor
+ * @brief Calls an update on the currentState for TemperatureSensor
  */
 	void update() override;
 

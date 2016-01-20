@@ -4,6 +4,8 @@
 #include "HardwareSensor.hpp"
 #include "Motor.hpp"
 
+#include <time.h>
+
 /**
  * @class RotationController
  * @author Thijs
@@ -32,8 +34,13 @@ public:
  * @brief Main method derrived from RTOS::Task
  */
 	void main() override;
+
+	void setRotationInterval(int interval);
 	
 private:
 	Motor* motor;
 	HardwareSensor* rotationSensor;
+
+	time_t lastRotationSwitch;
+	int rotationInterval = 0;
 };

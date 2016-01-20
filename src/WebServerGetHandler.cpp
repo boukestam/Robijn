@@ -3,9 +3,6 @@
 WebServerGetHandler::WebServerGetHandler() {
 }
 
-WebServerGetHandler::~WebServerGetHandler() {
-}
-
 std::string WebServerGetHandler::getGetPrefix() {
     return getPrefix;
 }
