@@ -90,7 +90,7 @@ public:
  * @param socketServer Pointer to SocketServer so SocketListener can use mutex and multicaster from SocketServer (friend of SocketServer)
  */
     SocketListener(SocketServer* socketServer);
-
+	virtual ~SocketListener() {};
 /**
  * @brief Callback that gets called when WebSocket receives a text message
  * @param s Reference to string received by WebSocket
