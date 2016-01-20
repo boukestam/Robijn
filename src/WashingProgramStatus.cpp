@@ -7,7 +7,24 @@ SocketMessage* WashingProgramStatus::toSocketMessage(){
     rapidjson::StringBuffer s;
     rapidjson::Writer<rapidjson::StringBuffer> writer(s);
 
-	//int stats = stats;
+    int stat = 0x00;
+    switch(status){
+        case WashingMachineStatus::halted:
+            stat = 0x01;
+            break;
+        case WashingMachineStatus::idle:
+            stat = 0x02;
+            break;
+        case WashingMachineStatus::running:
+            stat = 0x04;
+            break;
+        case WashingMachineStatus::stopped:
+            stat = 0x08;
+            break;
+        case WashingMachineStatus::failed:
+            stat = 0x00;
+            break;
+    }
 
     writer.StartObject();
         writer.Key("event");
@@ -15,7 +32,7 @@ SocketMessage* WashingProgramStatus::toSocketMessage(){
         writer.Key("washingProgram");
         writer.StartObject();
             writer.Key("description");
-            writer.String("Change name in washingprogramstatus.cpp");
+            writer.String("No description in status");
             writer.Key("currentStep");
             writer.Uint(currentStep);
             writer.Key("totalSteps");
@@ -23,7 +40,7 @@ SocketMessage* WashingProgramStatus::toSocketMessage(){
             writer.Key("data");
             writer.StartObject();
                 writer.Key("status");
-                writer.Uint(0);
+                writer.Uint(stat);
                 writer.Key("currentDegrees");
                 writer.Uint(temperature);
                 writer.Key("currentRpm");
