@@ -58,6 +58,9 @@ void WebInterfaceController::loadWashingPrograms()
 		    step.rotationSpeed = stoi(setting["rpm"].GetString());
 		    step.waterLevel = stoi(setting["water"].GetString());
 		    step.duration = stoi(setting["time"].GetString());
+            step.rotationInterval = stoi(setting["rotationInterval"].GetString());
+            
+            std::cout << " Rotation interval: " << step.rotationInterval << std::endl;
 		    
 		    wp->addStep(step);
 		}
@@ -97,6 +100,7 @@ void WebInterfaceController::main()
                     step.rotationSpeed = stoi(setting["rpm"].GetString());
                     step.waterLevel = stoi(setting["water"].GetString());
                     step.duration = stoi(setting["time"].GetString());
+                    step.rotationInterval = stoi(setting["rotationInterval"].GetString());
 
                     wp->addStep(step);
 				}
@@ -140,6 +144,9 @@ void WebInterfaceController::valueChanged(HardwareSensor* sensor, unsigned char 
 	std::cout << "New status: " << (int)value << std::endl;
 
         switch(value){
+            case 0x01:
+                stats = WashingMachineStatus::halted;
+                break;
             case 0x02:
                 stats = WashingMachineStatus::idle;
                 break;
@@ -149,8 +156,8 @@ void WebInterfaceController::valueChanged(HardwareSensor* sensor, unsigned char 
             case 0x08:
                 stats = WashingMachineStatus::stopped;
                 break;
-            case 0x01:
-                stats = WashingMachineStatus::halted;
+            case 0x00:
+                stats = WashingMachineStatus::failed;
                 break;
         }
 
@@ -187,6 +194,8 @@ SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
             writer.Uint(step.waterLevel);
             writer.Key("time");
             writer.Uint(step.duration);
+            writer.Key("rotationInterval");
+            writer.Uint(step.rotationInterval);
             writer.EndObject();
         }
         writer.EndArray();
