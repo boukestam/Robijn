@@ -1,63 +1,178 @@
 <html>
-<head>
-    <title> Wasmachine </title>
-    <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
-    <script src="draw.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
-
-<!-- header -->
-<div> 
-    <img src="logo.jpg" alt="Logo">
-</div>
-		<div class="ribbon-wrapper-green"><div id="ribbon" class="ribbon-green">Online</div></div>
-<div id="login">
-Name: <input type="text" id="nameInput" /> <br/>
-Passcode: <input type="password" id="passInput" /><br />
-IP wasmachine: <input type="text" id="ipInput" /> poort: <input type="text" id="poortInput" value="8081" />
-		  <input type="button" value="verbind" id="subBtn" />
-</div>
-<div id="status">   
-
-	<!-- Body -->
-	<canvas id="statusCanvas" height="200" style="border:1px solid #000000;">
-	</canvas>
+	<head>
+		<title>Robijn</title>
+		<script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script src="draw.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
 		
-		
-	<fieldset id="infoBox">
-	  <legend id="legenda">Was info</legend>
-		Was status: <a id="statusText">Running</a><br />
-			<select id="wasSelector" width="300px;">
-				<option></option>
-			</select><br /><br />
-		<label>Centrifugeer snelheid: <a id="rpm"> </a></label><br />
-			<input type="radio" name="radiorpm" value="0" /> niet <br />
-			<input type="radio" name="radiorpm" value="1200" /> 1200 toeren per minuut<br />
-			<input type="radio" name="radiorpm" value="1400" /> 1400 toeren per minuut<br />
-			<input type="radio" name="radiorpm" value="1600" /> 1600 toeren per minuut<br />
-			<input type="radio" name="radiorpm" value="1800" /> 1800 toeren per minuut<br />
-		 <br />
-	   <label> Temperatuur: <a id="temp"> </a> </label><br />
-			<input type="radio" name="radiotmp" value="20" /> 20 graden <br />
-			<input type="radio" name="radiotmp" value="30" /> 30 graden<br />
-			<input type="radio" name="radiotmp" value="40" /> 40 graden<br />
-			<input type="radio" name="radiotmp" value="50" /> 50 graden<br />
-			<input type="radio" name="radiotmp" value="60" /> 60 graden<br />
-			<input type="radio" name="radiotmp" value="70" /> 70 graden<br />
-			<input type="radio" name="radiotmp" value="80" /> 80 graden<br />
-			<input type="radio" name="radiotmp" value="90" /> 90 graden<br />
-			<input type="radio" name="radiotmp" value="100" /> 100 graden<br />
-		 <br />
-		<label>spoel tijd: <a id="time"> </a></label><br />
-			<input type="radio" name="radiotime" value="2400" /> kort (40 min) <br />
-			<input type="radio" name="radiotime" value="3000" /> normaal (50 min) <br />
-			<input type="radio" name="radiotime" value="3600" /> lang (60 min) <br />
-	<!-- Als het draait -->
-	<button id="stop" type="button">Stop!</button>
-	<!-- Als het gestopt is -->
-	<button id="start" type="button" >Start!</button>
-	</fieldset>
-</div>
-</body>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+	</head>
+
+	<body>
+		<div class="container">
+			<img src="robijn.png" style="margin-top:10px;width:200px;height:auto;"/>
+
+			<div class="ribbon-wrapper-green">
+				<div id="ribbon" class="ribbon-green">Online</div>
+			</div>
+			
+			<div id="login" class="card" style="padding:20px;">
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="nameInput" type="text" class="validate">
+						<label>Name</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="passInput" type="password" class="validate">
+						<label>Password</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="ipInput" type="text" class="validate">
+						<label>IP</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="poortInput" type="text" class="validate" value="8081" >
+						<label>Port</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<a class="waves-effect waves-light btn" id="subBtn">Connect</a>
+					</div>
+				</div>
+			</div>
+			
+			<div id="status">
+				<canvas id="statusCanvas" class="card" style="width:100%;height:200px;"></canvas>
+				
+				<div class="card" style="padding:20px;">
+					<form class="row">
+						<h5>Info</h5>
+						
+						<div class="col s12">
+							<p>
+								Status: <b id="statusText">Running</b>
+							</p>
+						</div>
+						
+						<div class="col s12">
+							<p>
+								<b>Washing program</b>
+							</p>
+							
+							<p>
+								<select id="wasSelector" class="browser-default">
+									<option></option>
+								</select>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<b>Centrifuging</b>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="0"/>
+								<label>Disabled</label>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="1200"/>
+								<label>1200 rpm</label>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="1400"/>
+								<label>1400 rpm</label>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="1600"/>
+								<label>1600 rpm</label>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="1800"/>
+								<label>1800 rpm</label>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<b>Temperature</b>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="20"/>
+								<label>20 degrees</label>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="30"/>
+								<label>30 degrees</label>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="40"/>
+								<label>40 degrees</label>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="60"/>
+								<label>60 degrees</label>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="90"/>
+								<label>90 degrees</label>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<b>Duration</b>
+							</p>
+							
+							<p>
+								<input name="radiotime" type="radio" value="3600"/>
+								<label>Fast (60 min)</label>
+							</p>
+							
+							<p>
+								<input name="radiotime" type="radio" value="7200"/>
+								<label>Intensive (120 min)</label>
+							</p>
+							
+							<p>
+								<input name="radiotime" type="radio" value="14400"/>
+								<label>Eco (240 min)</label>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<!-- Als het draait -->
+								<a class="waves-effect waves-light btn" id="stop">Stop</a>
+								
+								<!-- Als het gestopt is -->
+								<a class="waves-effect waves-light btn" id="start">Start</a>
+							</p>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>

@@ -161,6 +161,9 @@ void WebInterfaceController::valueChanged(HardwareSensor* sensor, unsigned char 
             case 0x00:
                 stats = WashingMachineStatus::failed;
                 break;
+			default:
+				stats = WashingMachineStatus::running;
+				break;
         }
 
         currentWashingProgramStatus->status = stats;

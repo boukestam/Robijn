@@ -1,21 +1,59 @@
 {
 	"washingPrograms":[
 		{
-			"description":"Was programma 1",
+			"description":"Snel",
 			"steps":[
 				{
-					"degrees":"45",
+					"degrees":"40",
 					"rpm":"200",
 					"water":"50",
-					"time":"400",
+					"time":"3000",
                   	"rotationInterval":"30"
 				},
 				{
 					"degrees":"20",
 					"rpm":"1200",
 					"water":"0",
-					"time":"100",
-                  	"rotationInterval":"50"
+					"time":"600",
+                  	"rotationInterval":"300"
+				}
+			]
+		},
+		{
+			"description":"Eco",
+			"steps":[
+				{
+					"degrees":"30",
+					"rpm":"200",
+					"water":"50",
+					"time":"14400",
+                  	"rotationInterval":"30"
+				},
+				{
+					"degrees":"20",
+					"rpm":"1200",
+					"water":"0",
+					"time":"600",
+                  	"rotationInterval":"300"
+				}
+			]
+		},
+		{
+			"description":"Bonte was",
+			"steps":[
+				{
+					"degrees":"40",
+					"rpm":"200",
+					"water":"50",
+					"time":"7200",
+                  	"rotationInterval":"30"
+				},
+				{
+					"degrees":"20",
+					"rpm":"1200",
+					"water":"0",
+					"time":"600",
+                  	"rotationInterval":"300"
 				}
 			]
 		}

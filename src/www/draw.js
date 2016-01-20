@@ -23,14 +23,8 @@ $( document ).ready(function() {
     
     var stepCount;
     var hasLoadedPrograms = false;
-    
-    window.addEventListener('resize', resizeCanvas, false);
-
-    function resizeCanvas() {
-            c.width = window.innerWidth - 20;
-            draw(); 
-    }
-    resizeCanvas();
+	
+    draw();
     hideShowItems();
 
 	function initWebSockets()
