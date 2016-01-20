@@ -10,9 +10,6 @@ WebServer::WebServer(int port, std::string rootDirectory) : port{port}, rootDire
     t.detach();
 }
 
-WebServer::~WebServer() {
-}
-
 // Custom getLine function to handle requests from multiple OSes
 // Sees LF, CR+LF and CR as end-of-line mark
 std::istream& WebServer::getLine(std::istream& in, std::string& out) {
@@ -33,7 +30,7 @@ std::istream& WebServer::getLine(std::istream& in, std::string& out) {
 	return in;
 }
 
-void WebServer::handleConnection(TCPSocket *sock) {
+void WebServer::handleConnection(TCPSocket* sock) {
     Logger logger;
     logger.setFile(sock->getForeignAddress().getAddress());
     logger.logNotice("Handle Connection", "Started logging");

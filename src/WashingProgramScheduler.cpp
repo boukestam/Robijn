@@ -66,3 +66,11 @@ void WashingProgramScheduler::update(){
 		}
 	}
 }
+
+int WashingProgramScheduler::GetElapsedStepTime()
+{
+    time_t now;
+    time(&now);
+    int elapsedSeconds = now - stepStartTime;
+    return elapsedSeconds;
+}

@@ -172,3 +172,12 @@ void WashingProgramController::main(){
 		std::cout << "Stopped washing program" << std::endl;
 	}
 }
+
+int WashingProgramController::getStepTimeRunning(){
+    return scheduler->GetElapsedStepTime();
+    
+}
+
+WashingProgramStep WashingProgramController::getCurrentStep(){
+	return scheduler->getCurrentStep();
+}

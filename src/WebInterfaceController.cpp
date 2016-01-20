@@ -124,6 +124,8 @@ void WebInterfaceController::main()
 		wait(sleepTimer);
 		// Send status update every 1000MS
 		if(currentWashingProgramStatus->status ==  WashingMachineStatus::running){
+			currentWashingProgramStatus->totalSteptime = washingProgramController->getCurrentStep().duration;
+            currentWashingProgramStatus->duration = washingProgramController->getStepTimeRunning();
 			SocketMessage* msg2 = currentWashingProgramStatus->toSocketMessage();
         	socketServer->sendMessage(msg2);
 		}

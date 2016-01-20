@@ -3,7 +3,6 @@
 #include <iostream>
 
 SocketMessage* WashingProgramStatus::toSocketMessage(){
-    // TODO(Yorick): Get the name of the washing program
     rapidjson::StringBuffer s;
     rapidjson::Writer<rapidjson::StringBuffer> writer(s);
 
@@ -48,7 +47,7 @@ SocketMessage* WashingProgramStatus::toSocketMessage(){
                 writer.Key("currentWaterLevel");
                 writer.Uint(waterLevel);
                 writer.Key("timeRunning");
-                writer.Uint(totalSteptime - timeLeft);
+                writer.Uint(duration);
                 writer.Key("totalTime");
                 writer.Uint(totalSteptime);
             writer.EndObject();
