@@ -28,42 +28,36 @@ IP wasmachine: <input type="text" id="ipInput" /> poort: <input type="text" id="
 	<fieldset id="infoBox">
 	  <legend id="legenda">Was info</legend>
 		Was status: <a id="statusText">Running</a><br />
-		<label>Centrifugeer snelheid: <a id="rpm"> </a></label>
-		<select id="rpmSelector">
-		    <option></option>
-		    <option value='0'>niet</option>
-		    <option value='1200'>1200</option>
-		    <option value='1400'>1400</option>
-		    <option value='1600'>1600</option>
-		    <option value='1800'>1800</option>
-		</select> toeren per minuut<br />
-	   <label> Temperatuur: <a id="temp"> </a> </label>
-		<select id="degreeSelector">
-		    <option></option>
-		    <option value='10'>10 graden</option>
-		    <option value='20'>20 graden</option>
-		    <option value='30'>30 graden</option>
-		    <option value='40'>40 graden</option>
-		    <option value='50'>50 graden</option>
-		    <option value='60'>60 graden</option>
-		    <option value='70'>70 graden</option>
-		    <option value='80'>80 graden</option>
-		</select>  <br />
-		<label>spoel tijd: <a id="time"> </a></label>
-		<select id="timeSelector">
-		    <option></option>
-		    <option value='40'>kort (40 min)</option>
-		    <option value='50'>normaal (50 min)</option>
-		    <option value='60'>lang (60 min)</option>
-		</select><br />
-	</fieldset>
+			<select id="wasSelector" width="300px;">
+				<option></option>
+			</select><br /><br />
+		<label>Centrifugeer snelheid: <a id="rpm"> </a></label><br />
+			<input type="radio" name="radiorpm" value="0" /> niet <br />
+			<input type="radio" name="radiorpm" value="1200" /> 1200 toeren per minuut<br />
+			<input type="radio" name="radiorpm" value="1400" /> 1400 toeren per minuut<br />
+			<input type="radio" name="radiorpm" value="1600" /> 1600 toeren per minuut<br />
+			<input type="radio" name="radiorpm" value="1800" /> 1800 toeren per minuut<br />
+		 <br />
+	   <label> Temperatuur: <a id="temp"> </a> </label><br />
+			<input type="radio" name="radiotmp" value="20" /> 20 graden <br />
+			<input type="radio" name="radiotmp" value="30" /> 30 graden<br />
+			<input type="radio" name="radiotmp" value="40" /> 40 graden<br />
+			<input type="radio" name="radiotmp" value="50" /> 50 graden<br />
+			<input type="radio" name="radiotmp" value="60" /> 60 graden<br />
+			<input type="radio" name="radiotmp" value="70" /> 70 graden<br />
+			<input type="radio" name="radiotmp" value="80" /> 80 graden<br />
+			<input type="radio" name="radiotmp" value="90" /> 90 graden<br />
+			<input type="radio" name="radiotmp" value="100" /> 100 graden<br />
+		 <br />
+		<label>spoel tijd: <a id="time"> </a></label><br />
+			<input type="radio" name="radiotime" value="2400" /> kort (40 min) <br />
+			<input type="radio" name="radiotime" value="3000" /> normaal (50 min) <br />
+			<input type="radio" name="radiotime" value="3600" /> lang (60 min) <br />
 	<!-- Als het draait -->
 	<button id="stop" type="button">Stop!</button>
 	<!-- Als het gestopt is -->
-	<select id="wasSelector">
-
-	</select>
 	<button id="start" type="button" >Start!</button>
+	</fieldset>
 </div>
 </body>
 </html>

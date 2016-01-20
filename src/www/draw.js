@@ -236,16 +236,16 @@ $( document ).ready(function() {
     {
         console.log(status);
         if(status == 0x02 || status == 0x08) {
-            $('#rpmSelector').show();
-            $('#degreeSelector').show();
-            $('#timeSelector').show();
+            $('#radiorpm').show();
+            $('#radiotmp').show();
+            $('#radiotime').show();
             $('#wasSelector').show();
             $('#start').show();
             $('#stop').hide();
         } else {
-            $('#rpmSelector').hide();
-            $('#degreeSelector').hide();
-            $('#timeSelector').hide(); 
+            $('#radiorpm').hide();
+            $('#radiotmp').hide();
+            $('#radiotime').hide(); 
             $('#start').hide();
             $('#wasSelector').hide();
             $('#stop').show();
@@ -260,14 +260,15 @@ $( document ).ready(function() {
         var currentDegrees = data.steps[0]["degrees"];
         var rpm = data.steps[0]["rpm"];
         var water = data.steps[0]["water"];
-        var total = 0;
-        for(var i = 0; i < data.steps.length; i++){
-            times[i] = data.steps[i]["time"];
-            total += times[i];
-        }
+		var time = data.steps[0]["time"];
+       
         steps = data.steps.length + 1;
         
+		$("input[name=radiorpm][value=" + rpm + "]").prop('checked', true);
+		$("input[name=radiotime][value=" + time + "]").prop('checked', true);
+		$("input[name=radiotmp][value=" + currentDegrees + "]").prop('checked', true);
 
+/*
         $('#waterSelector option:first-child').text(water);
         $('#rpmSelector option:first-child').text(rpm);
         $('#degreeSelector option:first-child').text(currentDegrees);
@@ -277,7 +278,7 @@ $( document ).ready(function() {
         $('#rpmSelector option:first-child').val(rpm);
         $('#degreeSelector option:first-child').val(currentDegrees);
         $('#timeSelector option:first-child').val(total);
-        
+        */
         $("#water").innerHTML = water;
         $("#rpm").innerHTML = rpm;
         $("#temp").innerHTML = currentDegrees;
@@ -316,14 +317,14 @@ $( document ).ready(function() {
             "washingProgram":{
                     "steps":[
                     {
-                        "degrees": $( "#degreeSelector option:selected" ).val(),
+                        "degrees": $('input[name=radiotmp]:checked').val(),
                         "rpm": data.steps[0]['rpm'].toString() ,
                         "water": data.steps[0]['water'].toString() ,
-                        "time": $( "#timeSelector option:selected" ).val(),
+                        "time": $('input[name=radiotime]:checked').val(),
                         "rotationInterval": data.steps[0]['rotationInterval'].toString() 
                     },{
                         "degrees": data.steps[1]['degrees'].toString() ,
-                        "rpm": $( "#rpmSelector option:selected" ).val(),
+                        "rpm": $('input[name=radiorpm]:checked').val(),
                         "water": data.steps[1]['water'].toString() ,
                         "time": data.steps[1]['time'].toString() ,
                         "rotationInterval": data.steps[1]['rotationInterval'].toString() 
