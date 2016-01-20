@@ -15,6 +15,9 @@ public:
 
 	int totalSteps = 0;
 	int totalSteptime = 0;
+    
+    int timeRunning = 0;
+    int duration = 0;
 
 	WashingMachineStatus status;
 

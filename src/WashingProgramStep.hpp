@@ -6,6 +6,7 @@ public:
 	int waterLevel;
 	int temperature;
 	int duration;
+    int timeSinceStart;
     int rotationInterval;
 
 	bool operator==(WashingProgramStep& rhs){

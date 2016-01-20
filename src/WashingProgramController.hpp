@@ -75,6 +75,8 @@ public:
  * @param value The changed value
  */
 	void valueChanged(HardwareSensor* sensor, unsigned char value);
+    
+    int getStepTimeRunning();
 private:
 	WashingProgramScheduler* scheduler;
 	

@@ -48,6 +48,11 @@ public:
 	*/
 	 
 	void update();
+    
+    /**
+     * @brief The time elapsed in this step
+     */
+    int GetElapsedStepTime();
 	
 private:
 	WashingProgram* currentWashingProgram;

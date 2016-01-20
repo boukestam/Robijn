@@ -61,3 +61,11 @@ void WashingProgramScheduler::update(){
 		std::cout << "End of update" << std::endl;
 	}
 }
+
+int WashingProgramScheduler::GetElapsedStepTime()
+{
+    time_t now;
+    time(&now);
+    int elapsedSeconds = now - stepStartTime;
+    return elapsedSeconds;
+}
