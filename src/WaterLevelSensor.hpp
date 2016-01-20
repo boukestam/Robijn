@@ -18,7 +18,7 @@ public:
 	WaterLevelSensor(UARTInterface* uartInterface);
 
 /**
- * @brief Calls an update on the currentValue for TemperatureSensor
+ * @brief Calls an update on the currentState for WaterLevelSensor
  */
 	void update() override;
 
