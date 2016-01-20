@@ -18,7 +18,7 @@ public:
 	RotationSensor(UARTInterface* uartInterface);
 
 /**
- * @brief Calls an update on the currentState for RotationSensor
+ * @brief Calls an update on the currentValue for TemperatureSensor
  */
 	void update() override;
 

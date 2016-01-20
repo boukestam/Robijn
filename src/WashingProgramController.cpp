@@ -51,6 +51,8 @@ void WashingProgramController::main(){
 	RTOS::timer washingProgramTimer(this, "stepTimer");
 	RTOS::flag stateReachedFlag(this, "stateReachedFlag");
 
+	RTOS::timer doorTimer(this, "doorTimer");
+
 	while(true){
 		wait(startFlag);
 
@@ -59,8 +61,6 @@ void WashingProgramController::main(){
 		hasStarted = true;
 
 		std::cout << "Waiting for door to close" << std::endl;
-
-		RTOS::timer doorTimer(this, "doorTimer");
 
 		while(!doorClosed){
 			doorSensor->update();
@@ -94,11 +94,14 @@ void WashingProgramController::main(){
 				if(scheduler->isRunning()){
 					if(scheduler->isPaused()){
 						scheduler->unpause();
+						washingMachine->start();
 					}
 
 					WashingProgramStep currentStep = scheduler->getCurrentStep();
 
 					if(currentStep != step){
+						scheduler->pause();
+
 						waterLevelController->setGoalState(currentStep.waterLevel);
 
 						waterLevelController->signalWhenDone(&stateReachedFlag);
@@ -110,12 +113,15 @@ void WashingProgramController::main(){
 						rotationController->setGoalState(currentStep.rotationSpeed / 25);
 
 						step = currentStep;
+
+						scheduler->unpause();
 					}
 				}else{
 					std::cout << "Washing program done" << std::endl;
 					break;
 				}
 			}else if(washingMachineStatus == FAILED){
+				std::cout << "Status: " << "FAILED" << std::endl;
 				scheduler->pause();
 			}else{
 				if(startedRunning){

@@ -30,10 +30,17 @@ bool WashingProgramScheduler::isPaused(){
 }
 
 void WashingProgramScheduler::pause(){
+	time(&beforePauseTime);
 	paused = true;
 }
 
 void WashingProgramScheduler::unpause(){
+	time_t afterPauseTime;
+	time(&afterPauseTime);
+
+	int pauseDuration = afterPauseTime - beforePauseTime;
+	stepStartTime += pauseDuration;
+
 	paused = false;
 }
 
@@ -46,7 +53,7 @@ void WashingProgramScheduler::update(){
 		int elapsedSeconds = now - stepStartTime;
 
 		if(elapsedSeconds >= currentWashingProgram->getStep(currentStepIndex).duration){
-			if(currentStepIndex >= currentWashingProgram->getStepSize() - 1){
+			if(currentStepIndex < currentWashingProgram->getStepSize() - 1){
 				currentStepIndex++;
 
 				std::cout << "Step: " << currentStepIndex - 1 << "has finished/nMoving to step: " << currentStepIndex << std::endl;
@@ -57,7 +64,5 @@ void WashingProgramScheduler::update(){
 				running = false;
 			}
 		}
-
-		std::cout << "End of update" << std::endl;
 	}
 }

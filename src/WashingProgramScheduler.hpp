@@ -55,6 +55,7 @@ private:
 	time_t stepStartTime = 0;
 	time_t stepStopTime = 0;
 	time_t programStartTime = 0;
+	time_t beforePauseTime = 0;
 
 	unsigned int currentStepIndex = 0;
 	

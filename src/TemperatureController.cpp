@@ -7,6 +7,7 @@ TemperatureController::TemperatureController(Heating* heating, HardwareSensor* t
 
 void TemperatureController::main(){
 	RTOS::timer temperatureTimer(this, "temperatureTimer");
+
 	while(true){
 		if(currentState >= goalState+1){
 			heating->off();
