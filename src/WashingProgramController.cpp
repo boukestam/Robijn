@@ -105,6 +105,8 @@ void WashingProgramController::main(){
 						wait(stateReachedFlag);
 
 						temperatureController->setGoalState(currentStep.temperature);
+
+						rotationController->setRotationInterval(currentStep.rotationInterval);
 						rotationController->setGoalState(currentStep.rotationSpeed / 25);
 
 						step = currentStep;

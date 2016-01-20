@@ -136,21 +136,21 @@ void WebInterfaceController::valueChanged(HardwareSensor* sensor, unsigned char 
         currentWashingProgramStatus->rotationSpeed = value;
     } else if (sensor == washingMachineStatusSensor) {
         WashingMachineStatus stats;
+
+	std::cout << "New status: " << (int)value << std::endl;
+
         switch(value){
-            case 0:
+            case 0x02:
                 stats = WashingMachineStatus::idle;
                 break;
-            case 1:
+            case 0x04:
                 stats = WashingMachineStatus::running;
                 break;
-            case 2:
+            case 0x08:
                 stats = WashingMachineStatus::stopped;
                 break;
-            case 3:
+            case 0x01:
                 stats = WashingMachineStatus::halted;
-                break;
-            case 4:
-                stats = WashingMachineStatus::failed;
                 break;
         }
 
