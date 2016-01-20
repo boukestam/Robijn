@@ -3,9 +3,6 @@
 SocketMessage::SocketMessage() {
 }
 
-SocketMessage::~SocketMessage() {
-}
-
 bool SocketMessage::parseJSONString(std::string jsonString) {
     const char* c = jsonString.c_str();
     rapidjson::ParseResult ok = json.Parse(c);

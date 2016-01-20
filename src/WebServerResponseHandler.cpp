@@ -4,9 +4,6 @@ WebServerResponseHandler::WebServerResponseHandler(std::string rootDirectory, Lo
     log.logNotice("ResponseHandler ctor", "New response handler for connection ");
 }
 
-WebServerResponseHandler::~WebServerResponseHandler() {
-}
-
 void WebServerResponseHandler::setInfo(std::string filePath, std::string fileExtension) {
     path = filePath;
     extension = fileExtension;
@@ -29,7 +26,7 @@ bool WebServerResponseHandler::isValidExtension() {
     for (auto s : ValidExtensionType) {
         if (s.ext == extension) {
             needBinaryRead = s.binaryRead;
-            content_type = "Content-Type: " + s.content_type;
+            contentType = "Content-Type: " + s.contentType;
             log.logNotice("IsValidExtension", "Valid extension");
             return true;
         }
@@ -50,7 +47,7 @@ void WebServerResponseHandler::sendResponse(TCPSocket *sock) {
             log.logNotice("SendResponse", "Valid Extension and file read");
         } else {// Niet ondersteunde extensie 501 Not Implemented
             stream << "HTTP/1.1 501 Not Implemented" << std::endl;
-            content_type = "text/html";
+            contentType = "text/html";
             response = readFile("statuspages/501.html", false);
             log.logNotice("SendResponse", "Invalid extension 501 not implemented");
         }
@@ -58,12 +55,12 @@ void WebServerResponseHandler::sendResponse(TCPSocket *sock) {
     } else {
         stream << "HTTP/1.1 404 File not found" << std::endl;
         response = readFile("statuspages/404.html", false);
-        content_type = "text/html";
+        contentType = "text/html";
         log.logNotice("SendResponse", "404 file not found");
     }
 
     stream << "Content-Length: " << response.length() << std::endl;
-    stream << "Content-Type: " << content_type << std::endl;
+    stream << "Content-Type: " << contentType << std::endl;
     stream << std::endl;
     stream << response;
     stream.flush();

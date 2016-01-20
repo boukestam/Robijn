@@ -3,13 +3,11 @@
 Logger::Logger() {
 }
 
-Logger::~Logger() {
-}
-
 void Logger::setFile(std::string file) {
-    std::string timeStr = getTime();
+    file.append("_");
+    file.append(getTime());
 
-    logFile = timeStr; // LogFile is time on which setFile is called
+    logFile = file; // LogFile is time on which setFile is called
 }
 
 void Logger::logNotice(std::string funcName, std::string log) {
