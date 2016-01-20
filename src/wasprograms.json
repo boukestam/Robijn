@@ -5,33 +5,17 @@
 			"steps":[
 				{
 					"degrees":"45",
-					"rpm":"1200",
-					"water":"80",
-					"time":"100",
-                  "rotationInterval":"30"
-				},{
-					"degrees":"45",
-					"rpm":"1200",
-					"water":"80",
-					"time":"100",
-                  "rotationInterval":"300"
-				}
-			]
-		} , {
-			"description":"Was programma 2",
-			"steps":[
+					"rpm":"200",
+					"water":"50",
+					"time":"400",
+                  	"rotationInterval":"30"
+				},
 				{
-					"degrees":"45",
+					"degrees":"20",
 					"rpm":"1200",
-					"water":"80",
+					"water":"0",
 					"time":"100",
-                  "rotationInterval":"30"
-				},{
-					"degrees":"45",
-					"rpm":"1200",
-					"water":"80",
-					"time":"100",
-                  "rotationInterval":"300"
+                  	"rotationInterval":"50"
 				}
 			]
 		}
