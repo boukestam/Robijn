@@ -11,7 +11,7 @@
 <div> 
     <img src="logo.jpg" alt="Logo">
 </div>
-		<div class="ribbon-wrapper-green"><div class="ribbon-green">Online</div></div>
+		<div class="ribbon-wrapper-green"><div id="ribbon" class="ribbon-green">Online</div></div>
 <div id="login">
 Name: <input type="text" id="nameInput" /> <br/>
 Passcode: <input type="password" id="passInput" /><br />
@@ -27,71 +27,35 @@ IP wasmachine: <input type="text" id="ipInput" /> poort: <input type="text" id="
 		
 	<fieldset id="infoBox">
 	  <legend id="legenda">Was info</legend>
-		Was status: <a id="status">Running</a><br />
-		<label>Water niveau: <a id="water"> </a>% </label> 
-		<select id="waterSelector">
-		    <option></option>
-		    <option>1</option>
-		    <option>20</option>
-		    <option>30</option>
-		    <option>40</option>
-		    <option>50</option>
-		    <option>60</option>
-		    <option>70</option>
-		    <option>80</option>
-		    <option>90</option>
-		    <option>100</option>
-		</select><br />
-		<label>Toeren: <a id="rpm"> </a></label>
+		Was status: <a id="statusText">Running</a><br />
+		<label>Centrifugeer snelheid: <a id="rpm"> </a></label>
 		<select id="rpmSelector">
 		    <option></option>
-		    <option>100</option>
-		    <option>200</option>
-		    <option>300</option>
-		    <option>400</option>
-		    <option>500</option>
-		    <option>600</option>
-		    <option>700</option>
-		    <option>800</option>
-		    <option>900</option>
-		    <option>1000</option>
-		    <option>1100</option>
-		    <option>1200</option>
-		    <option>1300</option>
-		    <option>1400</option>
-		    <option>1500</option>
-		    <option>1600</option>
-		    <option>1700</option>
-		    <option>1800</option>
-		</select> per minuut<br />
+		    <option value='0'>niet</option>
+		    <option value='1200'>1200</option>
+		    <option value='1400'>1400</option>
+		    <option value='1600'>1600</option>
+		    <option value='1800'>1800</option>
+		</select> toeren per minuut<br />
 	   <label> Temperatuur: <a id="temp"> </a> </label>
 		<select id="degreeSelector">
 		    <option></option>
-		    <option>10</option>
-		    <option>20</option>
-		    <option>30</option>
-		    <option>40</option>
-		    <option>50</option>
-		    <option>60</option>
-		    <option>70</option>
-		    <option>80</option>
-		    <option>90</option>
-		    <option>100</option>
-		</select> graden <br />
-		<label>loop tijd: <a id="time"> </a></label>
+		    <option value='10'>10 graden</option>
+		    <option value='20'>20 graden</option>
+		    <option value='30'>30 graden</option>
+		    <option value='40'>40 graden</option>
+		    <option value='50'>50 graden</option>
+		    <option value='60'>60 graden</option>
+		    <option value='70'>70 graden</option>
+		    <option value='80'>80 graden</option>
+		</select>  <br />
+		<label>spoel tijd: <a id="time"> </a></label>
 		<select id="timeSelector">
 		    <option></option>
-		    <option>1</option>
-		    <option>20</option>
-		    <option>30</option>
-		    <option>40</option>
-		    <option>50</option>
-		    <option>60</option>
-		    <option>70</option>
-		    <option>80</option>
-		    <option>90</option>
-		    <option>100</option>
-		</select> minuten<br />
+		    <option value='40'>kort (40 min)</option>
+		    <option value='50'>normaal (50 min)</option>
+		    <option value='60'>lang (60 min)</option>
+		</select><br />
 	</fieldset>
 	<!-- Als het draait -->
 	<button id="stop" type="button">Stop!</button>
