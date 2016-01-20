@@ -8,25 +8,45 @@ RotationController::RotationController(Motor* motor, HardwareSensor* rotationSen
 void RotationController::main(){
 	RTOS::timer rotationTimer(this, "rotationTimer");
 
-	unsigned char rotation = 0;
-	const unsigned char rotationChangeAmount = 1;
+	int rotation = 0;
+	int rotationChangeAmount = 50;
+
+	int rotationDirection = 1;
 
 	while(true){
-		if(rotation < goalState){
+		time_t now;
+		time(&now);
+
+		if(rotationInterval <= 0){
+			lastRotationSwitch = now;
+		}else if(now - lastRotationSwitch >= rotationInterval){
+			rotationDirection = -rotationDirection;
+			lastRotationSwitch = now;
+		}
+
+		int goalRotation = goalState * 25 * rotationDirection;
+
+		if(rotation < goalRotation){
 			rotation += rotationChangeAmount;
 
-			if(rotation > goalState){
-				rotation = goalState;
+			if(rotation > goalRotation){
+				rotation = goalRotation;
 			}
-		}else if(rotation > goalState){
+		}else if(rotation > goalRotation){
 			rotation -= rotationChangeAmount;
 
-			if(rotation < goalState){
-				rotation = goalState;
+			if(rotation < goalRotation){
+				rotation = goalRotation;
 			}
 		}
 
-		motor->setRotation(rotation);
+		unsigned char realRotation = abs(rotation / 25);
+
+		if(rotation < 0){
+			realRotation |= 0x80;
+		}
+
+		motor->setRotation(realRotation);
 
 		rotationSensor->update();
 
@@ -39,4 +59,8 @@ void RotationController::valueChanged(HardwareSensor* sensor, unsigned char valu
 	if(sensor == rotationSensor){
 		setCurrentState(value);
 	}
+}
+
+void RotationController::setRotationInterval(int interval){
+	rotationInterval = interval;
 }

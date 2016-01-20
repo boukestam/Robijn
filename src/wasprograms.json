@@ -7,17 +7,14 @@
 					"degrees":"45",
 					"rpm":"1200",
 					"water":"80",
-					"time":"100"
+					"time":"100",
+                  "rotationInterval":"30"
 				},{
 					"degrees":"45",
 					"rpm":"1200",
 					"water":"80",
-					"time":"100"
-				},{
-					"degrees":"45",
-					"rpm":"1200",
-					"water":"80",
-					"time":"100"
+					"time":"100",
+                  "rotationInterval":"300"
 				}
 			]
 		} , {
@@ -27,22 +24,14 @@
 					"degrees":"45",
 					"rpm":"1200",
 					"water":"80",
-					"time":"100"
+					"time":"100",
+                  "rotationInterval":"30"
 				},{
 					"degrees":"45",
 					"rpm":"1200",
 					"water":"80",
-					"time":"100"
-				},{
-					"degrees":"45",
-					"rpm":"1200",
-					"water":"80",
-					"time":"100"
-				},{
-					"degrees":"45",
-					"rpm":"1200",
-					"water":"80",
-					"time":"100"
+					"time":"100",
+                  "rotationInterval":"300"
 				}
 			]
 		}

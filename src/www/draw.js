@@ -22,25 +22,7 @@ $( document ).ready(function() {
 	var connectHash = "";
     
     var stepCount;
-    var washingProgram = { 
-        "steps":[{ "settings": [
-                    {"degrees": 0},
-                    {"rpm": 0},
-                    {"water": 0},
-                    {"time": 0}
-                ]},{ "settings": [
-                    {"degrees": 0},
-                    {"rpm": 0},
-                    {"water": 0},
-                    {"time": 0}
-                ]}]   
-        };
-    var step = {"settings": [
-                    {"degrees": 0},
-                    {"rpm": 0},
-                    {"water": 0},
-                    {"time": 5}
-        ]};
+    var hasLoadedPrograms = false;
     
     window.addEventListener('resize', resizeCanvas, false);
 
@@ -102,7 +84,6 @@ $( document ).ready(function() {
     
     function onClose (evt){
 		$(".ribbon-green").text("Offline");
-		$(".ribbon-green").css("background-color", "#F00");
         console.log("connection closed");
 		$("#login").show();
 		$("#status").hide();
@@ -196,11 +177,33 @@ $( document ).ready(function() {
         for(var j = 0; j < data.length; j++) {
             sel.innerHTML += "<option id=\"j\">" + data[j].description + "</option>";
         }
+        hasLoadedPrograms = true;
     }
     
     function handleStatusUpdate(data)
     {   
         status = data["data"]["status"];
+        
+        var statusText = "Unknown status";
+        switch(status)
+        {
+            case 0x01:
+                statusText = "Halted!";
+                break;
+            case 0x02:
+                statusText = "Idle";
+                break;
+            case 0x04:
+                statusText = "Running";
+                break;
+            case 0x08:
+                statusText = "Stopped";
+                break;
+            case 0x00:
+                statusText = "Failed!";
+                break;
+        }
+        document.getElementById("statusText").innerHTML = statusText;
         
         selectedStep = data["currentStep"];
         steps = data["totalSteps"] + 1;
@@ -218,14 +221,11 @@ $( document ).ready(function() {
 
             times[selectedStep] = totalStepTime;
 
-            var statusText = status == 0 ? "Uit" : status == -1 ? "Error" : "Aan";
-
-            document.getElementById("status").innerHTML = statusText;
             document.getElementById("water").innerHTML = water;
             document.getElementById("rpm").innerHTML = rpm;
             document.getElementById("temp").innerHTML = currentDegrees;
             document.getElementById("time").innerHTML = currentStepTime + "/" + totalStepTime;
-        } else if(status == 0){
+        } else if(hasLoadedPrograms == false){
 			sendMSG("getWashingPrograms");
         }
         
@@ -235,16 +235,14 @@ $( document ).ready(function() {
     function hideShowItems()
     {
         console.log(status);
-        if(status == 0) {
-            $('#waterSelector').show();
+        if(status == 0x02 || status == 0x08) {
             $('#rpmSelector').show();
             $('#degreeSelector').show();
             $('#timeSelector').show();
             $('#wasSelector').show();
             $('#start').show();
             $('#stop').hide();
-        } else if(status == 1) {
-            $('#waterSelector').hide();
+        } else {
             $('#rpmSelector').hide();
             $('#degreeSelector').hide();
             $('#timeSelector').hide(); 
@@ -274,6 +272,11 @@ $( document ).ready(function() {
         $('#rpmSelector option:first-child').text(rpm);
         $('#degreeSelector option:first-child').text(currentDegrees);
         $('#timeSelector option:first-child').text(total);
+        
+        $('#waterSelector option:first-child').val(water);
+        $('#rpmSelector option:first-child').val(rpm);
+        $('#degreeSelector option:first-child').val(currentDegrees);
+        $('#timeSelector option:first-child').val(total);
         
         $("#water").innerHTML = water;
         $("#rpm").innerHTML = rpm;
@@ -306,34 +309,32 @@ $( document ).ready(function() {
 	{
 		if(event == "startWashingProgram")
 		{
-			var msg = {
+            var data = loadedWasPrograms[$('#wasSelector')[0].selectedIndex];
+            var msg = {
             "event":"startWashingProgram",
-			"hash":connectHash, 
+            "hash":connectHash, 
             "washingProgram":{
                     "steps":[
                     {
-						"degrees": $( "#degreeSelector option:selected" ).text(),
-                    	"rpm": $( "#rpmSelector option:selected" ).text(),
-                        "water": $( "#waterSelector option:selected" ).text(),
-                        "time": $( "#timeSelector option:selected" ).text()
+                        "degrees": $( "#degreeSelector option:selected" ).val(),
+                        "rpm": data.steps[0]['rpm'].toString() ,
+                        "water": data.steps[0]['water'].toString() ,
+                        "time": $( "#timeSelector option:selected" ).val(),
+                        "rotationInterval": data.steps[0]['rotationInterval'].toString() 
                     },{
-						"degrees": $( "#degreeSelector option:selected" ).text(),
-                    	"rpm": $( "#rpmSelector option:selected" ).text(),
-                        "water": $( "#waterSelector option:selected" ).text(),
-                        "time": $( "#timeSelector option:selected" ).text()
-                    },{
-						"degrees": $( "#degreeSelector option:selected" ).text(),
-                    	"rpm": $( "#rpmSelector option:selected" ).text(),
-                        "water": $( "#waterSelector option:selected" ).text(),
-                        "time": $( "#timeSelector option:selected" ).text()
-                    },{
-						"degrees": $( "#degreeSelector option:selected" ).text(),
-                    	"rpm": $( "#rpmSelector option:selected" ).text(),
-                        "water": $( "#waterSelector option:selected" ).text(),
-                        "time": $( "#timeSelector option:selected" ).text()
-                    }                 
+                        "degrees": data.steps[1]['degrees'].toString() ,
+                        "rpm": $( "#rpmSelector option:selected" ).val(),
+                        "water": data.steps[1]['water'].toString() ,
+                        "time": data.steps[1]['time'].toString() ,
+                        "rotationInterval": data.steps[1]['rotationInterval'].toString() 
+                    }               
                 ]}
             };
+            /*
+            for(var i = 0; i < data['steps'].length; i++){
+                msg['washingPrgram']['steps'][i]['rpm'] = data['steps'][i]['rpm'];
+            }
+            */
 		}else if(event == "stopWashingProgram") {
 			var msg = { 
 				"event": "stopWashingProgram",
@@ -363,7 +364,7 @@ $( document ).ready(function() {
 		} else {
 			return; /* It shouldn't send an undifined msg */
 		} 
-		console.log(JSON.stringify(msg));
+		console.log(msg);
 		ws.send(JSON.stringify(msg));
 	}
 
