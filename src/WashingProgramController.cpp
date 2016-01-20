@@ -171,3 +171,7 @@ int WashingProgramController::getStepTimeRunning(){
     return scheduler->GetElapsedStepTime();
     
 }
+
+WashingProgramStep WashingProgramController::getCurrentStep(){
+	return scheduler->getCurrentStep();
+}
