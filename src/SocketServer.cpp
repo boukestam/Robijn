@@ -18,15 +18,15 @@ SocketServer::~SocketServer() {
     delete socketListener;
 }
 
-bool SocketServer::receiveMessage(SocketMessage*& message) {
+SocketMessage* SocketServer::receiveMessage() {
     std::lock_guard<std::mutex> lock(receiveMutex);
+    SocketMessage* message = nullptr;
     if (receiveBuffer.size() > 0) {
         message = receiveBuffer.front(); // Make message point to message from vector (will have to be deleted on receiving side when done)
         receiveBuffer.erase(receiveBuffer.begin()); // Remove from vector
-        return true;
     }
 
-    return false;
+    return message;
 }
 
 void SocketServer::sendMessage(SocketMessage* message) {
@@ -75,6 +75,7 @@ SocketListener::SocketListener(SocketServer* socketServer) : socketServer{socket
 void SocketListener::onTextMessage(const std::string& s, WebSocket* ws){ // TODO: Parse json string and put it in the receiveBuffer
     std::cout << "Got new message" << std::endl;
     SocketMessage* message = new SocketMessage();
+    bool inBuffer = false;
     if (message->parseJSONString(s)) {
         rapidjson::Document& document = message->getJSON();
         rapidjson::Value& val = document["event"];
@@ -84,7 +85,6 @@ void SocketListener::onTextMessage(const std::string& s, WebSocket* ws){ // TODO
             const std::string name = document["name"].GetString();
             const int password = document["password"].GetInt();
             handleVerification(ws, name, password);
-            delete message; // Delete message because we're not using it
         } else { // Handle messaged
             unsigned int hashValue = document["hash"].GetUint();
 
@@ -95,18 +95,17 @@ void SocketListener::onTextMessage(const std::string& s, WebSocket* ws){ // TODO
                     socketServer->receiveMutex.lock();
                     socketServer->receiveBuffer.push_back(message);
                     socketServer->receiveMutex.unlock();
-                } else { // Hash not equal, so delete message
-                    delete message;
+                    inBuffer = true;
                 }
-            } else { // Map not found, delete message
-                delete message;
             }
         }
     } else { // Parsing failed, delete message
         std::cout << "Parsing failed" << std::endl;
-        delete message;
     }
     std::cout << "Received: " << s << std::endl;
+    if (!inBuffer) { // Message has not been pushed in receiveBuffer, so won't be used anymore
+        delete message; // Delete message because not used anymore
+    }
 }
 
 void SocketListener::onClose(WebSocket* ws){
@@ -137,10 +136,10 @@ void SocketListener::handleVerification(WebSocket* ws, std::string name, int pas
     const rapidjson::Value& a = document["users"];
 
     for (rapidjson::SizeType i = 0; i < a.Size(); i++){
-        std::string defaultName = a[i]["name"].GetString(); // TODO: From file
-        int defaultPassword = a[i]["pass"].GetInt(); //3079651; // TODO: From file means demo
+        std::string currentName = a[i]["name"].GetString(); // TODO: From file
+        int currentPassword = a[i]["pass"].GetInt(); //3079651; // TODO: From file means demo
 
-        if (name == defaultName && password == defaultPassword) {
+        if (name == currentName && password == currentPassword) {
             //const long double sysTime = time(0);
             //const char* s = std::to_string(sysTime).c_str();
             const char* s = "wakkaUbuntu9NEIN";

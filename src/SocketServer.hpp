@@ -41,12 +41,9 @@ public:
 
 /**
  * @brief Checks if there's a new message from the client
- * @brief Will return true if there's a new message and false if there's no new message
- * @brief If there's a new message then the message parameter will point to that new message
- * @brief Buffer is locked by a mutex
- * @param message Reference to a pointer to SocketMessage which will point to a new message from the buffer if available
+ * @brief Will return that new message or a nullptr if there's no new message
  */
-	bool receiveMessage(SocketMessage*& message);
+	SocketMessage* receiveMessage();
 
 private:
 /**
