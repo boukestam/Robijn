@@ -23,14 +23,82 @@ $( document ).ready(function() {
     
     var stepCount;
     var hasLoadedPrograms = false;
-    
-    window.addEventListener('resize', resizeCanvas, false);
+	
+	function draw() {
+        var c = document.getElementById("statusCanvas");
+        var context = c.getContext('2d');
+        var centerY = c.height / 2;
+        var radius = 10;
+        var margin = 50;
+        context.lineWidth = 5;
 
-    function resizeCanvas() {
-            c.width = window.innerWidth - 20;
-            draw(); 
+        context.font = "30px Arial";
+        context.textAlign = "center";
+        
+        var dist = (c.width - margin * 2) / (steps - 1); 
+        
+        context.clearRect(0,0,c.width,c.height);
+        
+        context.fillText("Huidige stap: " + selectedStep + 1, margin + dist * i, centerY - radius * 2);
+        
+        for(var i = 0; i < steps; i++) {          
+            context.fillStyle = textColor;
+            if(i < steps - 1){
+                context.fillText("stap " + (i + 1), margin + dist * i, centerY - radius * 2);
+            } else {
+                context.fillText("Klaar" , margin + dist * i, centerY - radius * 2);
+            }
+            
+            if(i == selectedStep && status == 1){
+                context.fillStyle = busyColor;
+            } else if (i < selectedStep) {
+                context.fillStyle = doneColor;
+            } else {
+                context.fillStyle = waitingColor;
+            }
+            
+            if(i < steps - 1){
+                if(i == selectedStep && status == 1){
+                    context.strokeStyle = busyColor;
+                    context.beginPath();
+                    context.moveTo(margin + dist * i, c.height / 2);
+                    context.lineTo(margin + dist * i + (dist / times[selectedStep] * currentStepTime) , c.height / 2);
+                    context.stroke();
+                    
+                    context.strokeStyle = waitingColor;
+                    context.beginPath();
+                    context.moveTo((margin + dist * i) + (dist / times[selectedStep] * currentStepTime), c.height / 2);
+                    context.lineTo(margin + dist * (i + 1), c.height / 2);
+                    context.stroke();
+                    
+                } else {
+                    context.strokeStyle = context.fillStyle;
+                    context.beginPath();
+                    context.moveTo(margin + dist * i, c.height / 2);
+                    context.lineTo(margin + dist * (i + 1), c.height / 2);
+                    context.stroke();
+                }
+            }
+        
+            context.beginPath();
+            context.arc(margin + dist * i, centerY, radius, 0, 2 * Math.PI, false);
+            context.fill();
+            context.strokeStyle = '#003300';
+            context.stroke(); 
+        }
+		
+		console.log("Redrawn");
     }
-    resizeCanvas();
+	
+    draw();
+	
+	window.addEventListener("resize",function(e){
+		var c = document.getElementById("statusCanvas");
+		c.width = $(c).width();
+		c.height = $(c).height();
+		draw();
+	});
+	
     hideShowItems();
 
 	function initWebSockets()
@@ -105,70 +173,6 @@ $( document ).ready(function() {
         ws.close();
     }
     
-    function draw() {
-        var c = document.getElementById("statusCanvas");
-        var context = c.getContext('2d');
-        var centerY = c.height / 2;
-        var radius = 10;
-        var margin = 50;
-        context.lineWidth = 5;
-
-        context.font = "30px Arial";
-        context.textAlign = "center";
-        
-        var dist = (c.width - margin * 2) / (steps - 1); 
-        
-        context.clearRect(0,0,c.width,c.height);
-        
-        context.fillText("Huidige stap: " + selectedStep + 1, margin + dist * i, centerY - radius * 2);
-        
-        for(var i = 0; i < steps; i++) {          
-            context.fillStyle = textColor;
-            if(i < steps - 1){
-                context.fillText("stap " + (i + 1), margin + dist * i, centerY - radius * 2);
-            } else {
-                context.fillText("Klaar" , margin + dist * i, centerY - radius * 2);
-            }
-            
-            if(i == selectedStep && status == 1){
-                context.fillStyle = busyColor;
-            } else if (i < selectedStep) {
-                context.fillStyle = doneColor;
-            } else {
-                context.fillStyle = waitingColor;
-            }
-            
-            if(i < steps - 1){
-                if(i == selectedStep && status == 1){
-                    context.strokeStyle = busyColor;
-                    context.beginPath();
-                    context.moveTo(margin + dist * i, c.height / 2);
-                    context.lineTo(margin + dist * i + (dist / times[selectedStep] * currentStepTime) , c.height / 2);
-                    context.stroke();
-                    
-                    context.strokeStyle = waitingColor;
-                    context.beginPath();
-                    context.moveTo((margin + dist * i) + (dist / times[selectedStep] * currentStepTime), c.height / 2);
-                    context.lineTo(margin + dist * (i + 1), c.height / 2);
-                    context.stroke();
-                    
-                } else {
-                    context.strokeStyle = context.fillStyle;
-                    context.beginPath();
-                    context.moveTo(margin + dist * i, c.height / 2);
-                    context.lineTo(margin + dist * (i + 1), c.height / 2);
-                    context.stroke();
-                }
-            }
-        
-            context.beginPath();
-            context.arc(margin + dist * i, centerY, radius, 0, 2 * Math.PI, false);
-            context.fill();
-            context.strokeStyle = '#003300';
-            context.stroke(); 
-        }
-    }
-    
     function handleWashingList(data)
     {
         var sel = document.getElementById('wasSelector');
@@ -236,16 +240,16 @@ $( document ).ready(function() {
     {
         console.log(status);
         if(status == 0x02 || status == 0x08) {
-            $('#rpmSelector').show();
-            $('#degreeSelector').show();
-            $('#timeSelector').show();
+            $('#radiorpm').show();
+            $('#radiotmp').show();
+            $('#radiotime').show();
             $('#wasSelector').show();
             $('#start').show();
             $('#stop').hide();
         } else {
-            $('#rpmSelector').hide();
-            $('#degreeSelector').hide();
-            $('#timeSelector').hide(); 
+            $('#radiorpm').hide();
+            $('#radiotmp').hide();
+            $('#radiotime').hide(); 
             $('#start').hide();
             $('#wasSelector').hide();
             $('#stop').show();
@@ -260,14 +264,15 @@ $( document ).ready(function() {
         var currentDegrees = data.steps[0]["degrees"];
         var rpm = data.steps[0]["rpm"];
         var water = data.steps[0]["water"];
-        var total = 0;
-        for(var i = 0; i < data.steps.length; i++){
-            times[i] = data.steps[i]["time"];
-            total += times[i];
-        }
+		var time = data.steps[0]["time"];
+       
         steps = data.steps.length + 1;
         
+		$("input[name=radiorpm][value=" + rpm + "]").prop('checked', true);
+		$("input[name=radiotime][value=" + time + "]").prop('checked', true);
+		$("input[name=radiotmp][value=" + currentDegrees + "]").prop('checked', true);
 
+/*
         $('#waterSelector option:first-child').text(water);
         $('#rpmSelector option:first-child').text(rpm);
         $('#degreeSelector option:first-child').text(currentDegrees);
@@ -277,11 +282,11 @@ $( document ).ready(function() {
         $('#rpmSelector option:first-child').val(rpm);
         $('#degreeSelector option:first-child').val(currentDegrees);
         $('#timeSelector option:first-child').val(total);
-        
+        */
         $("#water").innerHTML = water;
         $("#rpm").innerHTML = rpm;
         $("#temp").innerHTML = currentDegrees;
-        $("#time").innerHTML = total + " Seconde";
+        $("#time").innerHTML = time + " Seconde";
         draw();
     }
 
@@ -316,14 +321,14 @@ $( document ).ready(function() {
             "washingProgram":{
                     "steps":[
                     {
-                        "degrees": $( "#degreeSelector option:selected" ).val(),
+                        "degrees": $('input[name=radiotmp]:checked').val(),
                         "rpm": data.steps[0]['rpm'].toString() ,
                         "water": data.steps[0]['water'].toString() ,
-                        "time": $( "#timeSelector option:selected" ).val(),
+                        "time": $('input[name=radiotime]:checked').val(),
                         "rotationInterval": data.steps[0]['rotationInterval'].toString() 
                     },{
                         "degrees": data.steps[1]['degrees'].toString() ,
-                        "rpm": $( "#rpmSelector option:selected" ).val(),
+                        "rpm": $('input[name=radiorpm]:checked').val(),
                         "water": data.steps[1]['water'].toString() ,
                         "time": data.steps[1]['time'].toString() ,
                         "rotationInterval": data.steps[1]['rotationInterval'].toString() 

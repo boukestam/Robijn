@@ -4,7 +4,7 @@
 #include "WebSocket.h"
 #include "WebSocketMulticaster.h"
 #include "SocketMessage.hpp"
-#include <vector>
+#include <queue>
 #include <mutex>
 #include <unordered_map>
 #include <ctime>
@@ -65,8 +65,8 @@ private:
 
     int port;
     size_t bufferSize = 16;
-    std::vector<SocketMessage*> receiveBuffer;
-    std::vector<SocketMessage*> sendBuffer;
+    std::queue<SocketMessage*> receiveBuffer;
+    std::queue<SocketMessage*> sendBuffer;
 
     int sendMessageHandlerSleepTime = 200;
 

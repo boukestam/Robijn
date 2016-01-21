@@ -1,69 +1,178 @@
 <html>
-<head>
-    <title> Wasmachine </title>
-    <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
-    <script src="draw.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
-
-<!-- header -->
-<div> 
-    <img src="logo.jpg" alt="Logo">
-</div>
-		<div class="ribbon-wrapper-green"><div id="ribbon" class="ribbon-green">Online</div></div>
-<div id="login">
-Name: <input type="text" id="nameInput" /> <br/>
-Passcode: <input type="password" id="passInput" /><br />
-IP wasmachine: <input type="text" id="ipInput" /> poort: <input type="text" id="poortInput" value="8081" />
-		  <input type="button" value="verbind" id="subBtn" />
-</div>
-<div id="status">   
-
-	<!-- Body -->
-	<canvas id="statusCanvas" height="200" style="border:1px solid #000000;">
-	</canvas>
+	<head>
+		<title>Robijn</title>
+		<script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script src="draw.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
 		
-		
-	<fieldset id="infoBox">
-	  <legend id="legenda">Was info</legend>
-		Was status: <a id="statusText">Running</a><br />
-		<label>Centrifugeer snelheid: <a id="rpm"> </a></label>
-		<select id="rpmSelector">
-		    <option></option>
-		    <option value='0'>niet</option>
-		    <option value='1200'>1200</option>
-		    <option value='1400'>1400</option>
-		    <option value='1600'>1600</option>
-		    <option value='1800'>1800</option>
-		</select> toeren per minuut<br />
-	   <label> Temperatuur: <a id="temp"> </a> </label>
-		<select id="degreeSelector">
-		    <option></option>
-		    <option value='10'>10 graden</option>
-		    <option value='20'>20 graden</option>
-		    <option value='30'>30 graden</option>
-		    <option value='40'>40 graden</option>
-		    <option value='50'>50 graden</option>
-		    <option value='60'>60 graden</option>
-		    <option value='70'>70 graden</option>
-		    <option value='80'>80 graden</option>
-		</select>  <br />
-		<label>spoel tijd: <a id="time"> </a></label>
-		<select id="timeSelector">
-		    <option></option>
-		    <option value='40'>kort (40 min)</option>
-		    <option value='50'>normaal (50 min)</option>
-		    <option value='60'>lang (60 min)</option>
-		</select><br />
-	</fieldset>
-	<!-- Als het draait -->
-	<button id="stop" type="button">Stop!</button>
-	<!-- Als het gestopt is -->
-	<select id="wasSelector">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+	</head>
 
-	</select>
-	<button id="start" type="button" >Start!</button>
-</div>
-</body>
+	<body>
+		<div class="container">
+			<img src="robijn.png" style="margin-top:10px;width:200px;height:auto;"/>
+
+			<div class="ribbon-wrapper-green">
+				<div id="ribbon" class="ribbon-green">Online</div>
+			</div>
+			
+			<div id="login" class="card" style="padding:20px;">
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="nameInput" type="text" class="validate">
+						<label>Name</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="passInput" type="password" class="validate">
+						<label>Password</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="ipInput" type="text" class="validate">
+						<label>IP</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="poortInput" type="text" class="validate" value="8081" >
+						<label>Port</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<a class="waves-effect waves-light btn" id="subBtn">Connect</a>
+					</div>
+				</div>
+			</div>
+			
+			<div id="status">
+				<canvas id="statusCanvas" class="card" style="width:100%;height:200px;"></canvas>
+				
+				<div class="card" style="padding:20px;">
+					<form class="row">
+						<h5>Info</h5>
+						
+						<div class="col s12">
+							<p>
+								Status: <b id="statusText">Running</b>
+							</p>
+						</div>
+						
+						<div class="col s12">
+							<p>
+								<b>Washing program</b>
+							</p>
+							
+							<p>
+								<select id="wasSelector" class="browser-default">
+									<option></option>
+								</select>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<b>Centrifuging</b>
+							</p>
+							
+							<p>
+								<input id="radiorpm0" name="radiorpm" type="radio" value="0"/>
+								<label for="radiorpm0">Disabled</label>
+							</p>
+							
+							<p>
+								<input id="radiorpm1"name="radiorpm" type="radio" value="1200"/>
+								<label for="radiorpm1">1200 rpm</label>
+							</p>
+							
+							<p>
+								<input id="radiorpm2" name="radiorpm" type="radio" value="1400"/>
+								<label for="radiorpm2">1400 rpm</label>
+							</p>
+							
+							<p>
+								<input id="radiorpm3" name="radiorpm" type="radio" value="1600"/>
+								<label for="radiorpm3">1600 rpm</label>
+							</p>
+							
+							<p>
+								<input id="radiorpm4" name="radiorpm" type="radio" value="1800"/>
+								<label for="radiorpm4">1800 rpm</label>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<b>Temperature</b>
+							</p>
+							
+							<p>
+								<input id="radiotmp0" name="radiotmp" type="radio" value="20"/>
+								<label for="radiotmp0">20 degrees</label>
+							</p>
+							
+							<p>
+								<input id="radiotmp1" name="radiotmp" type="radio" value="30"/>
+								<label for="radiotmp1">30 degrees</label>
+							</p>
+							
+							<p>
+								<input id="radiotmp2" name="radiotmp" type="radio" value="40"/>
+								<label for="radiotmp2">40 degrees</label>
+							</p>
+							
+							<p>
+								<input id="radiotmp3" name="radiotmp" type="radio" value="60"/>
+								<label for="radiotmp3">60 degrees</label>
+							</p>
+							
+							<p>
+								<input id="radiotmp4" name="radiotmp" type="radio" value="90"/>
+								<label for="radiotmp4">90 degrees</label>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<b>Duration</b>
+							</p>
+							
+							<p>
+								<input id="radiotime0" name="radiotime" type="radio" value="3600"/>
+								<label for="radiotime0">Fast (60 min)</label>
+							</p>
+							
+							<p>
+								<input id="radiotime1" name="radiotime" type="radio" value="7200"/>
+								<label for="radiotime1">Intensive (120 min)</label>
+							</p>
+							
+							<p>
+								<input id="radiotime2" name="radiotime" type="radio" value="14400"/>
+								<label for="radiotime2">Eco (240 min)</label>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<!-- Als het draait -->
+								<a class="waves-effect waves-light btn" id="stop">Stop</a>
+								
+								<!-- Als het gestopt is -->
+								<a class="waves-effect waves-light btn" id="start">Start</a>
+							</p>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>

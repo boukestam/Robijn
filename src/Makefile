@@ -189,7 +189,6 @@ main.o: rapidjson/internal/itoa.h rapidjson/internal/itoa.h
 main.o: rapidjson/stringbuffer.h WebServer.hpp WashingProgramController.hpp
 main.o: WashingProgram.hpp WashingProgramStep.hpp WashingProgramScheduler.hpp
 main.o: WaterLevelController.hpp WashingProgramStatus.hpp
-main.o: WashingMachineStatus.hpp
 Motor.o: Motor.hpp HardwareComponent.hpp UARTInterface.hpp pRTOS.h libfiber.h
 Motor.o: /usr/include/ucontext.h /usr/include/features.h
 Motor.o: /usr/include/stdc-predef.h /usr/include/stdlib.h
@@ -595,7 +594,6 @@ WashingProgramStatus.o: rapidjson/error/error.h rapidjson/internal/strfunc.h
 WashingProgramStatus.o: rapidjson/stringbuffer.h rapidjson/writer.h
 WashingProgramStatus.o: rapidjson/internal/dtoa.h rapidjson/internal/itoa.h
 WashingProgramStatus.o: rapidjson/internal/itoa.h rapidjson/stringbuffer.h
-WashingProgramStatus.o: WashingMachineStatus.hpp
 WashingProgramStatus.o: SocketMessage.hpp rapidjson/document.h
 WashingProgramStatus.o: rapidjson/reader.h rapidjson/rapidjson.h
 WashingProgramStatus.o: /usr/include/stdint.h /usr/include/features.h
@@ -611,7 +609,6 @@ WashingProgramStatus.o: rapidjson/error/error.h rapidjson/internal/strfunc.h
 WashingProgramStatus.o: rapidjson/stringbuffer.h rapidjson/writer.h
 WashingProgramStatus.o: rapidjson/internal/dtoa.h rapidjson/internal/itoa.h
 WashingProgramStatus.o: rapidjson/internal/itoa.h rapidjson/stringbuffer.h
-WashingProgramStatus.o: WashingMachineStatus.hpp
 WashingProgramStep.o: WashingProgramStep.hpp
 WaterLevelController.o: WaterLevelController.hpp HardwareController.hpp
 WaterLevelController.o: pRTOS.h libfiber.h /usr/include/ucontext.h
@@ -700,7 +697,7 @@ WebInterfaceController.o: UARTMessage.hpp UARTListener.hpp Pump.hpp Tap.hpp
 WebInterfaceController.o: RotationController.hpp Motor.hpp
 WebInterfaceController.o: TemperatureController.hpp Heating.hpp Door.hpp
 WebInterfaceController.o: SignalLed.hpp WashingMachine.hpp SoapTray.hpp
-WebInterfaceController.o: WashingProgramStatus.hpp WashingMachineStatus.hpp
+WebInterfaceController.o: WashingProgramStatus.hpp
 WebInterfaceController.o: pRTOS.h libfiber.h /usr/include/ucontext.h
 WebInterfaceController.o: /usr/include/features.h /usr/include/stdc-predef.h
 WebInterfaceController.o: /usr/include/stdlib.h /usr/include/alloca.h
@@ -739,7 +736,7 @@ WebInterfaceController.o: UARTMessage.hpp UARTListener.hpp Pump.hpp Tap.hpp
 WebInterfaceController.o: RotationController.hpp Motor.hpp
 WebInterfaceController.o: TemperatureController.hpp Heating.hpp Door.hpp
 WebInterfaceController.o: SignalLed.hpp WashingMachine.hpp SoapTray.hpp
-WebInterfaceController.o: WashingProgramStatus.hpp WashingMachineStatus.hpp
+WebInterfaceController.o: WashingProgramStatus.hpp
 WebServer.o: WebServer.hpp PracticalSocket.h /usr/include/netdb.h
 WebServer.o: /usr/include/features.h /usr/include/stdc-predef.h
 WebServer.o: /usr/include/netinet/in.h /usr/include/stdint.h
@@ -966,7 +963,7 @@ main.o: rapidjson/internal/itoa.h rapidjson/internal/itoa.h
 main.o: rapidjson/stringbuffer.h WebServer.hpp WashingProgramController.hpp
 main.o: WashingProgram.hpp WashingProgramStep.hpp WashingProgramScheduler.hpp
 main.o: WaterLevelController.hpp WashingProgramStatus.hpp
-main.o: WashingMachineStatus.hpp DoorSensor.hpp
+main.o: DoorSensor.hpp
 Motor.o: Motor.hpp HardwareComponent.hpp UARTInterface.hpp pRTOS.h libfiber.h
 Motor.o: /usr/include/ucontext.h /usr/include/features.h
 Motor.o: /usr/include/stdc-predef.h /usr/include/stdlib.h
@@ -1400,7 +1397,6 @@ WashingProgramStatus.o: rapidjson/error/error.h rapidjson/internal/strfunc.h
 WashingProgramStatus.o: rapidjson/stringbuffer.h rapidjson/writer.h
 WashingProgramStatus.o: rapidjson/internal/dtoa.h rapidjson/internal/itoa.h
 WashingProgramStatus.o: rapidjson/internal/itoa.h rapidjson/stringbuffer.h
-WashingProgramStatus.o: WashingMachineStatus.hpp
 WashingProgramStatus.o: SocketMessage.hpp rapidjson/document.h
 WashingProgramStatus.o: rapidjson/reader.h rapidjson/rapidjson.h
 WashingProgramStatus.o: /usr/include/stdint.h /usr/include/features.h
@@ -1416,7 +1412,6 @@ WashingProgramStatus.o: rapidjson/error/error.h rapidjson/internal/strfunc.h
 WashingProgramStatus.o: rapidjson/stringbuffer.h rapidjson/writer.h
 WashingProgramStatus.o: rapidjson/internal/dtoa.h rapidjson/internal/itoa.h
 WashingProgramStatus.o: rapidjson/internal/itoa.h rapidjson/stringbuffer.h
-WashingProgramStatus.o: WashingMachineStatus.hpp
 WashingProgramStep.o: WashingProgramStep.hpp
 WaterLevelController.o: WaterLevelController.hpp HardwareController.hpp
 WaterLevelController.o: pRTOS.h libfiber.h /usr/include/ucontext.h
@@ -1510,7 +1505,7 @@ WebInterfaceController.o: UARTListener.hpp Pump.hpp Tap.hpp
 WebInterfaceController.o: RotationController.hpp Motor.hpp
 WebInterfaceController.o: TemperatureController.hpp Heating.hpp Door.hpp
 WebInterfaceController.o: SignalLed.hpp WashingMachine.hpp SoapTray.hpp
-WebInterfaceController.o: WashingProgramStatus.hpp WashingMachineStatus.hpp
+WebInterfaceController.o: WashingProgramStatus.hpp
 WebInterfaceController.o: pRTOS.h libfiber.h /usr/include/ucontext.h
 WebInterfaceController.o: /usr/include/features.h /usr/include/stdc-predef.h
 WebInterfaceController.o: /usr/include/stdlib.h /usr/include/alloca.h
@@ -1550,7 +1545,6 @@ WebInterfaceController.o: UARTListener.hpp Pump.hpp Tap.hpp
 WebInterfaceController.o: RotationController.hpp Motor.hpp
 WebInterfaceController.o: TemperatureController.hpp Heating.hpp Door.hpp
 WebInterfaceController.o: SignalLed.hpp WashingMachine.hpp SoapTray.hpp
-WebInterfaceController.o: WashingProgramStatus.hpp WashingMachineStatus.hpp
 WebServer.o: WebServer.hpp PracticalSocket.h /usr/include/netdb.h
 WebServer.o: /usr/include/features.h /usr/include/stdc-predef.h
 WebServer.o: /usr/include/netinet/in.h /usr/include/stdint.h

@@ -1,9 +1,6 @@
 #include "SocketServer.hpp"
 
 SocketServer::SocketServer(int port) : port{port} {
-    receiveBuffer.reserve(bufferSize);  // Vector with 'bufferSize' elements
-    sendBuffer.reserve(bufferSize);     // Vector with 'bufferSize' elements
-
     multicaster = new Multicaster();
     socketListener = new SocketListener(this);
 
@@ -22,7 +19,7 @@ bool SocketServer::receiveMessage(SocketMessage*& message) {
     std::lock_guard<std::mutex> lock(receiveMutex);
     if (receiveBuffer.size() > 0) {
         message = receiveBuffer.front(); // Make message point to message from vector (will have to be deleted on receiving side when done)
-        receiveBuffer.erase(receiveBuffer.begin()); // Remove from vector
+        receiveBuffer.pop(); // Remove from vector
         return true;
     }
 
@@ -32,7 +29,7 @@ bool SocketServer::receiveMessage(SocketMessage*& message) {
 void SocketServer::sendMessage(SocketMessage* message) {
 	std::cout << "Start putting in buffer" << std::endl;
     std::lock_guard<std::mutex> lock(sendMutex);
-    sendBuffer.push_back(message);
+    sendBuffer.push(message);
     std::cout << "Done putting in buffer" << std::endl;
 }
 
@@ -56,9 +53,12 @@ void SocketServer::runSendMessageHandler() {
         sendMutex.lock();
         if (sendBuffer.size() > 0) {
             SocketMessage* message = sendBuffer.front(); // Get Message
-            multicaster->broadcast(message->getJSONString()); // Send Message
-            sendBuffer.erase(sendBuffer.begin()); // Delete from vector
-            delete message; // Free space
+			std::cout << "Message: " << message->getJSONString() << std::endl;
+        std::cout << "Before" << std::endl; 
+	multicaster->broadcast(message->getJSONString()); // Send Message
+       std::cout << "After" <<std::endl;
+	sendBuffer.pop(); // Delete from vector
+            //delete message; // Free space
         }
         sendMutex.unlock();
 
@@ -93,7 +93,7 @@ void SocketListener::onTextMessage(const std::string& s, WebSocket* ws){ // TODO
             if (foundMap != webSocketHashValueMap.end()) { // If websocket exists
                 if (foundMap->second == hashValue) { // If the hash is equal to the sent hash
                     socketServer->receiveMutex.lock();
-                    socketServer->receiveBuffer.push_back(message);
+                    socketServer->receiveBuffer.push(message);
                     socketServer->receiveMutex.unlock();
                 } else { // Hash not equal, so delete message
                     delete message;

@@ -27,5 +27,6 @@ void Multicaster::broadcast(const string& message){
 	std::lock_guard<std::mutex> lock(mutex);
 	for (std::list<WebSocket*>::iterator it=theList.begin(); it!=theList.end(); ++it)
 		(*it)->sendTextMessage(message);
+	std::cout << "End of broadcast" << std::endl;
 }
 

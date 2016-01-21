@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SocketMessage.hpp"
-#include "WashingMachineStatus.hpp"
 
 class WashingProgramStatus{
 public:
@@ -16,7 +15,7 @@ public:
     
     int duration = 0;
 
-	WashingMachineStatus status;
+	int status = 0x02;
 
 	SocketMessage* toSocketMessage();
 };

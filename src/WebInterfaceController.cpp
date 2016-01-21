@@ -119,16 +119,17 @@ void WebInterfaceController::main()
                 socketServer->sendMessage(createSocketMessageFromWashingList());
             }
         }
-
-		sleepTimer.set(1000 MS);
-		wait(sleepTimer);
+		
 		// Send status update every 1000MS
-		if(currentWashingProgramStatus->status ==  WashingMachineStatus::running){
+		if(currentWashingProgramStatus->status == 0x04){
 			currentWashingProgramStatus->totalSteptime = washingProgramController->getCurrentStep().duration;
             currentWashingProgramStatus->duration = washingProgramController->getStepTimeRunning();
 			SocketMessage* msg2 = currentWashingProgramStatus->toSocketMessage();
         	socketServer->sendMessage(msg2);
 		}
+
+		sleepTimer.set(1000 MS);
+		wait(sleepTimer);
     }
 }
 
@@ -141,29 +142,7 @@ void WebInterfaceController::valueChanged(HardwareSensor* sensor, unsigned char 
     } else if (sensor == rotationSensor) {
         currentWashingProgramStatus->rotationSpeed = value;
     } else if (sensor == washingMachineStatusSensor) {
-        WashingMachineStatus stats;
-
-	std::cout << "New status: " << (int)value << std::endl;
-
-        switch(value){
-            case 0x01:
-                stats = WashingMachineStatus::halted;
-                break;
-            case 0x02:
-                stats = WashingMachineStatus::idle;
-                break;
-            case 0x04:
-                stats = WashingMachineStatus::running;
-                break;
-            case 0x08:
-                stats = WashingMachineStatus::stopped;
-                break;
-            case 0x00:
-                stats = WashingMachineStatus::failed;
-                break;
-        }
-
-        currentWashingProgramStatus->status = stats;
+        currentWashingProgramStatus->status = value;
     }
 }
 
