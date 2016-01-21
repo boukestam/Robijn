@@ -1,0 +1,178 @@
+<html>
+	<head>
+		<title>Robijn</title>
+		<script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script src="draw.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+	</head>
+
+	<body>
+		<div class="container">
+			<img src="robijn.png" style="margin-top:10px;width:200px;height:auto;"/>
+
+			<div class="ribbon-wrapper-green">
+				<div id="ribbon" class="ribbon-green">Online</div>
+			</div>
+			
+			<div id="login" class="card" style="padding:20px;">
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="nameInput" type="text" class="validate">
+						<label>Name</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="passInput" type="password" class="validate">
+						<label>Password</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="ipInput" type="text" class="validate">
+						<label>IP</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<input id="poortInput" type="text" class="validate" value="8081" >
+						<label>Port</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<a class="waves-effect waves-light btn" id="subBtn">Connect</a>
+					</div>
+				</div>
+			</div>
+			
+			<div id="status">
+				<canvas id="statusCanvas" class="card" style="width:100%;height:200px;"></canvas>
+				
+				<div class="card" style="padding:20px;">
+					<form class="row">
+						<h5>Info</h5>
+						
+						<div class="col s12">
+							<p>
+								Status: <b id="statusText">Running</b>
+							</p>
+						</div>
+						
+						<div class="col s12">
+							<p>
+								<b>Washing program</b>
+							</p>
+							
+							<p>
+								<select id="wasSelector" class="browser-default">
+									<option></option>
+								</select>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<b>Centrifuging</b>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="0"/>
+								<label>Disabled</label>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="1200"/>
+								<label>1200 rpm</label>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="1400"/>
+								<label>1400 rpm</label>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="1600"/>
+								<label>1600 rpm</label>
+							</p>
+							
+							<p>
+								<input name="radiorpm" type="radio" value="1800"/>
+								<label>1800 rpm</label>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<b>Temperature</b>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="20"/>
+								<label>20 degrees</label>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="30"/>
+								<label>30 degrees</label>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="40"/>
+								<label>40 degrees</label>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="60"/>
+								<label>60 degrees</label>
+							</p>
+							
+							<p>
+								<input name="radiotmp" type="radio" value="90"/>
+								<label>90 degrees</label>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<b>Duration</b>
+							</p>
+							
+							<p>
+								<input name="radiotime" type="radio" value="3600"/>
+								<label>Fast (60 min)</label>
+							</p>
+							
+							<p>
+								<input name="radiotime" type="radio" value="7200"/>
+								<label>Intensive (120 min)</label>
+							</p>
+							
+							<p>
+								<input name="radiotime" type="radio" value="14400"/>
+								<label>Eco (240 min)</label>
+							</p>
+						</div>
+						
+						<div class="input-field col s12">
+							<p>
+								<!-- Als het draait -->
+								<a class="waves-effect waves-light btn" id="stop">Stop</a>
+								
+								<!-- Als het gestopt is -->
+								<a class="waves-effect waves-light btn" id="start">Start</a>
+							</p>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
