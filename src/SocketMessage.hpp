@@ -38,5 +38,8 @@ public:
 	rapidjson::Document& getJSON();
 
 private:
+/**
+ * @brief The rapidjson::Document that holds the JSON data
+ */
 	rapidjson::Document json;
 };

@@ -81,10 +81,33 @@ private:
         { "wav", "audio/x-wav", true }
     };
 
+/**
+ * @brief Whether or not file to be read has te be read as binary file
+ */
     bool needBinaryRead;
+
+/**
+ * @brief The path of the file that was set
+ */
     std::string path;
+
+/**
+ * @brief The extension of the file that was set
+ */
     std::string extension;
+
+/**
+ * @brief The content type that will be sent back to the client
+ */
     std::string contentType;
+
+/**
+ * @brief Directory where files are located
+ */
     std::string rootDirectory;
+
+/**
+ * @brief The Logger object where logs will be written to
+ */
     Logger log;
 };

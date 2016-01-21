@@ -57,19 +57,54 @@ private:
  */
     void runSendMessageHandler();
 
+/**
+ * @brief The multicaster used to send messages to clients
+ */
     Multicaster* multicaster;
+
+/**
+ * @brief The SocketListener that receives messages from clients
+ */
     SocketListener* socketListener;
 
+/**
+ * @brief Port number that the WebSocket will run on
+ */
     int port;
+
+/**
+ * @brief Size of the buffers containing pointers to SocketMessages
+ */
     size_t bufferSize = 16;
+
+/**
+ * @brief Vector containing all messages received from clients
+ */
     std::vector<SocketMessage*> receiveBuffer;
+
+/**
+ * @brief Vector containing all messages that have to be sent to clients
+ */
     std::vector<SocketMessage*> sendBuffer;
 
+/**
+ * @brief Amount of uSec that messageHandler thread will sleep
+ */
     int sendMessageHandlerSleepTime = 200;
 
+/**
+ * @brief Mutex for the receiveBuffer
+ */
     std::mutex receiveMutex;
+
+/**
+ * @brief Mutex for sendBuffer
+ */
     std::mutex sendMutex;
 
+/**
+ * @brief SocketListener set as friend so SocketListener can access mutexes and multicaster
+ */
     friend SocketListener;
 };
 
@@ -110,6 +145,13 @@ private:
  */
     void handleVerification(WebSocket* ws, std::string name, int password);
 
+/**
+ * @brief The SocketServer object that uses this listener
+ */
     SocketServer* socketServer;
+
+/**
+ * @brief Unordered map with WebSockets and Hash values used for verification
+ */
     std::unordered_map<WebSocket*, unsigned int> webSocketHashValueMap; // WebSocket pointer, hash value
 };
