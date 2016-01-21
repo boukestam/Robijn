@@ -40,6 +40,13 @@ private:
  */
 	void run();
 
+/**
+ * @brief Port number that the WebServer will run on
+ */
 	int port;
+
+/**
+ * @brief The directory where the files are located
+ */
 	std::string rootDirectory;
 };

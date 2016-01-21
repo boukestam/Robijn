@@ -41,7 +41,18 @@ public:
 
 protected:
 private:
+/**
+ * @brief The filename of the requested file
+ */
     std::string filename;
+
+/**
+ * @brief The file extension of the requested file
+ */
     std::string extension;
+
+/**
+ * @brief Prefix of the first line of the GET request
+ */
     std::string getPrefix = "GET /";
 };

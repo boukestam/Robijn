@@ -6,20 +6,19 @@ WebInterfaceController::WebInterfaceController( WashingProgramController* washin
                             HardwareSensor* rotationSensor,
                             HardwareSensor* washingMachineStatusSensor):
 	task(3, "webInterfaceController"),
-	sleepTimer(this, "webInterfaceController")
+	sleepTimer(this, "webInterfaceController"),
+	washingProgramController{washingProgramController},
+	temperatureSensor{temperatureSensor},
+	waterLevelSensor{waterLevelSensor},
+	rotationSensor{rotationSensor},
+	washingMachineStatusSensor{washingMachineStatusSensor}
 {
-    this->washingProgramController = washingProgramController;
-
-    this->temperatureSensor = temperatureSensor;
     this->temperatureSensor->addListener(this);
 
-    this->waterLevelSensor = waterLevelSensor;
     this->waterLevelSensor->addListener(this);
 
-    this->rotationSensor = rotationSensor;
     this->rotationSensor->addListener(this);
 
-    this->washingMachineStatusSensor = washingMachineStatusSensor;
     this->washingMachineStatusSensor->addListener(this);
 
     this->currentWashingProgramStatus = new WashingProgramStatus();
@@ -34,21 +33,21 @@ void WebInterfaceController::loadWashingPrograms()
 	while (std::getline(file, str))
 	{
 		file_contents += str;
-	}  
+	}
 
 
 	rapidjson::Document document;
 	document.Parse(file_contents.c_str());
 
 	const rapidjson::Value& a = document["washingPrograms"];
-	
+
 	for(rapidjson::SizeType j = 0; j < a.Size(); j++)
 	{
 		const rapidjson::Value& jsonsteps = a[j]["steps"];
 
 		WashingProgram* wp = new WashingProgram();
 		wp->dicription = a[j]["description"].GetString();
-	
+
 		// rapidjson uses SizeType instead of size_t.
 		for (rapidjson::SizeType i = 0; i < jsonsteps.Size(); i++){
 			const rapidjson::Value& setting = jsonsteps[i];
@@ -59,9 +58,9 @@ void WebInterfaceController::loadWashingPrograms()
 		    step.waterLevel = stoi(setting["water"].GetString());
 		    step.duration = stoi(setting["time"].GetString());
             step.rotationInterval = stoi(setting["rotationInterval"].GetString());
-            
+
             std::cout << " Rotation interval: " << step.rotationInterval << std::endl;
-		    
+
 		    wp->addStep(step);
 		}
 		washingPrograms.push_back(wp);
@@ -72,10 +71,9 @@ void WebInterfaceController::loadWashingPrograms()
 void WebInterfaceController::main()
 {
     while(true){
-        SocketMessage* msg;
-        bool msgReceived = socketServer->receiveMessage(msg);
+        SocketMessage* msg = socketServer->receiveMessage();
 
-        if(msgReceived){
+        if(msg != nullptr){
             std::string eventKey("event");
             rapidjson::Document& document = msg->getJSON();
             rapidjson::Value& val = document["event"];

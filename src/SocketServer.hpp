@@ -41,12 +41,9 @@ public:
 
 /**
  * @brief Checks if there's a new message from the client
- * @brief Will return true if there's a new message and false if there's no new message
- * @brief If there's a new message then the message parameter will point to that new message
- * @brief Buffer is locked by a mutex
- * @param message Reference to a pointer to SocketMessage which will point to a new message from the buffer if available
+ * @brief Will return that new message or a nullptr if there's no new message
  */
-	bool receiveMessage(SocketMessage*& message);
+	SocketMessage* receiveMessage();
 
 private:
 /**
@@ -60,19 +57,42 @@ private:
  */
     void runSendMessageHandler();
 
+/**
+ * @brief The multicaster used to send messages to clients
+ */
     Multicaster* multicaster;
+
+/**
+ * @brief The SocketListener that receives messages from clients
+ */
     SocketListener* socketListener;
 
+/**
+ * @brief Port number that the WebSocket will run on
+ */
     int port;
-    size_t bufferSize = 16;
+
     std::queue<SocketMessage*> receiveBuffer;
     std::queue<SocketMessage*> sendBuffer;
 
+/**
+ * @brief Amount of uSec that messageHandler thread will sleep
+ */
     int sendMessageHandlerSleepTime = 200;
 
+/**
+ * @brief Mutex for the receiveBuffer
+ */
     std::mutex receiveMutex;
+
+/**
+ * @brief Mutex for sendBuffer
+ */
     std::mutex sendMutex;
 
+/**
+ * @brief SocketListener set as friend so SocketListener can access mutexes and multicaster
+ */
     friend SocketListener;
 };
 
@@ -113,6 +133,13 @@ private:
  */
     void handleVerification(WebSocket* ws, std::string name, int password);
 
+/**
+ * @brief The SocketServer object that uses this listener
+ */
     SocketServer* socketServer;
+
+/**
+ * @brief Unordered map with WebSockets and Hash values used for verification
+ */
     std::unordered_map<WebSocket*, unsigned int> webSocketHashValueMap; // WebSocket pointer, hash value
 };
