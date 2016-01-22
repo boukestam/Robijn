@@ -10,7 +10,7 @@
 #include <ctime>
 #include <fstream>
 
-class SocketListener; // Needed to compile, implementation is below
+class SocketListener; // Forward declaration, implementation is below
 
 /**
  * @class SocketServer
@@ -19,82 +19,56 @@ class SocketListener; // Needed to compile, implementation is below
  * @file SocketServer.hpp
  * @brief This class handles connections to the WebSocket
  */
+ 
 class SocketServer{
 public:
-/**
- * @brief Constructor for SocketServer that calls method run() and method runSendMessageHandler() on new threads
- * @param port Integer that indicates on what port number the SocketServer should run
- */
+	//! Constructor for SocketServer that calls method run() and method runSendMessageHandler() on new threads
 	SocketServer(int port);
 
-/**
- * @brief Destructor for SocketServer that deletes certain data
- */
+	//! Destructor for SocketServer that deletes certain data
 	~SocketServer();
 
-/**
- * @brief Adds a new SocketMessage that has te be sent to the client
- * @brief Buffer is locked by a mutex
- * @param message Pointer to SocketMessage which will be put in the SendBuffer
- */
+	//! Adds a new SocketMessage that has te be sent to the client
 	void sendMessage(SocketMessage message);
 
-/**
- * @brief Checks if there's a new message from the client
- * @brief Will return that new message or a nullptr if there's no new message
- */
+	//! Returns the first message in the receive queue, or an empty one if the queue is empty
 	SocketMessage receiveMessage();
 	
+	//! Returns true if there is a message in the receive queue
 	bool hasMessage();
 
 private:
-/**
- * @brief Function that accepts and handles new connections
- */
+	//! Accepts and handles new connections
     void run();
 
-/**
- * @brief Function that will check for new messages that have to be sent to the client
- * @brief Buffer is locked by a mutex
- */
+	//! Will check for new messages that have to be sent to the client
     void runSendMessageHandler();
 
-/**
- * @brief The multicaster used to send messages to clients
- */
+	//! The multicaster used to send messages to clients
     Multicaster* multicaster;
 
-/**
- * @brief The SocketListener that receives messages from clients
- */
+	//! The SocketListener that receives messages from clients
     SocketListener* socketListener;
 
-/**
- * @brief Port number that the WebSocket will run on
- */
+	//! Port number that the WebSocket will run on
     int port;
 
+	//! Queue with received messages
     std::queue<SocketMessage> receiveBuffer;
+    
+    //! Queue with messages to be sent
     std::queue<SocketMessage> sendBuffer;
 
-/**
- * @brief Amount of uSec that messageHandler thread will sleep
- */
+	//! Amount of uSec that messageHandler thread will sleep
     int sendMessageHandlerSleepTime = 200;
 
-/**
- * @brief Mutex for the receiveBuffer
- */
+	//! Mutex for the receiveBuffer
     std::mutex receiveMutex;
 
-/**
- * @brief Mutex for sendBuffer
- */
+	//! Mutex for sendBuffer
     std::mutex sendMutex;
 
-/**
- * @brief SocketListener set as friend so SocketListener can access mutexes and multicaster
- */
+	//! SocketListener set as friend so SocketListener can access mutexes and multicaster
     friend SocketListener;
 };
 
@@ -105,43 +79,28 @@ private:
  * @file SocketListener.hpp
  * @brief This class handles the callbacks from the WebSocket
  */
+ 
 class SocketListener : public WebSocketListener{
 public:
-/**
- * @brief Constructor for SocketListener
- * @param socketServer Pointer to SocketServer so SocketListener can use mutex and multicaster from SocketServer (friend of SocketServer)
- */
+	//! Constructor for SocketListener
     SocketListener(SocketServer* socketServer);
+    
+    //! Destructor
 	virtual ~SocketListener() {};
-/**
- * @brief Callback that gets called when WebSocket receives a text message
- * @param s Reference to string received by WebSocket
- * @param ws Pointer to WebSocket where the callback came from
- */
+	
+	//! Callback that gets called when WebSocket receives a text message
 	void onTextMessage(const std::string& s, WebSocket* ws);
 
-/**
- * @brief Callback that gets called when WebSocket gets closed
- * @param ws Pointer to WebSocket where the callback came from
- */
+ 	//! Callback that gets called when WebSocket gets closed
 	void onClose(WebSocket* ws);
 
 private:
-/**
- * @brief Function that handles verification of a certain user
- * @param ws Pointer to WebSocket the verification request came from
- * @param name String of the username that has to be verified
- * @param password Integer of the hashed password that has to be verified
- */
+	//! Function that handles verification of a certain user
     void handleVerification(WebSocket* ws, std::string name, int password);
 
-/**
- * @brief The SocketServer object that uses this listener
- */
+	//! The SocketServer object that uses this listener
     SocketServer* socketServer;
 
-/**
- * @brief Unordered map with WebSockets and Hash values used for verification
- */
+	//! Unordered map with WebSockets and Hash values used for verification
     std::unordered_map<WebSocket*, unsigned int> webSocketHashValueMap; // WebSocket pointer, hash value
 };

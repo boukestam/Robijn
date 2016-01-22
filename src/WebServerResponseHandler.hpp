@@ -16,52 +16,29 @@
  * @file WebServerResponseHandler.hpp
  * @brief This class handles the response that has to be sent back to the browser
  */
+ 
 class WebServerResponseHandler {
 public:
-/**
- * @brief Constructor for WebServerResponseHandler
- * @param rootDirectory String that indicates where the WebServer files are located
- * @param logger Logger object used to log certain things
- */
+	//! Constructor for WebServerResponseHandler
     WebServerResponseHandler(std::string rootDirectory, Logger logger);
 
-/**
- * @brief Sends the response to the given TCP socket (should be called after a call to setInfo())
- * @param sock Pointer to the socket that response should be sent to
- */
+	//! Sends the response to the given TCP socket (should be called after a call to setInfo())
     void sendResponse(TCPSocket* sock);
 
-/**
- * @brief Sets the file path and file extension of the file that has to be sent as response
- * @param filePath String that indicates what file should be sent as response
- * @param fileExtension String that indicates what extension the file has (used for Content-Type in response)
- */
+	//! Sets the file path and file extension of the file that has to be sent as response
     void setInfo(std::string filePath, std::string fileExtension);
 protected:
 private:
-/**
- * @brief Returns whether or not the file (set with setInfo()) exists
- */
+	//! Returns whether or not the file (set with setInfo()) exists
     bool doesFileExist();
 
-/**
- * @brief Returns whether or not the file extension (set with setInfo()) is valid
-*/
+	//! Returns whether or not the file extension (set with setInfo()) is valid
      bool isValidExtension();
 
-/**
- * @brief Returns the filecontent of the given file
- * @param path String that indicates what file should be read from
- * @param binaryRead Boolean that indicates if the file should be read as binary file or as text file
- */
+	//! Returns the filecontent of the given file
     std::string readFile(std::string path, bool binaryRead);
 
-/**
- * @brief Struct with valid extension types / supported extension types
- * @param ext String that indicates what the extension is
- * @param contentType String that indicates what the contenType is
- * @param binaryRead String that indicates whether or not the file should read as binary file or as text file
- */
+	//! Struct with valid extension types / supported extension types
     const struct { std::string ext; std::string contentType; bool binaryRead; } ValidExtensionType[15] =
     {
         { "bmp", "image/bmp", true },
@@ -81,33 +58,21 @@ private:
         { "wav", "audio/x-wav", true }
     };
 
-/**
- * @brief Whether or not file to be read has te be read as binary file
- */
+	//! Whether or not file to be read has te be read as binary file
     bool needBinaryRead;
 
-/**
- * @brief The path of the file that was set
- */
+	//! The path of the file that was set
     std::string path;
 
-/**
- * @brief The extension of the file that was set
- */
+	//! The extension of the file that was set
     std::string extension;
 
-/**
- * @brief The content type that will be sent back to the client
- */
+	//! The content type that will be sent back to the client
     std::string contentType;
 
-/**
- * @brief Directory where files are located
- */
+	//! Directory where files are located
     std::string rootDirectory;
 
-/**
- * @brief The Logger object where logs will be written to
- */
+	//! The Logger object where logs will be written to
     Logger log;
 };

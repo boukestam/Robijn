@@ -12,18 +12,12 @@
 
 class Pump: public HardwareComponent{
 public:
-/**
- * @brief Constructor for Pump
- */ 
+	//! Constructor for Pump
 	Pump(UARTInterface* uartInterface);
 
-/**
- * @brief Turns the pump on, emptying water from the washing machine
- */
+	//! Turns the pump on, emptying water from the washing machine
 	void on();
 
-/**
- * @brief Turns the pump off, stopping the emptying from the washing machine
- */
+	//! Turns the pump off, stopping the emptying off water from the washing machine
 	void off();
 };

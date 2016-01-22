@@ -12,18 +12,12 @@
 
 class Tap: public HardwareComponent{
 public:
-/**
- * @brief Constructor for Tap
- */
+	//! Constructor for Tap
 	Tap(UARTInterface* uartInterface);
 
-/**
- * @brief Turns the tap on, allowing water to flow in
- */
+	//! Turns the tap on, allowing water to flow in
 	void on();
 
-/**
- * @brief Turns the tap off, stopping the water flow 
- */
+	//! Turns the tap off, stopping the water flow
 	void off();
 };

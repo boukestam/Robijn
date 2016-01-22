@@ -12,19 +12,12 @@
 
 class RotationSensor: public HardwareSensor{
 public:
-/**
- * @brief Constructor for RotationSensor
- */
+	//! Constructor for RotationSensor
 	RotationSensor(UARTInterface* uartInterface);
 
-/**
- * @brief Calls an update on the currentValue for TemperatureSensor
- */
+	//! Calls an update on the currentValue for TemperatureSensor
 	void update() override;
 
-/**
- * @brief Gets called if UART recieves a response directed to this sensor
- * @param response The message that was send by the UART
- */
+	//! Gets called if UART recieves a response directed to this sensor
 	void responseReceived(UARTMessage response) override;
 };

@@ -6,9 +6,14 @@
 #include "UARTInterface.hpp"
 #include "UARTMessage.hpp"
 
-//! UARTInterface class
+/**
+ * @class UARTInterface
+ * @author Bouke Stam
+ * @date 20/01/16
+ * @file UARTInterface.hpp
+ * @brief sends messages asynchronous through the uart and sends the response back to sender
+ */
 
-//! UARTInterface, sends messages asynchronous through the uart and sends the response back to sender
 class UARTInterface: public RTOS::task{
 public:
 	//! Constructor
