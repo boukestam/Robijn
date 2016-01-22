@@ -12,14 +12,9 @@
 
 class Motor: public HardwareComponent{
 public:
-/**
- * @brief Constructor for Motor
- */
+	//! Constructor for Motor
 	Motor(UARTInterface* uartInterface);
 
-/**
- * @brief Set the RPM for the motor
- * @param rotation The RPM that the motor will be set to
- */
+	//! Set the RPM for the motor
 	void setRotation(unsigned char rotation);
 };

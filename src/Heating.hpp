@@ -12,18 +12,12 @@
 
 class Heating: public HardwareComponent{
 public:
-/**
- * @brief Constructor for Heating
- */
+	//! Constructor for Heating
 	Heating(UARTInterface* uartInterface);
 
-/**
- * @brief Turns the heating unit on
- */
+	//! Turns the heating unit on
 	void on();
 
-/**
- * @brief Turns the heating unit off
- */
+	//! Turns the heating unit off
 	void off();
 };

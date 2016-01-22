@@ -13,11 +13,7 @@ class HardwareSensor;
 
 class HardwareListener{
 public:
-/**
- * @brief Gets called if sensor detects a change in currentValue
- * @param sensor Which sensor called the method
- * @param value The changed value
- */
+	//! Gets called if sensor detects a change in currentValue
 	virtual void valueChanged(HardwareSensor* sensor, unsigned char value);
 private:
 	

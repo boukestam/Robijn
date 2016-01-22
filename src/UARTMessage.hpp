@@ -3,9 +3,14 @@
 //To avoid circular dependency
 class UARTListener;
 
-//! UARTMessage class
-
-//! This class constains the two bytes to send to or receive from the uart and the sender to send the response to
+/**
+ * @class UARTMessage
+ * @author Bouke Stam
+ * @date 20/01/16
+ * @file UARTMessage.hpp
+ * @brief This class constains the two bytes to send to or receive from the uart and the sender to send the response to
+ */
+ 
 class UARTMessage{
 public:
 	//! Create an empty message

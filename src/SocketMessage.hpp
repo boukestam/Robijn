@@ -13,37 +13,29 @@
  * @file SocketMessage.hpp
  * @brief This class is used to send data over from client to server
  */
+ 
 class SocketMessage{
 public:
-/**
- * @brief Constructor for SocketMessage
- */
+	//! Constructor for SocketMessage
 	SocketMessage();
 	
+	//! Copy constructor
 	SocketMessage(const SocketMessage& message);
 	
+	//! Assignment operator
 	SocketMessage& operator=(const SocketMessage& message);
 
-/**
- * @brief Parses given JSON string into a rapidjson::Document
- * @brief Returns boolean indicating whether or not parsing was successful
- * @param jsonString String that has to be parsed
- */
+	//! Parses given JSON string into a rapidjson::Document
+	//! Returns boolean indicating whether or not parsing was successful
 	bool parseJSONString(std::string jsonString);
 
-/**
- * @brief Returns the JSON string
- */
+	//! Returns the JSON string
 	std::string getJSONString();
 
-/**
- * @brief Returns a reference to the rapidjson::Document
- */
+	//! Returns a reference to the rapidjson::Document
 	rapidjson::Document& getJSON();
 
 private:
-/**
- * @brief The rapidjson::Document that holds the JSON data
- */
+	//! The rapidjson::Document that holds the JSON data
 	rapidjson::Document json;
 };

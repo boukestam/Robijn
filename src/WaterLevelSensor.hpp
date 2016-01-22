@@ -12,19 +12,12 @@
 
 class WaterLevelSensor: public HardwareSensor{
 public:
-/**
- * @brief Constructor for WaterLevelSensor
- */
+	//! Constructor for WaterLevelSensor
 	WaterLevelSensor(UARTInterface* uartInterface);
 
-/**
- * @brief Calls an update on the currentValue for TemperatureSensor
- */
+	//! Calls an update on the currentValue for TemperatureSensor
 	void update() override;
 
-/**
- * @brief Gets called if UART recieves a response directed to this sensor
- * @param response The message that was send by the UART
- */
+	//! Gets called if UART recieves a response directed to this sensor
 	void responseReceived(UARTMessage response) override;
 };

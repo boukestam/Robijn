@@ -12,18 +12,12 @@
  
 class WashingMachine: public HardwareComponent{
 public:
-/**
- * @brief Constructor for WashingMachine
- */
+	//! Constructor for WashingMachine
 	WashingMachine(UARTInterface* uartInterface);
 
-/**
- * @brief Starts the washing machine
- */
+	//! Starts the washing machine
 	void start();
 
-/**
- * @brief Stops the washing machine
- */
+	//! Stops the washing machine
 	void stop();
 };

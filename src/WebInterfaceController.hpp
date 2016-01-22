@@ -25,100 +25,60 @@
  * @brief Controller that handles requests from wesockets
  */
 
-
 class WebInterfaceController: public RTOS::task, public HardwareListener{
 public:
 
-    /**
-     * @brief The constructor for the webinterface controller
-     * @param washingProgramController The washing program controller that can start and stop the washing machine
-     * @param temperatureSensor The temprature sensor of the washing machine
-     * @param waterLevelSensor The water sensor of the washing machine
-     * @param rotationSensor The rotation sensor of the washing machine
-     * @param washingMachineStatusSensor The status sensor of the washing machine
-     */
+	//! The constructor for the webinterface controller
     WebInterfaceController( WashingProgramController* washingProgramController,
                             HardwareSensor* temperatureSensor,
                             HardwareSensor* waterLevelSensor,
                             HardwareSensor* rotationSensor,
                             HardwareSensor* washingMachineStatusSensor);
-	/**
-	 * @brief The function called by the RTOS library
-	 */
+
+	//! The function called by the RTOS library
     void main() override;
     
-    /**
-     * @brief A function used by the sensors that this class is listening to
-     * @param sensor The sensor wich value just changed
-     * @param value The new value of the sensor
-     */
+	//! A function used by the sensors that this class is listening to
 	void valueChanged(HardwareSensor* sensor, unsigned char value);
     
-    /**
-     * @brief This function generates and send a status update to all connected clients 
-     */
+	//! This function generates and send a status update to all connected clients
 	void GenerateStatusUpdate();
 
 private:
 
-    /**
-     * @brief Create an SocketMessage* from the list of loaded washing programs
-     * @return Returns a SocketMessage* with all washing programs saved on the server
-     */
+	//! Create an SocketMessage* from the list of loaded washing programs
     SocketMessage createSocketMessageFromWashingList();
     
-    /**
-     * @brief Loads all the washing programs from disk
-     */
+	//! Loads all the washing programs from disk
 	void loadWashingPrograms();
 
-    /**
-     * @brief Timer to let the main loop sleep and give resources to other tasks  
-     */
+	//! Timer to let the main loop sleep and give resources to other tasks
 	RTOS::timer sleepTimer;
 
-    /**
-     * @brief The webserver that handles outside http connections  
-     */
+	//! The webserver that handles outside http connections
     WebServer* webServer = new WebServer(80, "www/"); // Starts the WebServer on its own thread (.detach)
     
-    /**
-     * @brief The socket server that handles outside websocket messages
-     */
+	//! The socket server that handles outside websocket messages
     SocketServer* socketServer = new SocketServer(8081); // Starts the SocketServer on its own thread (.detach)
 
-    /**
-     * @brief The controller that can start and stop the washing machine  
-     */
+	//! The controller that can start and stop the washing machine  
 	WashingProgramController* washingProgramController;
 
-    /**
-     * @brief The temprature sensor it listens to 
-     */
+	//! The temprature sensor it listens to
 	HardwareSensor* temperatureSensor;
     
-    /**
-     * @brief The water level sensor it listens to 
-     */
+	//! The water level sensor it listens to
 	HardwareSensor* waterLevelSensor;
     
-    /**
-     * @brief The rotation sensor it listens to 
-     */
+	//! The rotation sensor it listens to
 	HardwareSensor* rotationSensor;
     
-    /**
-     * @brief The washing machine status sensor it listens to 
-     */
+	//! The washing machine status sensor it listens to
 	HardwareSensor* washingMachineStatusSensor;
     
-    /**
-     * @brief The current status of the washing program
-     */
+	//! The current status of the washing program
 	WashingProgramStatus* currentWashingProgramStatus;
     
-    /**
-     * @brief A list with all the loaded washingprograms the server knows 
-     */
+	//! A list with all the loaded washingprograms the server knows
     std::vector<WashingProgram*> washingPrograms;
 };

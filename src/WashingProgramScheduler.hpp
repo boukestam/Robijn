@@ -14,60 +14,41 @@
  * @brief A scheduler that keeps track of time whenever the washing program has 
  * been started by calling WashingProgramScheduler::startWashingProgram().
  */
+ 
 class WashingProgramScheduler{
 public:	
 	WashingProgramScheduler(WashingProgram* washingProgram);
 
-	/**
-	 * @brief Starts the washing program
-	 */
+	//! Starts the washing program
 	void start();
 	
-	/**
-	 * @brief Stops the current washing program
-	 */
+	//! Stops the current washing program
 	void stop();
 	
-	/**
-	 * @brief Pauses the current washing program
-	 */
+	//! Pauses the current washing program
 	void pause();
 	
-	/**
-	 * @brief Unpauses the current washing program
-	 */
+	//! Unpauses the current washing program
 	void unpause();
 	
-	/**
-	 * @brief Retrieve the current step of the washing program. 
-	 * @return The step of WashingProgramStep which is currently running in
-	 */
+	//! Retrieve the current step of the washing program.
 	WashingProgramStep getCurrentStep();
 	
-	/**
-	 * @brief Checks the washing program wether it is in a running state
-	 * @return 1 for "running" and 0 for "is not running"
-	 */
+	//! Checks the washing program wether it is in a running state
 	bool isRunning();
 	
-	/**
-	 * @brief Checks the washing program wether it is in a paused state
-	 * @return 1 for "running" and 0 for "is not running"
-	 */
+	//! Checks the washing program wether it is in a paused state
 	bool isPaused();
 	
-	/**
-	* @brief Updates the washing program scheduler by keeping track of the elapse time since
-	* WashingProgram has been started. update() also checkes wether a step has been finished 
-	* so it can jump to next step or finish the program
-	*/ 
+	//! Updates the washing program scheduler by keeping track of the elapse time since
+	//! WashingProgram has been started. update() also checkes wether a step has been finished 
+	//! so it can jump to next step or finish the program
 	void update();
     
-    /**
-     * @brief The time elapsed
-     */
+	//! The time elapsed from start
     int getElapsedTime();
 	
+	//! The current step index
 	int getCurrentStepIndex();
 	
 private:

@@ -12,18 +12,12 @@
  
 class SignalLed: public HardwareComponent{
 public:
-/**
- * @brief Constructor for SignaLed
- */
+	//! Constructor for SignaLed
 	SignalLed(UARTInterface* uartInterface);
 
-/**
- * @brief Turns the signal led on
- */
+	//! Turns the signal led on
 	void on();
 
-/**
- * @brief Turns the signal led off
- */
+	//! Turns the signal led off
 	void off();
 };
