@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 /***************************************************************************\
 
 file      RTOS.cpp
@@ -1048,6 +1050,7 @@ void RTOS::run (void) {
 
    // Attempt to set the realtime SCHED_RR policy and thread priority
    r = pthread_setschedparam(this_thread, SCHED_RR, &param);
+   std::cout << "Error nr. : " << r << std::endl;
    if (r != 0)
       rtos_fatal("Installing realtime scheduler failed");
 
