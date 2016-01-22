@@ -39,7 +39,7 @@ private:
     std::string readFile(std::string path, bool binaryRead);
 
 	//! Struct with valid extension types / supported extension types
-    const struct { std::string ext; std::string contentType; bool binaryRead; } ValidExtensionType[15] =
+    const struct { std::string ext; std::string contentType; bool binaryRead; } ValidExtensionType[16] =
     {
         { "bmp", "image/bmp", true },
         { "ico", "image/ico", true },
@@ -55,7 +55,8 @@ private:
         { "log", "text/plain", false},
         { "js", "application/javascript", false },
         { "css", "text/css", false },
-        { "wav", "audio/x-wav", true }
+        { "wav", "audio/x-wav", true },
+		{ "ogg", "audio/ogg", true}
     };
 
 	//! Whether or not file to be read has te be read as binary file

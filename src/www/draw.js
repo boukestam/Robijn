@@ -95,9 +95,9 @@ $( document ).ready(function() {
             context.fillStyle = textColor;
 			
             if(i < numSteps){
-                context.fillText("Stap " + (i + 1), margin + dist * i, centerY - radius * 2);
+                context.fillText("Step " + (i + 1), margin + dist * i, centerY - radius * 2);
             } else {
-                context.fillText("Klaar" , margin + dist * i, centerY - radius * 2);
+                context.fillText("Done" , margin + dist * i, centerY - radius * 2);
             }
             
             if(i == currentStep && status == 4){
