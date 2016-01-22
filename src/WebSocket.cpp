@@ -1,3 +1,4 @@
+#include <iostream>
 //Gemaakt door Jan Zuurbier, sept 2014
 //Vrij om te gebruiken en aan te passen.
 //Alleen voor onderwijsdoelen.
@@ -93,6 +94,13 @@ void WebSocket::sendTextMessage(const string &message) throw (WebSocketException
 	if(closing) {
         throw WebSocketException("sending message while the websocket is already in closing state");
     }
+	
+	for(int i=0; i < 1000 && !handShakePerformed; i++){
+		sleep(10);
+		if(i == 999){
+			return;
+		}
+	}
 
     size_t payloadlen = message.length();
     int startSize = 1;
@@ -122,7 +130,6 @@ void WebSocket::sendTextMessage(const string &message) throw (WebSocketException
 	sock->send(frame, payloadlen + position);
 
 	delete frame;
-	std::cout << "FRAME SENT" << std::endl;
 }
 
 //stuur een closeframe
@@ -200,6 +207,8 @@ void WebSocket::performHandshake() throw (WebSocketException, SocketException ){
 		stream << "Sec-WebSocket-Accept: " << accept_b64 << CRLF << CRLF;
 		stream.flush();
 	}
+	
+	handShakePerformed = 1;
 }
 
 //lees een frame
@@ -209,7 +218,6 @@ void WebSocket::performHandshake() throw (WebSocketException, SocketException ){
 //afhankelijk is van de opcode.
 
 void WebSocket::processFrame() throw(WebSocketException, SocketException){
-	cout << "processing frame" << endl;
 	unsigned char tmp[4];
 	size_t n = sock->recvFully(tmp,2);
 	if(n < 2) throw WebSocketException("connection closed while processing frame");
@@ -266,18 +274,15 @@ void WebSocket::processFrame() throw(WebSocketException, SocketException){
 	//handle message
 	switch(opc){
 		case 0x1: {
-			cout << "textframe" << endl;
 			string s (data, datalen);
 			if (theListener != NULL) theListener->onTextMessage(s, this);
 			break;
 		}
 		case 0x2: {
-			cout << "binary frame" << endl;
 			sendClose("1003 binary frames not supported", 32);
 			break;
 		}
 		case 0x8: {
-			cout << "closeframe" << endl;
 			if(!closing) sendClose(data, datalen);
 			closed = true;
 			break;
@@ -302,7 +307,6 @@ void WebSocket::processFrame() throw(WebSocketException, SocketException){
 	//clear databuffer
 	if(datalen != 0) delete[] data;
 	datalen = 0;
-
 }
 
 void WebSocket::handleConnection() {

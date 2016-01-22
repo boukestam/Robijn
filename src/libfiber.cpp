@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 /***************************************************************************\
 
 file      libfiber.cpp
@@ -11,9 +13,11 @@ date      2014-11-01
 
 #include <stdlib.h>
 #include <ucontext.h>
-#include <errno.h>
+
+#include <errno.h>
 #include <string.h>
-#include <sys/sysinfo.h>
+
+#include <sys/sysinfo.h>
 #include <thread>
 
 /*
@@ -56,10 +60,12 @@ int fiber_t::createContext ( void (*func)(void), int sz ) {
 
     // Create the context. The context calls func.
     makecontext( &context, func, 0 );
-
+
+
     return 0;
 }
-
+
+
 /*
  * Switches from the old to the next fiber
  */

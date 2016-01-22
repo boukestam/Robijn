@@ -42,7 +42,7 @@ public:
  */
 	void setCurrentState(unsigned char state);
 
-	void signalWhenDone(RTOS::flag* flag);
+	bool signalWhenDone(RTOS::flag* flag);
 	
 protected:
 	unsigned char goalState;

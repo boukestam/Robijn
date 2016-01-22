@@ -19,6 +19,10 @@ public:
  * @brief Constructor for SocketMessage
  */
 	SocketMessage();
+	
+	SocketMessage(const SocketMessage& message);
+	
+	SocketMessage& operator=(const SocketMessage& message);
 
 /**
  * @brief Parses given JSON string into a rapidjson::Document

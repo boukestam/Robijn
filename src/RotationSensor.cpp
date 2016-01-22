@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "RotationSensor.hpp"
 
 RotationSensor::RotationSensor(UARTInterface* uartInterface):

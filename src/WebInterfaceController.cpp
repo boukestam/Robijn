@@ -1,3 +1,4 @@
+#include <iostream>
 #include "WebInterfaceController.hpp"
 
 WebInterfaceController::WebInterfaceController( WashingProgramController* washingProgramController,
@@ -68,14 +69,15 @@ void WebInterfaceController::loadWashingPrograms()
 
 }
 
-void WebInterfaceController::main()
-{
+void WebInterfaceController::main(){
+	bool hasStarted = false;
+	
     while(true){
-        SocketMessage* msg = socketServer->receiveMessage();
+		if(socketServer->hasMessage()){
+			SocketMessage msg = socketServer->receiveMessage();
 
-        if(msg != nullptr){
-            std::string eventKey("event");
-            rapidjson::Document& document = msg->getJSON();
+			std::string eventKey("event");
+            rapidjson::Document& document = msg.getJSON();
             rapidjson::Value& val = document["event"];
 			std::string event = val.GetString();
 
@@ -110,7 +112,7 @@ void WebInterfaceController::main()
                 washingProgramController->stopWashingProgram();
             } else if(event == "statusUpdate"){
                 // Get data parse to msg and send back
-                SocketMessage* msg2 = currentWashingProgramStatus->toSocketMessage();
+                SocketMessage msg2 = currentWashingProgramStatus->toSocketMessage();
                 socketServer->sendMessage(msg2);
             } else if(event == "getWashingPrograms"){
                 // Show washing program list
@@ -120,11 +122,19 @@ void WebInterfaceController::main()
 		
 		// Send status update every 1000MS
 		if(currentWashingProgramStatus->status == 0x04){
-			currentWashingProgramStatus->totalSteptime = washingProgramController->getCurrentStep().duration;
-            currentWashingProgramStatus->duration = washingProgramController->getStepTimeRunning();
-			SocketMessage* msg2 = currentWashingProgramStatus->toSocketMessage();
+			hasStarted = true;
+			
+			currentWashingProgramStatus->currentStep = washingProgramController->getCurrentStepIndex();
+            currentWashingProgramStatus->duration = washingProgramController->getTimeRunning();
+			
+			SocketMessage msg2 = currentWashingProgramStatus->toSocketMessage();
+        	socketServer->sendMessage(msg2);
+		}else if(hasStarted){
+			SocketMessage msg2 = currentWashingProgramStatus->toSocketMessage();
         	socketServer->sendMessage(msg2);
 		}
+		
+		washingMachineStatusSensor->update();
 
 		sleepTimer.set(1000 MS);
 		wait(sleepTimer);
@@ -144,7 +154,7 @@ void WebInterfaceController::valueChanged(HardwareSensor* sensor, unsigned char 
     }
 }
 
-SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
+SocketMessage WebInterfaceController::createSocketMessageFromWashingList()
 {
     rapidjson::StringBuffer s;
     rapidjson::Writer<rapidjson::StringBuffer> writer(s);
@@ -183,7 +193,7 @@ SocketMessage* WebInterfaceController::createSocketMessageFromWashingList()
     writer.EndArray();
     writer.EndObject();
 
-    SocketMessage* msg = new SocketMessage();
-    msg->parseJSONString(s.GetString());
+    SocketMessage msg;
+    msg.parseJSONString(s.GetString());
     return msg;
 }

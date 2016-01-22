@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "HardwareSensor.hpp"
 
 HardwareSensor::HardwareSensor(UARTInterface* uartInterface):

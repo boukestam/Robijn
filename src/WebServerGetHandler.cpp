@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "WebServerGetHandler.hpp"
 
 WebServerGetHandler::WebServerGetHandler() {

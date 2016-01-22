@@ -28,7 +28,7 @@
 #define STOP_CMD				0x20
 
 #define LOCK_CMD				0x40
-#define UNLOCK_CMD			0x80
+#define UNLOCK_CMD				0x80
 
 #define OPEN_CMD				0x10
 #define CLOSE_CMD				0x20

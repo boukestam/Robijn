@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "WashingMachineStatusSensor.hpp"
 
 WashingMachineStatusSensor::WashingMachineStatusSensor(UARTInterface* uartInterface):

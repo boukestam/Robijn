@@ -40,6 +40,7 @@ private:
 	int datalen;
 	bool closed;
 	bool closing;
+	unsigned char handShakePerformed = 0;
 	void performHandshake() throw(WebSocketException, SocketException);
 	void processFrame() throw(WebSocketException, SocketException);
 	void handleConnection();

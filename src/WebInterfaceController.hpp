@@ -65,7 +65,7 @@ private:
      * @brief Create an SocketMessage* from the list of loaded washing programs
      * @return Returns a SocketMessage* with all washing programs saved on the server
      */
-    SocketMessage* createSocketMessageFromWashingList();
+    SocketMessage createSocketMessageFromWashingList();
     
     /**
      * @brief Loads all the washing programs from disk

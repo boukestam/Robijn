@@ -17,5 +17,5 @@ public:
 
 	int status = 0x02;
 
-	SocketMessage* toSocketMessage();
+	SocketMessage toSocketMessage();
 };

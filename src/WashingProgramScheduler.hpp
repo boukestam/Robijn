@@ -64,9 +64,11 @@ public:
 	void update();
     
     /**
-     * @brief The time elapsed in this step
+     * @brief The time elapsed
      */
-    int GetElapsedStepTime();
+    int getElapsedTime();
+	
+	int getCurrentStepIndex();
 	
 private:
 	WashingProgram* currentWashingProgram;

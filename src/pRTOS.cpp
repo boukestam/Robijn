@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 /***************************************************************************\
 
 file      RTOS.cpp
@@ -21,7 +23,7 @@ date      2014-12-12
 using namespace std;
 
 #define task_logging          (global_logging && 0)
-#define debug_task_logging    (global_logging && 1)
+#define debug_task_logging    (global_logging && 0)
 #define hartbeat_logging      (global_logging && 0)
 
 #define TASK_STATE( task ) \

@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "SoapTray.hpp"
 
 SoapTray::SoapTray(UARTInterface* uartInterface):

@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "WashingProgram.hpp"
 
 int WashingProgram::getTotalDuration (){

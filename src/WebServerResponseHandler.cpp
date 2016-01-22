@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "WebServerResponseHandler.hpp"
 
 WebServerResponseHandler::WebServerResponseHandler(std::string rootDirectory, Logger logger) : rootDirectory{rootDirectory}, log{logger} {

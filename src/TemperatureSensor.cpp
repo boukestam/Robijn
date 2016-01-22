@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "TemperatureSensor.hpp"
 
 TemperatureSensor::TemperatureSensor(UARTInterface* uartInterface):

@@ -1,8 +1,9 @@
+#include <iostream>
 #include "WashingProgramStatus.hpp"
 
 #include <iostream>
 
-SocketMessage* WashingProgramStatus::toSocketMessage(){
+SocketMessage WashingProgramStatus::toSocketMessage(){
     rapidjson::StringBuffer s;
     rapidjson::Writer<rapidjson::StringBuffer> writer(s);
 
@@ -35,7 +36,7 @@ SocketMessage* WashingProgramStatus::toSocketMessage(){
         writer.EndObject();
     writer.EndObject();
 
-    SocketMessage* msg = new SocketMessage();
-    msg->parseJSONString(s.GetString());
+    SocketMessage msg;
+    msg.parseJSONString(s.GetString());
     return msg;
 }

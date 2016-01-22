@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "HardwareController.hpp"
 
 HardwareController::HardwareController():
@@ -12,10 +14,7 @@ void HardwareController::valueChanged(HardwareSensor* sensor, unsigned char valu
 
 }
 
-#include <iostream>
-
 void HardwareController::setGoalState(unsigned char state){
-	std::cout << "Goal state: " << (int)state << std::endl;
 	goalState = state;
 }
 
@@ -26,9 +25,15 @@ void HardwareController::setCurrentState(unsigned char state){
 		for(RTOS::flag* flag : waitingFlags){
 			flag->set();
 		}
+		waitingFlags.clear();
 	}
 }
 
-void HardwareController::signalWhenDone(RTOS::flag* flag){
-	waitingFlags.push_back(flag);
+bool HardwareController::signalWhenDone(RTOS::flag* flag){
+	if(currentState != goalState){
+		waitingFlags.push_back(flag);
+		return true;
+	}else{
+		return false;
+	}
 }

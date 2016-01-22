@@ -7,14 +7,14 @@
 					"degrees":"40",
 					"rpm":"200",
 					"water":"50",
-					"time":"3000",
+					"time":"60",
                   	"rotationInterval":"30"
 				},
 				{
 					"degrees":"20",
 					"rpm":"1200",
 					"water":"0",
-					"time":"600",
+					"time":"30",
                   	"rotationInterval":"300"
 				}
 			]
@@ -26,14 +26,14 @@
 					"degrees":"30",
 					"rpm":"200",
 					"water":"50",
-					"time":"14400",
+					"time":"240",
                   	"rotationInterval":"30"
 				},
 				{
 					"degrees":"20",
 					"rpm":"1200",
 					"water":"0",
-					"time":"600",
+					"time":"30",
                   	"rotationInterval":"300"
 				}
 			]
@@ -45,14 +45,14 @@
 					"degrees":"40",
 					"rpm":"200",
 					"water":"50",
-					"time":"7200",
+					"time":"120",
                   	"rotationInterval":"30"
 				},
 				{
 					"degrees":"20",
 					"rpm":"1200",
 					"water":"0",
-					"time":"600",
+					"time":"30",
                   	"rotationInterval":"300"
 				}
 			]

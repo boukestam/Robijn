@@ -1,3 +1,4 @@
+#include <iostream>
 #include "WashingProgramScheduler.hpp"
 
 WashingProgramScheduler::WashingProgramScheduler(WashingProgram* washingProgram):
@@ -40,6 +41,7 @@ void WashingProgramScheduler::unpause(){
 
 	int pauseDuration = afterPauseTime - beforePauseTime;
 	stepStartTime += pauseDuration;
+	programStartTime += pauseDuration;
 
 	paused = false;
 }
@@ -67,13 +69,20 @@ void WashingProgramScheduler::update(){
 	}
 }
 
-int WashingProgramScheduler::GetElapsedStepTime(){
+int WashingProgramScheduler::getElapsedTime(){
     time_t now;
     time(&now);
-
-	int pauseDuration = now - beforePauseTime;
     
-    int elapsedSeconds = now - stepStartTime + pauseDuration;
+    int elapsedSeconds = now - programStartTime;
+	
+	if(paused){
+		int pauseDuration = now - beforePauseTime;
+		elapsedSeconds -= pauseDuration;
+	}
     
     return elapsedSeconds;
+}
+
+int WashingProgramScheduler::getCurrentStepIndex(){
+	return currentStepIndex;
 }

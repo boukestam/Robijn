@@ -76,8 +76,8 @@ public:
  */
 	void valueChanged(HardwareSensor* sensor, unsigned char value);
     
-    int getStepTimeRunning();
-	WashingProgramStep getCurrentStep();
+    int getTimeRunning();
+	int getCurrentStepIndex();
 private:
 	WashingProgramScheduler* scheduler;
 	
@@ -96,6 +96,6 @@ private:
 	unsigned char washingMachineStatus;
 	
 	bool hasStarted = false;
-	bool doorClosed = false;
+	unsigned char doorStatus = 0x01;
 };
 

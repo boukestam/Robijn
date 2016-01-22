@@ -1,3 +1,4 @@
+#include <iostream>
 #include "SocketServer.hpp"
 
 SocketServer::SocketServer(int port) : port{port} {
@@ -15,9 +16,10 @@ SocketServer::~SocketServer() {
     delete socketListener;
 }
 
-SocketMessage* SocketServer::receiveMessage() {
+SocketMessage SocketServer::receiveMessage() {
     std::lock_guard<std::mutex> lock(receiveMutex);
-    SocketMessage* message = nullptr;
+    SocketMessage message;
+	
     if (receiveBuffer.size() > 0) {
         message = receiveBuffer.front(); // Make message point to message from vector (will have to be deleted on receiving side when done)
         receiveBuffer.pop(); // Remove from vector
@@ -26,11 +28,14 @@ SocketMessage* SocketServer::receiveMessage() {
     return message;
 }
 
-void SocketServer::sendMessage(SocketMessage* message) {
-	std::cout << "Start putting in buffer" << std::endl;
+bool SocketServer::hasMessage(){
+	std::lock_guard<std::mutex> lock(receiveMutex);
+    return receiveBuffer.size() > 0;
+}
+
+void SocketServer::sendMessage(SocketMessage message) {
     std::lock_guard<std::mutex> lock(sendMutex);
     sendBuffer.push(message);
-    std::cout << "Done putting in buffer" << std::endl;
 }
 
 void SocketServer::run() {
@@ -52,13 +57,11 @@ void SocketServer::runSendMessageHandler() {
     for (;;) {
         sendMutex.lock();
         if (sendBuffer.size() > 0) {
-            SocketMessage* message = sendBuffer.front(); // Get Message
-			std::cout << "Message: " << message->getJSONString() << std::endl;
-        std::cout << "Before" << std::endl; 
-	multicaster->broadcast(message->getJSONString()); // Send Message
-       std::cout << "After" <<std::endl;
-	sendBuffer.pop(); // Delete from vector
-            //delete message; // Free space
+			SocketMessage message = sendBuffer.front(); // Get Message
+			
+			multicaster->broadcast(message.getJSONString()); // Send Message
+			
+			sendBuffer.pop(); // Delete from vector
         }
         sendMutex.unlock();
 
@@ -73,11 +76,10 @@ void SocketServer::runSendMessageHandler() {
 SocketListener::SocketListener(SocketServer* socketServer) : socketServer{socketServer} {}
 
 void SocketListener::onTextMessage(const std::string& s, WebSocket* ws){ // TODO: Parse json string and put it in the receiveBuffer
-    std::cout << "Got new message" << std::endl;
-    SocketMessage* message = new SocketMessage();
-    bool inBuffer = false;
-    if (message->parseJSONString(s)) {
-        rapidjson::Document& document = message->getJSON();
+    SocketMessage message;
+	
+    if (message.parseJSONString(s)) {
+        rapidjson::Document& document = message.getJSON();
         rapidjson::Value& val = document["event"];
         std::string event = val.GetString();
 
@@ -95,16 +97,11 @@ void SocketListener::onTextMessage(const std::string& s, WebSocket* ws){ // TODO
                     socketServer->receiveMutex.lock();
                     socketServer->receiveBuffer.push(message);
                     socketServer->receiveMutex.unlock();
-                    inBuffer = true;
                 }
             }
         }
     } else { // Parsing failed, delete message
         std::cout << "Parsing failed" << std::endl;
-    }
-    std::cout << "Received: " << s << std::endl;
-    if (!inBuffer) { // Message has not been pushed in receiveBuffer, so won't be used anymore
-        delete message; // Delete message because not used anymore
     }
 }
 

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "SocketMessage.hpp"
 
 SocketMessage::SocketMessage() {
@@ -34,3 +35,11 @@ rapidjson::Document& SocketMessage::getJSON() {
     return json;
 }
 
+SocketMessage::SocketMessage(const SocketMessage& message){
+	json.CopyFrom(message.json, json.GetAllocator());
+}
+	
+SocketMessage& SocketMessage::operator=(const SocketMessage& message){
+	json.CopyFrom(message.json, json.GetAllocator());
+	return *this;
+}

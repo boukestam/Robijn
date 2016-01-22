@@ -37,13 +37,15 @@ public:
  * @brief Buffer is locked by a mutex
  * @param message Pointer to SocketMessage which will be put in the SendBuffer
  */
-	void sendMessage(SocketMessage* message);
+	void sendMessage(SocketMessage message);
 
 /**
  * @brief Checks if there's a new message from the client
  * @brief Will return that new message or a nullptr if there's no new message
  */
-	SocketMessage* receiveMessage();
+	SocketMessage receiveMessage();
+	
+	bool hasMessage();
 
 private:
 /**
@@ -72,8 +74,8 @@ private:
  */
     int port;
 
-    std::queue<SocketMessage*> receiveBuffer;
-    std::queue<SocketMessage*> sendBuffer;
+    std::queue<SocketMessage> receiveBuffer;
+    std::queue<SocketMessage> sendBuffer;
 
 /**
  * @brief Amount of uSec that messageHandler thread will sleep

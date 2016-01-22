@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "TemperatureController.hpp"
 
 TemperatureController::TemperatureController(Heating* heating, HardwareSensor* temperatureSensor) :

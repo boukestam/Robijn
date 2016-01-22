@@ -1,3 +1,5 @@
+#include <iostream>
+#include <iostream>
 #include "WashingMachine.hpp"
 
 WashingMachine::WashingMachine(UARTInterface* uartInterface):

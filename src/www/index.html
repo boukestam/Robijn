@@ -14,7 +14,7 @@
 			<img src="robijn.png" style="margin-top:10px;width:200px;height:auto;"/>
 
 			<div class="ribbon-wrapper-green">
-				<div id="ribbon" class="ribbon-green">Online</div>
+				<div id="ribbon" class="ribbon-red">Offline</div>
 			</div>
 			
 			<div id="login" class="card" style="padding:20px;">
@@ -62,7 +62,23 @@
 						
 						<div class="col s12">
 							<p>
-								Status: <b id="statusText">Running</b>
+								Status: <b id="statusText"></b>
+							</p>
+							
+							<p>
+								Water: <b id="water"></b>
+							</p>
+							
+							<p>
+								RPM: <b id="rpm"></b>
+							</p>
+							
+							<p>
+								Temperature: <b id="temp"></b>
+							</p>
+							
+							<p>
+								Time: <b id="time"></b>
 							</p>
 						</div>
 						
@@ -146,17 +162,17 @@
 							</p>
 							
 							<p>
-								<input id="radiotime0" name="radiotime" type="radio" value="3600"/>
+								<input id="radiotime0" name="radiotime" type="radio" value="60"/>
 								<label for="radiotime0">Fast (60 min)</label>
 							</p>
 							
 							<p>
-								<input id="radiotime1" name="radiotime" type="radio" value="7200"/>
+								<input id="radiotime1" name="radiotime" type="radio" value="120"/>
 								<label for="radiotime1">Intensive (120 min)</label>
 							</p>
 							
 							<p>
-								<input id="radiotime2" name="radiotime" type="radio" value="14400"/>
+								<input id="radiotime2" name="radiotime" type="radio" value="240"/>
 								<label for="radiotime2">Eco (240 min)</label>
 							</p>
 						</div>
