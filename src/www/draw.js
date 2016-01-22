@@ -266,6 +266,11 @@ $( document ).ready(function() {
         
         currentStep = parseInt(data["currentStep"]);
         timeRunning = parseInt(data["data"]["timeRunning"]);
+
+        if(timeRunning >= getTotalTime() && (status == 0x08 || status == 0x04)){
+        	var audio = new Audio('beeps.ogg');
+			audio.play();
+        }
 		
         if(status == 4) {
             var currentDegrees = data["data"]["currentDegrees"];
